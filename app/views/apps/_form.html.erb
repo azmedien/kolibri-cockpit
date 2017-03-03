@@ -16,15 +16,8 @@
     <%= f.text_field :internal_name %>
   </div>
 
-  <div class="field">
-    <%= f.label :internal_id %>
-    <%= f.text_field :internal_id %>
-  </div>
-
-  <div class="field">
-    <%= f.label :runtime %>
-    <%= f.text_area :runtime %>
-  </div>
+  <%= f.label :runtime %>
+  <%= f.text_area :runtime, :class => "jsoneditor-target"%>
 
   <div class="field">
     <%= f.label :android_config %>

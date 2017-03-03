@@ -12,21 +12,24 @@
 
 ActiveRecord::Schema.define(version: 20170303132101) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "hstore"
+
   create_table "apps", force: :cascade do |t|
     t.string   "internal_name"
     t.string   "internal_id"
-    t.text     "runtime"
-    t.text     "android_config"
-    t.text     "ios_config"
+    t.json     "runtime",        default: "{}", null: false
+    t.hstore   "android_config", default: {},   null: false
+    t.hstore   "ios_config",     default: {},   null: false
     t.integer  "user_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.index ["android_config"], name: "index_apps_on_android_config"
-    t.index ["internal_id"], name: "index_apps_on_internal_id"
-    t.index ["internal_name"], name: "index_apps_on_internal_name"
-    t.index ["ios_config"], name: "index_apps_on_ios_config"
-    t.index ["runtime"], name: "index_apps_on_runtime"
-    t.index ["user_id"], name: "index_apps_on_user_id"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.index ["android_config"], name: "index_apps_on_android_config", using: :gin
+    t.index ["internal_id"], name: "index_apps_on_internal_id", using: :btree
+    t.index ["internal_name"], name: "index_apps_on_internal_name", using: :btree
+    t.index ["ios_config"], name: "index_apps_on_ios_config", using: :gin
+    t.index ["user_id"], name: "index_apps_on_user_id", using: :btree
   end
 
   create_table "roles", force: :cascade do |t|
@@ -36,8 +39,8 @@ ActiveRecord::Schema.define(version: 20170303132101) do
     t.decimal  "abilities",     default: "0.0", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
-    t.index ["name"], name: "index_roles_on_name"
+    t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
+    t.index ["name"], name: "index_roles_on_name", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -62,16 +65,16 @@ ActiveRecord::Schema.define(version: 20170303132101) do
     t.datetime "locked_at"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
   end
 
   create_table "users_roles", id: false, force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
-    t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+    t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
   end
 
 end

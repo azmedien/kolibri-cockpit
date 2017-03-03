@@ -1,3 +1,25 @@
 // Place all the styles related to the Apps controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.jsoneditor-container, .jsoneditor-contextmenu {
+    table {
+        width: auto;
+        margin: 0;
+    }
+
+    .jsoneditor {
+        background: white;
+    }
+
+    button, button:hover, .menu button, .menu button:hover {
+        background: none;
+        text-shadow: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+}
+
+.jsoneditor-container {
+    height: 400px;
+    width: 50%;
+}
