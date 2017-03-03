@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  internal_name: MyString
+  internal_id: MyString
+  runtime: MyText
+  android_config: MyText
+  ios_config: MyText
+
+two:
+  internal_name: MyString
+  internal_id: MyString
+  runtime: MyText
+  android_config: MyText
+  ios_config: MyText

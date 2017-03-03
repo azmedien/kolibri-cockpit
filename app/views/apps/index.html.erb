@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Apps</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Internal name</th>
+      <th>Internal</th>
+      <th>Runtime</th>
+      <th>Android config</th>
+      <th>Ios config</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @apps.each do |app| %>
+      <tr>
+        <td><%= app.internal_name %></td>
+        <td><%= app.internal_id %></td>
+        <td><%= app.runtime %></td>
+        <td><%= app.android_config %></td>
+        <td><%= app.ios_config %></td>
+        <td><%= link_to 'Show', app %></td>
+        <td><%= link_to 'Edit', edit_app_path(app) %></td>
+        <td><%= link_to 'Destroy', app, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New App', new_app_path %>
