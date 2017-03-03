@@ -1,6 +1,6 @@
 class AppsController < ApplicationController
-  before_action :set_app, only: [:show, :edit, :update, :destroy]
-  before_action :set_apps, only: [:show, :edit, :update, :new]
+  before_action :set_app, only: [:show, :edit, :update, :destroy, :runtime]
+  before_action :set_apps, only: [:create, :new, :show, :edit, :update]
   before_filter :authenticate_user!
 
   # GET /apps
@@ -26,7 +26,8 @@ class AppsController < ApplicationController
   # POST /apps
   # POST /apps.json
   def create
-    @app = current_user.apps.new(app_params)
+    @app = App.new(app_params)
+    @app.user = current_user
 
     respond_to do |format|
       if @app.save
@@ -61,6 +62,11 @@ class AppsController < ApplicationController
       format.html { redirect_to apps_url, notice: 'App was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+
+  def runtime
+    render json: @app.runtime
   end
 
   private

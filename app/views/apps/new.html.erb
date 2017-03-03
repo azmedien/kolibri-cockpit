@@ -1,7 +1,9 @@
 <%= render 'navigation', application: @application, applications: @applications %>
-
+<div class="container">
 <h1>New App</h1>
 
 <%= render 'form', app: @app %>
 
 <%= link_to 'Back', apps_path %>
+
+</div>

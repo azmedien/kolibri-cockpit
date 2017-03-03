@@ -11,25 +11,27 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group">
     <%= f.label :internal_name %>
-    <%= f.text_field :internal_name %>
+    <%= f.text_field :internal_name, :class => "form-control" %>
   </div>
 
-  <%= f.label :runtime %>
-  <%= f.text_area :runtime, :class => "jsoneditor-target"%>
+  <div class="form-group">
+    <%= f.label :runtime %>
+    <%= f.text_area :runtime, :class => "jsoneditor-target form-control"%>
+  </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= f.label :android_config %>
-    <%= f.text_area :android_config %>
+    <%= f.text_area :android_config, :class => "form-control" %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= f.label :ios_config %>
-    <%= f.text_area :ios_config %>
+    <%= f.text_area :ios_config, :class => "form-control" %>
   </div>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit :class => "btn btn-primary" %>
   </div>
 <% end %>
