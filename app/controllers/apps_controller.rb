@@ -1,5 +1,6 @@
 class AppsController < ApplicationController
   before_action :set_app, only: [:show, :edit, :update, :destroy]
+  before_action :set_apps, only: [:show, :edit, :update, :new]
   before_filter :authenticate_user!
 
   # GET /apps
@@ -15,7 +16,7 @@ class AppsController < ApplicationController
 
   # GET /apps/new
   def new
-    @app = current_user.apps.new
+    @app = App.new
   end
 
   # GET /apps/1/edit
@@ -66,6 +67,10 @@ class AppsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_app
       @app = current_user.apps.find(params[:id])
+    end
+
+    def set_apps
+      @apps = current_user.apps
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

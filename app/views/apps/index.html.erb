@@ -1,4 +1,22 @@
-<p id="notice"><%= notice %></p>
+<%= render 'navigation', application: @application, applications: @applications %>
+
+<% if notice %>
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <%= notice %>
+</div>
+<% end %>
+
+<% if alert %>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <%= alert %>
+</div>
+<% end %>
 
 <h1>Apps</h1>
 
