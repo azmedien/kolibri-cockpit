@@ -3,29 +3,30 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Internal name:</strong>
-  <%= @app.internal_name %>
+    <strong>Internal name:</strong>
+    <%= @app.internal_name %>
 </p>
 
 <p>
-  <strong>Internal:</strong>
-  <%= @app.internal_id %>
+    <strong>Internal:</strong>
+    <%= @app.internal_id %>
 </p>
 
 <p>
-  <strong>Runtime:</strong>
-  <%= @app.runtime %>
+    <strong>Runtime:</strong>
+    <%= @app.runtime %>
 </p>
 
 <p>
-  <strong>Android config:</strong>
-  <%= @app.android_config %>
+    <strong>Android config:</strong>
+    <%= @app.android_config %>
 </p>
 
 <p>
-  <strong>Ios config:</strong>
-  <%= @app.ios_config %>
+    <strong>Ios config:</strong>
+    <%= @app.ios_config %>
 </p>
 
-<%= link_to 'Edit', edit_app_path(@app) %> |
+<%= link_to 'Edit', edit_app_path(@app) %>
+|
 <%= link_to 'Back', apps_path %>

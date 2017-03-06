@@ -2,36 +2,36 @@
 
 <% if notice %>
 <div class="alert alert-info alert-dismissible fade show" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <%= notice %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <%= notice %>
 </div>
 <% end %>
 
 <% if alert %>
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <%= alert %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <%= alert %>
 </div>
 <% end %>
 
-<div class="container">
-<h1>Apps</h1>
+<main>
+    <h1>Apps</h1>
 
-<div class="list-group">
-  <%= link_to "Create new application", new_app_path, :class => "list-group-item active" %>
-  <% @apps.each do |app| %>
-  <div class="list-group-item list-group-item-action flex-column align-items-start">
-    <div class="d-flex w-100 justify-content-end">
-    <div class="mr-auto p-2"><%= app.internal_name %></div>
-    <%= button_to 'Show', app, method: :get, :class => "btn btn-outline-primary" %>
-    <%= button_to 'Edit', edit_app_path(app), method: :get, :class => "btn btn-outline-secondary" %>
-    <%= button_to 'Destroy', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %>
+    <div class="list-group">
+        <%= link_to "Create new application", new_app_path, :class => "list-group-item active" %>
+        <% @apps.each do |app| %>
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-end">
+                <div class="mr-auto p-2"><%= app.internal_name %></div>
+                <%= button_to 'Show', app, method: :get, :class => "btn btn-outline-primary" %>
+                <%= button_to 'Edit', edit_app_path(app), method: :get, :class => "btn btn-outline-secondary" %>
+                <%= button_to 'Destroy', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %>
+            </div>
+        </div>
+        <% end %>
     </div>
-  </div>
-  <% end %>
-</div>
-</div>
+</main>

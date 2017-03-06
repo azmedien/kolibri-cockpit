@@ -31,9 +31,9 @@ class AppsController < ApplicationController
       @app = App.new(app_params)
       origin = current_user.apps.find(params[:origin])
 
-      @app.runtime = origin.runtime
-      @app.android_config = origin.android_config
-      @app.ios_config = origin.ios_config
+      @app.runtime = origin.runtime.dup
+      @app.android_config = origin.android_config.dup
+      @app.ios_config = origin.ios_config.dup
 
       notice = 'Application was successfully duplicated.'
     else
@@ -96,6 +96,6 @@ class AppsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def app_params
-      params.require(:app).permit(:internal_name, :internal_id, :runtime, :android_config => [:repo_url], :ios_config => [:repo_url])
+      params.require(:app).permit(:internal_name, :internal_id, :runtime, :android_config => [:repository_url], :ios_config => [:repository_url])
     end
 end

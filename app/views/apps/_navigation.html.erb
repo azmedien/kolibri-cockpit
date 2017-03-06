@@ -1,58 +1,60 @@
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
-  <div class="container">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand" href="<%= apps_path %>">Kolibri</a>
+    <div class="container">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="<%= apps_path %>">Kolibri</a>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle navbar-brand" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <% if @app and not @app.new_record? %>
-            <%= @app.internal_name %>
-          <% else %>
-            Applications
-          <% end %>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <h6 class="dropdown-header">Applications</h6>
-          <% @apps.each do |application| %>
-            <%= link_to application.internal_name, edit_app_path(application), :class => "dropdown-item" %>
-          <% end %>
-          <div class="dropdown-divider"></div>
-          <%= link_to "Create new...", new_app_path, :class => "dropdown-item" %>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle navbar-brand" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <% if @app and not @app.new_record? %>
+                        <%= @app.internal_name %>
+                    <% else %>
+                        Applications
+                        <% end %>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <h6 class="dropdown-header">Applications</h6>
+                        <% @apps.each do |application| %>
+                        <%= link_to application.internal_name, edit_app_path(application), :class => "dropdown-item" %>
+                        <% end %>
+                        <div class="dropdown-divider"></div>
+                        <%= link_to "Create new...", new_app_path, :class => "dropdown-item" %>
+                    </div>
+                </li>
+                <% if @app and not @app.new_record? %>
+                <li class="nav-item active">
+                    <a class="nav-link" data-toggle="tab" href="#app" role="tab" aria-controls="app">App</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#build" role="tab" aria-controls="build">Build</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#store" role="tab" aria-controls="store">Store</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#publish" role="tab" aria-controls="publish">Publish</a>
+                </li>
+                <% end %>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <%= current_user.first_name %>
+                        <%= current_user.last_name %>
+
+                        <%= image_tag gravatar_url(current_user.email, 64), alt: "", :class => "nav-text img-responsive rounded-circle", :style => "max-height:20px; width:auto; vertical-align:middle;" %>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <%= link_to('Edit profile', edit_user_registration_path, :class => "dropdown-item") %>
+                        <div class="dropdown-divider"></div>
+                        <%= link_to('Logout', destroy_user_session_path, :method => :delete, :class => "dropdown-item") %>
+                    </div>
+                </li>
+            </ul>
         </div>
-      </li>
-      <% if @app and not @app.new_record? %>
-      <li class="nav-item active">
-        <a class="nav-link" data-toggle="tab" href="#app" role="tab" aria-controls="app">App</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#build" role="tab" aria-controls="build">Build</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#store" role="tab" aria-controls="store">Store</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#publish" role="tab" aria-controls="publish">Publish</a>
-      </li>
-      <% end %>
-    </ul>
-
-    <ul class="navbar-nav">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <%= current_user.first_name %> <%= current_user.last_name %>
-
-          <%= image_tag gravatar_url(current_user.email, 64), alt: "", :class => "nav-text img-responsive rounded-circle", :style => "max-height:20px; width:auto; vertical-align:middle;" %>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <%= link_to('Edit profile', edit_user_registration_path, :class => "dropdown-item") %>
-          <div class="dropdown-divider"></div>
-          <%= link_to('Logout', destroy_user_session_path, :method => :delete, :class => "dropdown-item") %>
-        </div>
-      </li>
-    </ul>
-  </div>
+    </div>
 </nav>

@@ -1,0 +1,37 @@
+<div class="jumbotron">
+    <div class="container">
+
+        <% if notice %>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <%= notice %>
+        </div>
+        <% end %>
+
+        <% if alert %>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <%= alert %>
+        </div>
+        <% end %>
+
+        <div class="row justify-content-md-center">
+            <div class="card col-6 ">
+                <div class="card-block">
+                    <%= yield %>
+
+                    <% if not current_user %>
+                    <%= render "devise/shared/links" %>
+                    <div class="row align-self-center">
+                        <%= image_tag "kolibri_blue.jpg", height: '250', :style => "margin: auto" %>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
