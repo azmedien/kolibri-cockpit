@@ -26,7 +26,21 @@ class AppsController < ApplicationController
   # POST /apps
   # POST /apps.json
   def create
-    @app = App.new(app_params)
+
+    if params[:create] == 'existing'
+      @app = App.new(app_params)
+      origin = current_user.apps.find(params[:origin])
+
+      @app.runtime = origin.runtime
+      @app.android_config = origin.android_config
+      @app.ios_config = origin.ios_config
+
+      notice = 'Application was successfully duplicated.'
+    else
+      @app = App.new(app_params)
+      notice = 'Application was successfully created.'
+    end
+
     @app.user = current_user
 
     respond_to do |format|
@@ -43,6 +57,7 @@ class AppsController < ApplicationController
   # PATCH/PUT /apps/1
   # PATCH/PUT /apps/1.json
   def update
+
     respond_to do |format|
       if @app.update(app_params)
         format.html { redirect_to @app, notice: 'App was successfully updated.' }
@@ -81,6 +96,6 @@ class AppsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def app_params
-      params.require(:app).permit(:internal_name, :internal_id, :runtime, :android_config, :ios_config)
+      params.require(:app).permit(:internal_name, :internal_id, :runtime, :android_config => [:repo_url], :ios_config => [:repo_url])
     end
 end
