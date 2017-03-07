@@ -1,7 +1,17 @@
 class AppsController < ApplicationController
-  before_action :set_app, only: [:show, :edit, :update, :destroy, :runtime]
-  before_action :set_apps, only: [:create, :new, :show, :edit, :update]
+  before_action :set_app, only: [:show, :edit, :update, :destroy, :runtime, :build]
+  before_action :set_apps, only: [:create, :new, :edit, :update, :build]
   before_filter :authenticate_user!
+
+  require 'jenkins_api_client'
+
+  def build
+    @client = JenkinsApi::Client.new(:server_url => 'http://cimac.yanova.ch:8080/',
+              :username => 'azlekov',
+              :password => 'e2b06ab76712c72ace862eb6e0d536f4')
+    code = @client.api_post_request(@app.android_config['jenkins_job_url'])
+    raise "Could not build the job specified" unless code == '201'
+  end
 
   # GET /apps
   # GET /apps.json
@@ -12,6 +22,7 @@ class AppsController < ApplicationController
   # GET /apps/1
   # GET /apps/1.json
   def show
+    redirect_to edit_app_path(@app)
   end
 
   # GET /apps/new
@@ -21,6 +32,10 @@ class AppsController < ApplicationController
 
   # GET /apps/1/edit
   def edit
+    respond_to do |format|
+      format.json { render json: @app }
+      format.html { render :edit }
+    end
   end
 
   # POST /apps
@@ -45,8 +60,8 @@ class AppsController < ApplicationController
 
     respond_to do |format|
       if @app.save
-        format.html { redirect_to @app, notice: 'App was successfully created.' }
-        format.json { render :show, status: :created, location: @app }
+        format.html { render :edit, notice: 'App was successfully created.' }
+        format.json { render json: @app, status: :created, location: :edit }
       else
         format.html { render :new }
         format.json { render json: @app.errors, status: :unprocessable_entity }
@@ -60,8 +75,8 @@ class AppsController < ApplicationController
 
     respond_to do |format|
       if @app.update(app_params)
-        format.html { redirect_to @app, notice: 'App was successfully updated.' }
-        format.json { render :show, status: :ok, location: @app }
+        format.html { render :edit, notice: 'App was successfully updated.' }
+        format.json { render json: @pp, status: :ok, location: :edit }
       else
         format.html { render :edit }
         format.json { render json: @app.errors, status: :unprocessable_entity }
@@ -96,6 +111,11 @@ class AppsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def app_params
-      params.require(:app).permit(:internal_name, :internal_id, :runtime, :android_config => [:repository_url], :ios_config => [:repository_url])
+      params.require(:app).permit(
+        :internal_name,
+        :internal_id,
+        :runtime,
+        :android_config => [:repository_url, :jenkins_job_url],
+        :ios_config => [:repository_url, :jenkins_job_url])
     end
 end

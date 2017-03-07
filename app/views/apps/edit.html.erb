@@ -1,14 +1,28 @@
 <%= render 'navigation', application: @app, applications: @apps %>
 
+<% if notice %>
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <%= notice %>
+</div>
+<% end %>
+
+<% if alert %>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <%= alert %>
+</div>
+<% end %>
+
 <main class="tab-content">
     <div class="tab-pane active" id="app" role="tabpanel">
         <h1><%= @app.internal_name %></h1>
 
         <%= render 'settings', app: @app %>
-
-        <%= link_to 'Show', @app %>
-        |
-        <%= link_to 'Back', apps_path %>
     </div>
     <div class="tab-pane fade" id="build" role="tabpanel">
         <h1>Build
@@ -22,5 +36,6 @@
     <div class="tab-pane fade" id="publish" role="tabpanel">
         <h1>Publish
             <%= @app.internal_name %></h1>
+            <%= render 'publish', app: @app %>
     </div>
 </main>
