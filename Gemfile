@@ -46,6 +46,8 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-jsoneditor'
 end
 
+gem "font-awesome-rails"
+
 gem 'jenkins_api_client', '~> 1.4.5'
 
 group :development, :test do

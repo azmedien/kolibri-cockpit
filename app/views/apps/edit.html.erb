@@ -32,6 +32,7 @@
     <div class="tab-pane fade" id="store" role="tabpanel">
         <h1>Prepare
             <%= @app.internal_name %></h1>
+            <%= render 'prepare', app: @app %>
     </div>
     <div class="tab-pane fade" id="publish" role="tabpanel">
         <h1>Publish

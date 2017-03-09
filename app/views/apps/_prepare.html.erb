@@ -1,0 +1,44 @@
+<%= form_for(app) do |f| %>
+<% if app.errors.any? %>
+<div id="error_explanation">
+    <h2><%= pluralize(app.errors.count, "error") %>
+        prohibited this app from being saved:</h2>
+
+    <ul>
+        <% app.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<%= f.hidden_field :internal_name %>
+
+<section class="card">
+    <div class="card-header">
+        Android
+    </div>
+    <div class="card-block">
+        <div class=" form-group">
+            <%= f.label "Bundle ID:" %><br/>
+            <%= text_field_tag "app[android_config][bundle_id]", f.object.android_config["bundle_id"], :class => "form-control" %>
+        </div>
+    </div>
+</section>
+
+<section class="card">
+    <div class="card-header">
+        iOS
+    </div>
+    <div class="card-block">
+      <div class=" form-group">
+          <%= f.label "Bundle ID:" %><br/>
+          <%= text_field_tag "app[ios_config][bundle_id]", f.object.ios_config["buncle_id"], :class => "form-control" %>
+      </div>
+    </div>
+</section>
+
+<section class="actions">
+    <%= f.submit :class => "btn btn-primary" %>
+</section>
+<% end %>

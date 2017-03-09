@@ -9,6 +9,7 @@
         <thead>
             <tr>
                 <th>#</th>
+                <th>Status</th>
                 <th>Build</th>
                 <th>Test</th>
                 <th>Ready</th>
@@ -16,7 +17,7 @@
             </tr>
         </thead>
         <tbody id="builds">
-            <% @app.builds.each do |build| %>
+            <% @app.builds.last(5).reverse.each do |build| %>
               <%= raw build_to_html_table_row(build) %>
             <% end %>
         </tbody>
