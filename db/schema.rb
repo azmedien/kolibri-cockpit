@@ -33,9 +33,9 @@ ActiveRecord::Schema.define(version: 20170307141917) do
   end
 
   create_table "builds", force: :cascade do |t|
-    t.string   "build_status",   default: "Not started", null: false
-    t.string   "test_status",    default: "Not started", null: false
-    t.string   "publish_status", default: "Not started", null: false
+    t.string   "build_status",   default: "not started", null: false
+    t.string   "test_status",    default: "not started", null: false
+    t.string   "publish_status", default: "not started", null: false
     t.string   "build_id"
     t.integer  "app_id"
     t.datetime "created_at",                             null: false
