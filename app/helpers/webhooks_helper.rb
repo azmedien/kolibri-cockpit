@@ -7,8 +7,8 @@ module WebhooksHelper
     if statuses.include? 'failed'
       status = '<i class="fa fa-times-circle text-danger text-center" aria-hidden="true"></i>'
     else
-      status = build.publish_status == 'Not started' ?
-      '<i class="fa fa-circle-o-notch fa-spin text-success text-center" ></i>' :
+      status = build.publish_status == 'not started' ?
+      '<i class="fa fa-circle-o-notch fa-spin text-primary text-center" ></i>' :
       '<i class="fa fa-check-circle text-success text-center"></i>'
     end
 
