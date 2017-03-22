@@ -5,8 +5,13 @@ class AppsController < ApplicationController
   before_filter :authenticate_user!
 
   def build
-    code = @client.api_post_request(@app.android_config['jenkins_job_url'])
-    raise "Could not build the job specified" unless code == '201'
+    begin
+      code = @client.job.build(@app.android_config['jenkins_job'])
+    rescue Exception => e
+      flash[:danger] = e.message
+      redirect_to request.referrer
+    end
+    # raise "Could not build the job specified" unless code == '201'
   end
 
   # GET /apps
@@ -28,7 +33,12 @@ class AppsController < ApplicationController
 
   # GET /apps/1/edit
   def edit
-    @jobs = @client.job.list_all
+    begin
+      @jobs = @client.job.list_all
+    rescue Exception => e
+      flash[:danger] = e.message
+      redirect_to request.referrer
+    end
 
     respond_to do |format|
       format.json { render json: @app }
@@ -70,7 +80,12 @@ class AppsController < ApplicationController
   # PATCH/PUT /apps/1
   # PATCH/PUT /apps/1.json
   def update
-    @jobs = @client.job.list_all
+    begin
+      @jobs = @client.job.list_all
+    rescue Exception => e
+      flash[:danger] = e.message
+      redirect_to request.referrer
+    end
 
     respond_to do |format|
       if @app.update(app_params)

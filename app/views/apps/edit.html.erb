@@ -18,6 +18,15 @@
 </div>
 <% end %>
 
+<% if danger %>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <%= danger %>
+</div>
+<% end %>
+
 <main class="tab-content">
     <div class="tab-pane active" id="app" role="tabpanel">
         <h1><%= @app.internal_name %></h1>
