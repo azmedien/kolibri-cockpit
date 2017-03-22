@@ -1,14 +1,10 @@
 class AppsController < ApplicationController
   before_action :set_app, only: [:show, :edit, :update, :destroy, :runtime, :build]
   before_action :set_apps, only: [:create, :new, :edit, :update, :build]
+  before_filter :set_jenkins
   before_filter :authenticate_user!
 
-  require 'jenkins_api_client'
-
   def build
-    @client = JenkinsApi::Client.new(:server_url => 'http://cimac.yanova.ch:8080/',
-              :username => 'azlekov',
-              :password => 'e2b06ab76712c72ace862eb6e0d536f4')
     code = @client.api_post_request(@app.android_config['jenkins_job_url'])
     raise "Could not build the job specified" unless code == '201'
   end
@@ -32,6 +28,8 @@ class AppsController < ApplicationController
 
   # GET /apps/1/edit
   def edit
+    @jobs = @client.job.list_all
+
     respond_to do |format|
       format.json { render json: @app }
       format.html { render :edit }
@@ -72,6 +70,7 @@ class AppsController < ApplicationController
   # PATCH/PUT /apps/1
   # PATCH/PUT /apps/1.json
   def update
+    @jobs = @client.job.list_all
 
     respond_to do |format|
       if @app.update(app_params)
@@ -109,13 +108,21 @@ class AppsController < ApplicationController
       @apps = current_user.apps
     end
 
+    def set_jenkins
+      require 'jenkins_api_client'
+      @client = JenkinsApi::Client.new(
+                :server_url => Rails.configuration.cockpit['jenkins_url'],
+                :username => Rails.configuration.cockpit['jenkins_user'],
+                :password => Rails.configuration.cockpit['jenkins_secret'])
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def app_params
       params.require(:app).permit(
         :internal_name,
         :internal_id,
         :runtime,
-        :android_config => [:repository_url, :jenkins_job_url],
-        :ios_config => [:repository_url, :jenkins_job_url])
+        :android_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url],
+        :ios_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url])
     end
 end

@@ -1,0 +1,19 @@
+default: &default
+  jenkins_url: http://cimac.yanova.ch:8080/
+
+development:
+  <<: *default
+  jenkins_user: cockpit
+  jenkins_secret: db887dd20bcb0b8d19c4924dd9194930
+
+test:
+  <<: *default
+  jenkins_user: cockpit
+  jenkins_secret: db887dd20bcb0b8d19c4924dd9194930
+
+# Do not keep production secrets in the repository,
+# instead read values from the environment.
+production:
+  <<: *default
+  jenkins_user: <%= ENV["JENKINS_USER"] %>
+  jenkins_secret: <%= ENV["JENKINS_SECRET"] %>

@@ -27,7 +27,7 @@
     <div class="tab-pane fade" id="build" role="tabpanel">
         <h1>Build
             <%= @app.internal_name %></h1>
-        <%= render 'build', app: @app %>
+        <%= render partial: 'build', locals: {jobs: @jobs, app: @app} %>
     </div>
     <div class="tab-pane fade" id="store" role="tabpanel">
         <h1>Prepare
