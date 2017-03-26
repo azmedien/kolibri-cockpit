@@ -1,8 +1,8 @@
 class AppsController < ApplicationController
-  before_action :set_app, only: [:show, :edit, :update, :destroy, :runtime, :build]
+  before_action :set_app, only: [:show, :edit, :update, :destroy, :build]
   before_action :set_apps, only: [:create, :new, :edit, :update, :build]
   before_filter :set_jenkins
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: [:runtime]
 
   def build
     begin
@@ -49,6 +49,13 @@ class AppsController < ApplicationController
   # POST /apps
   # POST /apps.json
   def create
+
+    begin
+      @jobs = @client.job.list_all
+    rescue Exception => e
+      flash[:danger] = e.message
+      redirect_to request.referrer
+    end
 
     if params[:create] == 'existing'
       @app = App.new(app_params)
@@ -110,6 +117,10 @@ class AppsController < ApplicationController
 
 
   def runtime
+    # Ensure we return in all cases an app.
+    # This is used now to provide runtime configuraiton without any
+    # authentication. This must be repalced with some kind of authentication
+    @app = App.find(params[:id])
     render json: @app.runtime
   end
 
