@@ -4,6 +4,7 @@ class WebhooksController < ActionController::API
       @app = App.find_by_internal_id(params[:project]) or return head :not_found
 
       build = @app.builds.find_or_create_by(build_id: params[:build])
+      build.url = params[:url]
 
       begin
         build.send(params[:type].downcase + '_status=', params[:status])
