@@ -14,7 +14,7 @@ module WebhooksHelper
 
     hmtl = %{
       <tr id="#{build.build_id}">
-        <th scope="row"><a href="#{build.url}">#{build.build_id}</a></th>
+        <th scope="row"><a href="#{build.url}" target="_blank">#{build.build_id}</a></th>
         <th>#{status}</th>
         <td>#{build.build_status.capitalize}</td>
         <td>#{build.test_status.capitalize}</td>
