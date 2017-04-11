@@ -6,7 +6,12 @@ class AppsController < ApplicationController
 
   def build
     begin
-      code = @client.job.build(@app.android_config['jenkins_job'])
+      if :type == 'android'
+        code = @client.job.build(@app.android_config['jenkins_job'])
+      else
+        code = @client.job.build(@app.ios_config['jenkins_job'])
+      end
+
     rescue Exception => e
       flash[:danger] = e.message
       redirect_to request.referrer

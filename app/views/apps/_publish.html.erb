@@ -5,7 +5,7 @@
     <div class="card-header">
         Android
     </div>
-    <table class="card-block table table-hover">
+    <table class="card-block table table-hover" id="android">
         <thead>
             <tr>
                 <th>#</th>
@@ -17,12 +17,42 @@
             </tr>
         </thead>
         <tbody id="builds">
-            <% @app.builds.last(5).reverse.each do |build| %>
+            <% @app.builds.where(platform: 'android').last(5).reverse.each do |build| %>
               <%= raw build_to_html_table_row(build) %>
             <% end %>
         </tbody>
     </table>
+
+    <div class="card-footer text-muted">
+        <%= link_to "Publish", app_build_path(@app, :platform => 'android'), method: :post, :class => "btn btn-success" %>
+    </div>
 </div>
 
 </br>
-<%= link_to "Publish", app_build_path(@app), method: :post, :class => "btn btn-success btn-lg" %>
+
+<div class="card">
+    <div class="card-header">
+        iOS
+    </div>
+    <table class="card-block table table-hover" id="ios">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Status</th>
+                <th>Build</th>
+                <th>Test</th>
+                <th>Ready</th>
+                <th>Updated on</th>
+            </tr>
+        </thead>
+        <tbody id="builds">
+            <% @app.builds.where(platform: 'ios').last(5).reverse.each do |build| %>
+              <%= raw build_to_html_table_row(build) %>
+            <% end %>
+        </tbody>
+    </table>
+
+    <div class="card-footer text-muted">
+        <%= link_to "Publish", app_build_path(@app, :platform => 'ios'), method: :post, :class => "btn btn-success" %>
+    </div>
+</div>
