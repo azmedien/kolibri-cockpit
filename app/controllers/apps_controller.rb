@@ -154,6 +154,7 @@ class AppsController < ApplicationController
         :internal_id,
         :runtime,
         :android_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url],
-        :ios_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url])
+        :ios_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url],
+        :android_icons => [])
     end
 end

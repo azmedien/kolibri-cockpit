@@ -39,8 +39,10 @@ gem 'jbuilder', '~> 2.5'
 gem 'devise'
 gem 'authority'
 gem 'rolify'
+gem 'carrierwave', '~> 1.0'
 
 gem 'bootstrap', '~> 4.0.0.alpha6'
+
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
   gem 'rails-assets-jsoneditor'

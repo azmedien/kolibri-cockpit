@@ -13,6 +13,12 @@
 <% end %>
 
 <div class="form-group">
+    <%= f.label :android_icons %>
+    <%= f.file_field :android_icons, multiple: true, :class => "form-control-file", :'aria-describedby' => "fileHelp" %>
+    <small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
+</div>
+
+<div class="form-group">
     <%= f.label :internal_name %>
     <%= f.text_field :internal_name, :class => "form-control" %>
 </div>

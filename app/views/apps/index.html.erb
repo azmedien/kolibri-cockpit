@@ -26,7 +26,10 @@
         <% @apps.each do |app| %>
         <div class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-end">
-                <div class="mr-auto p-2"><%= app.internal_name %></div>
+                <div class="mr-auto p-2">
+                  <%= image_tag(app.android_icons.first, size: "32", :class => "img-responsive rounded-circle") if app.android_icons? %>
+                  <%= app.internal_name %>
+                </div>
                 <%= button_to 'Edit', edit_app_path(app), method: :get, :class => "btn btn-outline-secondary" %>
                 <%= button_to 'Destroy', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %>
             </div>

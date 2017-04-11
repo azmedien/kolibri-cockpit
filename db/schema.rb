@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170411075207) do
+ActiveRecord::Schema.define(version: 20170411162332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,10 @@ ActiveRecord::Schema.define(version: 20170411075207) do
     t.integer  "user_id"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.json     "android_icons"
+    t.json     "ios_icons"
+    t.json     "assets"
+    t.string   "splash"
     t.index ["android_config"], name: "index_apps_on_android_config", using: :gin
     t.index ["internal_id"], name: "index_apps_on_internal_id", using: :btree
     t.index ["internal_name"], name: "index_apps_on_internal_name", using: :btree
