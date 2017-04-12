@@ -1,6 +1,7 @@
 class AssetsController < ApplicationController
   before_action :set_asset, only: [:show, :edit, :update, :destroy]
   before_action :set_app
+  before_action :set_apps
 
   # GET /assets
   # GET /assets.json
@@ -71,6 +72,10 @@ class AssetsController < ApplicationController
 
     def set_app
       @app = App.find(params[:app_id])
+    end
+
+    def set_apps
+      @apps = current_user.apps
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

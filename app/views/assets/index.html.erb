@@ -1,27 +1,17 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Assets</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>File</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
+<main>
+<div class="list-group">
+    <%= link_to "New assets", new_app_asset_path, :class => "list-group-item active" %>
     <% @assets.each do |asset| %>
-      <tr>
-        <td><%= asset.file %></td>
-        <td><%= link_to 'Show', [@app, asset] %></td>
-        <td><%= link_to 'Edit', edit_app_asset_path(@app, asset) %></td>
-        <td><%= link_to 'Destroy', [@app, asset], method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+    <div class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-end">
+            <div class="mr-auto p-2">
+              <%= image_tag(asset.file.url, size: "32", :class => "img-responsive rounded-circle")%>
+              <%= asset.file %></a>
+            </div>
+            <%= button_to 'Edit', edit_app_asset_path(@app, asset), method: :get, :class => "btn btn-outline-primary" %>
+            <%= button_to 'Destroy', [@app, asset], method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %>
+        </div>
+    </div>
     <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Asset', new_app_asset_path %>
+</div>
+</main>

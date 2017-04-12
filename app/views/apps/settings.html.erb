@@ -1,18 +1,20 @@
-<%= form_for(app) do |f| %>
-<% if app.errors.any? %>
+<main>
+
+<%= form_for(@app) do |f| %>
+<% if @app.errors.any? %>
 <div id="error_explanation">
-    <h2><%= pluralize(app.errors.count, "error") %>
+    <h2><%= pluralize(@app.errors.count, "error") %>
         prohibited this app from being saved:</h2>
 
     <ul>
-        <% app.errors.full_messages.each do |message| %>
+        <% @app.errors.full_messages.each do |message| %>
         <li><%= message %></li>
         <% end %>
     </ul>
 </div>
 <% end %>
 
-<%= image_tag(app.android_icon.url, :size => "48") if app.android_icon? %>
+<%= image_tag(@app.android_icon.url, :size => "48") if @app.android_icon? %>
 
 <div class="form-group">
     <%= f.label :android_icon %>
@@ -44,3 +46,5 @@
     <%= f.submit :class => "btn btn-primary" %>
 </div>
 <% end %>
+
+</main>

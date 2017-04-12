@@ -25,20 +25,23 @@
                     </div>
                 </li>
                 <% if @app and not @app.new_record? %>
-                <li class="nav-item active">
-                    <a class="nav-link" data-toggle="tab" href="#app" role="tab" aria-controls="app">App</a>
+                <li class="nav-item <%= 'active' if controller?('apps') && action?('settings') %>">
+                    <a class="nav-link" href="<%= settings_app_path(@app) %>" aria-controls="app">App</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item <%= 'active' if controller?('assets') && action?('index', 'show', 'edit') %>">
                     <a class="nav-link" href="<%= app_assets_path(@app) %>" aria-controls="assets">Assets</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#build" role="tab" aria-controls="build">Build</a>
+                <li class="nav-item <%= 'active' if current_page?(build_app_path(@app)) %>">
+                    <a class="nav-link" href="<%= build_app_path(@app) %>" aria-controls="build">Build</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#store" role="tab" aria-controls="store">Store</a>
+                <li class="nav-item <%= 'active' if current_page?(prepare_app_path(@app)) %>">
+                    <a class="nav-link" href="<%= prepare_app_path(@app) %>" aria-controls="store">Store</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#publish" role="tab" aria-controls="publish">Publish</a>
+                <li class="nav-item <%= 'active' if current_page?(publish_app_path(@app)) %>">
+                    <a class="nav-link" href="<%= publish_app_path(@app) %>" aria-controls="publish">Publish</a>
+                </li>
+                <li class="nav-item <%= 'active' if current_page?(runtime_app_path(@app)) %>">
+                    <a class="nav-link" href="<%= runtime_app_path(@app) %>" aria-controls="publish">Runtime</a>
                 </li>
                 <% end %>
             </ul>

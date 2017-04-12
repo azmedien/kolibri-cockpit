@@ -1,6 +1,4 @@
-<h2 id="type"></h2>
-<h3 id="status"></h2>
-
+<main>
 <div class="card">
     <div class="card-header">
         Android
@@ -24,7 +22,7 @@
     </table>
 
     <div class="card-footer text-muted">
-        <%= link_to "Publish", app_build_path(@app, :platform => 'android'), method: :post, :class => "btn btn-success" %>
+        <%= link_to "Publish", trigger_build_app_path(@app, :platform => 'android'), method: :post, :class => "btn btn-success" %>
     </div>
 </div>
 
@@ -53,6 +51,7 @@
     </table>
 
     <div class="card-footer text-muted">
-        <%= link_to "Publish", app_build_path(@app, :platform => 'ios'), method: :post, :class => "btn btn-success" %>
+        <%= link_to "Publish", trigger_build_app_path(@app, :platform => 'ios'), method: :post, :class => "btn btn-success" %>
     </div>
 </div>
+</main>
