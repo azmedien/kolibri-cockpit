@@ -41,7 +41,7 @@
                     <a class="nav-link" href="<%= publish_app_path(@app) %>" aria-controls="publish">Publish</a>
                 </li>
                 <li class="nav-item align-self-center <%= 'active' if current_page?(runtime_app_path(@app)) %>">
-                    <a class="nav-link" href="<%= runtime_app_path(@app) %>" aria-controls="publish">Runtime</a>
+                    <a class="nav-link" href="<%= runtime_app_path(@app) %>"  target="_self "aria-controls="publish">Runtime</a>
                 </li>
                 <% end %>
             </ul>
