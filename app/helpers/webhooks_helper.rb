@@ -19,7 +19,7 @@ module WebhooksHelper
         <td>#{build.build_status.capitalize}</td>
         <td>#{build.test_status.capitalize}</td>
         <td>#{build.publish_status.capitalize}</td>
-        <td>#{build.updated_at}</td>
+        <td>#{time_ago_in_words(build.updated_at)}</td>
       </tr>
     }
   end

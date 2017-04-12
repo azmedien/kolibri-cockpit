@@ -7,7 +7,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown align-self-center">
                     <a class="nav-link dropdown-toggle navbar-brand" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <% if @app and not @app.new_record? %>
                         <%= @app.internal_name %>
@@ -18,29 +18,29 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <h6 class="dropdown-header">Applications</h6>
                         <% @apps.each do |application| %>
-                        <%= link_to application.internal_name, edit_app_path(application), :class => "dropdown-item" %>
+                        <%= link_to application.internal_name, settings_app_path(application), :class => "dropdown-item" %>
                         <% end %>
                         <div class="dropdown-divider"></div>
                         <%= link_to "Create new...", new_app_path, :class => "dropdown-item" %>
                     </div>
                 </li>
                 <% if @app and not @app.new_record? %>
-                <li class="nav-item <%= 'active' if controller?('apps') && action?('settings') %>">
+                <li class="nav-item align-self-center <%= 'active' if controller?('apps') && action?('settings') %>">
                     <a class="nav-link" href="<%= settings_app_path(@app) %>" aria-controls="app">App</a>
                 </li>
-                <li class="nav-item <%= 'active' if controller?('assets') && action?('index', 'show', 'edit') %>">
+                <li class="nav-item align-self-center <%= 'active' if controller?('assets') && action?('index', 'show', 'edit') %>">
                     <a class="nav-link" href="<%= app_assets_path(@app) %>" aria-controls="assets">Assets</a>
                 </li>
-                <li class="nav-item <%= 'active' if current_page?(build_app_path(@app)) %>">
+                <li class="nav-item align-self-center <%= 'active' if current_page?(build_app_path(@app)) %>">
                     <a class="nav-link" href="<%= build_app_path(@app) %>" aria-controls="build">Build</a>
                 </li>
-                <li class="nav-item <%= 'active' if current_page?(prepare_app_path(@app)) %>">
+                <li class="nav-item align-self-center <%= 'active' if current_page?(prepare_app_path(@app)) %>">
                     <a class="nav-link" href="<%= prepare_app_path(@app) %>" aria-controls="store">Store</a>
                 </li>
-                <li class="nav-item <%= 'active' if current_page?(publish_app_path(@app)) %>">
+                <li class="nav-item align-self-center <%= 'active' if current_page?(publish_app_path(@app)) %>">
                     <a class="nav-link" href="<%= publish_app_path(@app) %>" aria-controls="publish">Publish</a>
                 </li>
-                <li class="nav-item <%= 'active' if current_page?(runtime_app_path(@app)) %>">
+                <li class="nav-item align-self-center <%= 'active' if current_page?(runtime_app_path(@app)) %>">
                     <a class="nav-link" href="<%= runtime_app_path(@app) %>" aria-controls="publish">Runtime</a>
                 </li>
                 <% end %>
@@ -52,7 +52,7 @@
                         <%= current_user.first_name %>
                         <%= current_user.last_name %>
 
-                        <%= image_tag gravatar_url(current_user.email, 64), alt: "", :class => "nav-text img-responsive rounded-circle", :style => "max-height:20px; width:auto; vertical-align:middle;" %>
+                        <%= image_tag gravatar_url(current_user.email, 64), alt: "", :class => "nav-text img-responsive rounded-circle", :style => "max-height:36px; width:auto; vertical-align:middle;" %>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <%= link_to('Edit profile', edit_user_registration_path, :class => "dropdown-item") %>
