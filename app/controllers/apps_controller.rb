@@ -1,7 +1,7 @@
 class AppsController < ApplicationController
   before_action :authenticate_user!, except: [:runtime]
-  before_action :set_app, only: [:show, :edit, :update, :destroy, :build, :settings, :prepare, :publish]
-  before_action :set_apps, only: [:index, :create, :new, :edit, :update, :build, :settings, :prepare, :publish]
+  before_action :set_app, except: [:index, :create, :new]
+  before_action :set_apps, except: [:show, :destroy, :jenkins, :runtime]
   before_action :set_jenkins
   before_action :set_jenkins_job, only: [:create, :update, :build]
 
