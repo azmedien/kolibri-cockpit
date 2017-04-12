@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170411162332) do
+ActiveRecord::Schema.define(version: 20170412125325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,15 +25,22 @@ ActiveRecord::Schema.define(version: 20170411162332) do
     t.integer  "user_id"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
-    t.json     "android_icons"
-    t.json     "ios_icons"
-    t.json     "assets"
+    t.string   "android_icon"
+    t.string   "ios_icon"
     t.string   "splash"
     t.index ["android_config"], name: "index_apps_on_android_config", using: :gin
     t.index ["internal_id"], name: "index_apps_on_internal_id", using: :btree
     t.index ["internal_name"], name: "index_apps_on_internal_name", using: :btree
     t.index ["ios_config"], name: "index_apps_on_ios_config", using: :gin
     t.index ["user_id"], name: "index_apps_on_user_id", using: :btree
+  end
+
+  create_table "assets", force: :cascade do |t|
+    t.string   "file"
+    t.integer  "app_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id"], name: "index_assets_on_app_id", using: :btree
   end
 
   create_table "builds", force: :cascade do |t|

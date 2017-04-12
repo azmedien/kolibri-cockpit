@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
+
   post 'webhooks/receive'
 
   devise_for :users
-  resources :apps
+  resources :apps do
+    resources :assets
+  end
   root to: 'apps#index'
 
   mount ActionCable.server => '/cable'

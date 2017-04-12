@@ -30,37 +30,25 @@
 <main class="tab-content">
     <div class="tab-pane active" id="app" role="tabpanel">
         <h1>
-        <%= image_tag(@app.android_icons.first, size: "48", :class => "img-responsive rounded-circle") if @app.android_icons? %>
         <%= @app.internal_name %></h1>
-
         <%= render 'settings', app: @app %>
     </div>
-    <div class="tab-pane fade" id="assets" role="tabpanel">
-
-        <h1>
-          <%= image_tag(@app.android_icons.first, size: "48", :class => "img-responsive rounded-circle") if @app.android_icons? %>
-          Assets
-          <%= @app.internal_name %></h1>
-        <%= render partial: 'assets', locals: {app: @app} %>
-    </div>
-
+  
     <div class="tab-pane fade" id="build" role="tabpanel">
         <h1>
-          <%= image_tag(@app.android_icons.first, size: "48", :class => "img-responsive rounded-circle") if @app.android_icons? %>
           Build
             <%= @app.internal_name %></h1>
         <%= render partial: 'build', locals: {jobs: @jobs, app: @app} %>
     </div>
     <div class="tab-pane fade" id="store" role="tabpanel">
         <h1>
-          <%= image_tag(@app.android_icons.first, size: "48", :class => "img-responsive rounded-circle") if @app.android_icons? %>
           Prepare
             <%= @app.internal_name %></h1>
             <%= render 'prepare', app: @app %>
     </div>
     <div class="tab-pane fade" id="publish" role="tabpanel">
         <h1>
-          <%= image_tag(@app.android_icons.first, size: "48", :class => "img-responsive rounded-circle") if @app.android_icons? %>
+
           Publish
             <%= @app.internal_name %></h1>
             <%= render 'publish', app: @app %>

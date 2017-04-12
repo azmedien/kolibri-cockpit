@@ -1,0 +1,16 @@
+<p id="notice"><%= notice %></p>
+
+<%= image_tag(@asset.file) %>
+
+<p>
+  <strong>File:</strong>
+  <%= @asset.file %>
+</p>
+
+<p>
+  <strong>URL:</strong>
+  <%= @asset.file.url %>
+</p>
+
+<%= link_to 'Edit', edit_app_asset_path(@asset) %> |
+<%= link_to 'Back', app_assets_path %>

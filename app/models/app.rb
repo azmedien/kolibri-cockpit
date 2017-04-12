@@ -3,18 +3,16 @@ class App < ApplicationRecord
 
   belongs_to :user
   has_many :builds, dependent: :destroy
+  has_many :assets, dependent: :destroy
+  accepts_nested_attributes_for :assets
 
   validates :internal_name, uniqueness: true,  presence: true
   validates :internal_id, uniqueness: true
   validates :user, presence: true
 
-  mount_uploaders :android_icons, AssetsUploader
-  mount_uploaders :ios_icons, AssetsUploader
-  mount_uploaders :assets, AssetsUploader
-  mount_uploaders :splash, AssetsUploader
-  serialize :android_icons, JSON
-  serialize :ios_icons, JSON
-  serialize :assets, JSON
+  mount_uploader :android_icon, AssetsUploader
+  mount_uploader :ios_icon, AssetsUploader
+  mount_uploader :splash, AssetsUploader
 
   store %(:android_config :ios_config)
 

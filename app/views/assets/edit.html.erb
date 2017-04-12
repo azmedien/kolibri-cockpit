@@ -1,0 +1,8 @@
+<h1>Editing Asset</h1>
+
+<%= image_tag(@asset.file.url) %>
+
+<%= render 'form', asset: @asset %>
+
+<%= link_to 'Show', [@app, @asset] %> |
+<%= link_to 'Back', app_assets_path %>
