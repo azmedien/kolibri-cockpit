@@ -5,8 +5,6 @@ class AssetsUploader < CarrierWave::Uploader::Base
   # include CarrierWave::MiniMagick
   include CarrierWave::MiniMagick
 
-  process :validate_dimensions, if: :image?
-
   # Choose what kind of storage to use for this uploader:
   # storage :file
   # storage :fog
@@ -40,7 +38,7 @@ class AssetsUploader < CarrierWave::Uploader::Base
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_whitelist
-    %w(jpg jpeg gif png json xml)
+    %w(jpg gif png json xml)
   end
 
   def size_range

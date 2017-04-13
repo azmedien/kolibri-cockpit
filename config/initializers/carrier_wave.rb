@@ -1,20 +1,5 @@
 require 'carrierwave/orm/activerecord'
 
-module CarrierWave
-  module MiniMagick
-    # check for images that are larger than you probably want
-    def validate_dimensions
-      byebug
-      manipulate! do |img|
-        if img.dimensions.any?{|i| i > 4096 }
-          raise CarrierWave::ProcessingError, "dimensions too large"
-        end
-        img
-      end
-    end
-  end
-end
-
 CarrierWave.configure do |config|
 
   # Use local storage if in development or test
