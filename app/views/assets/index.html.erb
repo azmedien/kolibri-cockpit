@@ -5,7 +5,11 @@
         <div class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-end align-items-center">
                 <span class="p-2">
-                    <%= image_tag(asset.file.url, size: "32", :class => "img-responsive rounded-circle")%>
+                    <% if !asset.file.url.end_with?('json') %>
+                    <%= image_tag(asset.file.url, size: "32", :class => "img-responsive")%>
+                    <% else %>
+                    <i class="fa fa-file-code-o" style="font-size:32px"></i>
+                    <% end %>
                 </span>
                 <a class="mr-auto p-2" href="<%= asset.file %>" target="_blank"><%= asset.file %></a>
                 <span class="p-2"><%= button_to 'Edit', edit_app_asset_path(@app, asset), method: :get, :class => "btn btn-outline-primary" %></span>

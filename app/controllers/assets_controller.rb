@@ -26,17 +26,25 @@ class AssetsController < ApplicationController
   # POST /assets
   # POST /assets.json
   def create
-    @asset = Asset.new(asset_params)
-    @asset.app_id = @app.id
+    assets = Array.new
+
+    asset_params[:file].each do |file|
+      asset = Asset.new(file: file, app_id: @app.id)
+
+      assets << asset
+    end
 
     respond_to do |format|
-      if @asset.save
-        format.html { redirect_to [@app, @asset], notice: 'Asset was successfully created.' }
-        format.json { render :show, status: :created, location: [@app, @asset] }
-      else
-        format.html { render :new }
-        format.json { render json: @asset.errors, status: :unprocessable_entity }
+
+      assets.each do |asset|
+        if !asset.save
+          format.html { render :new }
+          format.json { render json: asset.errors, status: :unprocessable_entity }
+          return
+        end
       end
+
+      format.html { redirect_to app_assets_url, notice: 'Asset was successfully created.' }
     end
   end
 
@@ -80,6 +88,6 @@ class AssetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def asset_params
-      params.require(:asset).permit(:file)
+      params.require(:asset).permit(:file => [])
     end
 end

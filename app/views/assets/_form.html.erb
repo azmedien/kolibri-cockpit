@@ -1,4 +1,4 @@
-<%= form_for([@app, asset]) do |f| %>
+<%= form_for([@app, asset], :html => { :multipart => true }) do |f| %>
   <% if asset.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(asset.errors.count, "error") %> prohibited this asset from being saved:</h2>
@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= f.label :file %>
-    <%= f.file_field :file %>
+    <%= f.file_field :file, :multiple => true %>
   </div>
 
   <div class="actions">
