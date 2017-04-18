@@ -40,7 +40,7 @@ gem 'devise'
 gem 'authority'
 gem 'rolify'
 gem 'carrierwave', '~> 1.0'
-gem "mini_magick"
+gem 'mini_magick'
 
 gem 'bootstrap', '~> 4.0.0.alpha6'
 
