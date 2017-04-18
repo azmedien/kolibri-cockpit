@@ -52,7 +52,7 @@ class AssetsController < ApplicationController
   # PATCH/PUT /assets/1.json
   def update
     respond_to do |format|
-      if @asset.update(asset_params)
+      if @asset.update(file: asset_params[:file].first)
         format.html { redirect_to [@app, @asset], notice: 'Asset was successfully updated.' }
         format.json { render :show, status: :ok, location: [@app, @asset] }
       else
