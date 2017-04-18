@@ -21,7 +21,7 @@ CarrierWave.configure do |config|
   # Use local storage if in development or test
   if Rails.env.development? or Rails.env.test?
     config.storage = :file
-    config.cache_dir = '#{Rails.root}/public/tmp'
+    config.cache_dir = "#{Rails.root}/tmp/uploads"
     config.ignore_processing_errors = true
 
     MiniMagick.logger.level = Logger::DEBUG
@@ -33,7 +33,9 @@ CarrierWave.configure do |config|
 
   # Use AWS storage if in production
   if Rails.env.production?
+    config.cache_dir = "#{Rails.root}/tmp/uploads"
     config.storage :fog
+
     config.fog_provider = 'fog/aws'
     config.fog_credentials = {
       :provider               => 'AWS',                             # required
@@ -42,7 +44,6 @@ CarrierWave.configure do |config|
       :region                 => ENV['S3_REGION']                   # optional, defaults to 'us-east-1'
     }
     config.fog_directory  = ENV['S3_BUCKET_NAME']                   # required
-    #config.fog_host       = 'https://assets.example.com'           # optional, defaults to nil
     config.fog_public     = false                                   # optional, defaults to true
     config.fog_attributes = {'Cache-Control'=>'max-age=315576000'}  # optional, defaults to {}
   end
