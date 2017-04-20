@@ -3,6 +3,36 @@ class AssetsUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
   process :validate_dimensions, if: :image?
+  process :convert_to_png, if: :image?
+
+  version :xxxhdpi, :if => :image? do
+    process :resize_to_fit => [96, 96]
+  end
+  version :xxhdpi, :if => :image? do
+    process :resize_to_fit => [72, 72]
+  end
+  version :xxhdpi, :if => :image? do
+    process :resize_to_fit => [48, 48]
+  end
+  version :hdpi, :if => :image? do
+    process :resize_to_fit => [36, 36]
+  end
+  version :mdpi, :if => :image? do
+    process :resize_to_fit => [24, 24]
+  end
+
+  def convert_to_png()
+    manipulate! do |img|
+      img.format("png") do |c|
+        c.resize      "#{img[:width]}x#{img[:height]}>"
+        c.resize      "#{img[:width]}x#{img[:height]}<"
+        c.transparent  "white"
+      end
+      img
+    end
+  end
+
+  # convert collection-active.svg -resize 92x84> -resize 92x84< -background #000 out.png
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
@@ -33,7 +63,7 @@ class AssetsUploader < CarrierWave::Uploader::Base
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_whitelist
-    %w(jpg gif png json xml)
+    %w(png svg json xml)
   end
 
   def size_range
@@ -41,14 +71,24 @@ class AssetsUploader < CarrierWave::Uploader::Base
   end
 
   protected
+
   def image?(new_file)
     new_file.content_type.start_with? 'image'
   end
 
+  def is_square?(new_file)
+    image = MiniMagick::Image.open(new_file.path)
+    image[:width] == image[:height]
+  end
+
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
-  # def filename
-  #   "something.jpg" if original_filename
-  # end
+  def filename
+      if image? file
+        super.chomp(File.extname(super)) + '.png'
+      else
+        original_filename
+      end
+  end
 
 end

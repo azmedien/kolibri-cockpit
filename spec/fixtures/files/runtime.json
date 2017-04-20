@@ -1,0 +1,103 @@
+{
+  "kolibri-version": "1.2",
+  "styling": {
+    "color-palette": {
+      "color1": "#121212",
+      "color2": "#FFFFFF",
+      "color3": "#000000",
+      "color4": "#242424"
+    },
+    "font-sizes": {
+      "size1": "36",
+      "size2": "14",
+      "size3": "12"
+    }
+  },
+  "navigation": {
+    "type": "drawer",
+    "settings": {
+      "logo": "http://stage.yanova.ch/dev/kolibri/wildeisen/wildeisen_logo.png",
+      "hamburger": {
+        "logo_closed": "http://stage.yanova.ch/dev/kolibri/wildeisen/hamburger_closed.png",
+        "logo_opened": "http://stage.yanova.ch/dev/kolibri/wildeisen/hamburger_opened.png"
+      },
+      "default-item": "1"
+    },
+    "items": [
+      {
+        "component": "kolibri://navigation/headerview",
+        "id": "header-view",
+        "image": "http://stage.yanova.ch/dev/kolibri/wildeisen/wildeisen_header.png"
+      },
+      {
+        "component": "kolibri://navigation/link",
+        "id": "recepies",
+        "label": "Rezepte",
+        "url": "http://wildeisen-features.herokuapp.com/amp/suche/rezepte?kolibri-target=_self",
+        "items": [
+          {
+            "component": "kolibri://navigation/link",
+            "id": "vegetarian",
+            "label": "Vegetarian",
+            "url": "http://wildeisen-features.herokuapp.com/amp/rezepte/rueebli-kartoffel-gratin-mit-blauschimmelkaese?kolibri-target=_self"
+          },
+          {
+            "component": "kolibri://navigation/link",
+            "id": "dessert",
+            "label": "Dessert",
+            "url": "http://wildeisen-features.herokuapp.com/amp/rezepte/caramelisierte-rhabarbertopfchen?kolibri-target=_self"
+          }
+        ]
+      },
+      {
+        "component": "kolibri://navigation/link",
+        "id": "ingredients",
+        "label": "Zutaten",
+        "url": "http://wildeisen-features.herokuapp.com/amp/zutaten/minze?kolibri-target=_self"
+      },
+      {
+        "component": "kolibri://navigation/link",
+        "id": "howtos",
+        "label": "Kochwissen",
+        "url": "http://wildeisen-features.herokuapp.com/amp/howtos/pasta-ravioli?kolibri-target=_self"
+      },
+      {
+        "component": "kolibri://navigation/link",
+        "id": "service",
+        "label": "Service",
+        "url": "http://www.wildeisen.ch/service?kolibri-target=_external"
+      },
+      {
+        "component": "kolibri://navigation/separator"
+      },
+      {
+        "component": "kolibri://navigation/link",
+        "id": "shop",
+        "label": "Shop",
+        "url": "http://www.wildeisen.ch/shop?kolibri-target=_internal"
+      },
+      {
+        "component": "kolibri://navigation/separator"
+      },
+      {
+        "component": "kolibri://navivation/contributed/schuttelapp",
+        "id": "schuttelapp",
+        "label": "Schuttelapp",
+        "ingredientJSON": "http://www.wildeisen.ch/schuttelapp.json",
+        "url": "http://www.wildeisen.ch/schuttelapp?ingerident-list=###value1###"
+      },
+      {
+        "component": "kolibri://navigation/search",
+        "id": "search",
+        "label": "Enter to search...",
+        "icon": "http://www.wildeisen.ch/assets/search.png",
+        "url": "http://www.wildeisen.ch/search?query=###value1###"
+      },
+      {
+        "component": "kolibri://navivation/favorits",
+        "id": "favorits",
+        "label": "Favoriten"
+      }
+    ]
+  }
+}
