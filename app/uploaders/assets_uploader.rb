@@ -6,18 +6,23 @@ class AssetsUploader < CarrierWave::Uploader::Base
   process :convert_to_png, if: :image?
 
   version :xxxhdpi, :if => :image? do
+    convert :png
     process :resize_to_fit => [96, 96]
   end
   version :xxhdpi, :if => :image? do
+    convert :png
     process :resize_to_fit => [72, 72]
   end
   version :xxhdpi, :if => :image? do
+    convert :png
     process :resize_to_fit => [48, 48]
   end
   version :hdpi, :if => :image? do
+    convert :png
     process :resize_to_fit => [36, 36]
   end
   version :mdpi, :if => :image? do
+    convert :png
     process :resize_to_fit => [24, 24]
   end
 

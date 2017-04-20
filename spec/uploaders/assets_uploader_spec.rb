@@ -51,7 +51,7 @@ describe AssetsUploader do
     end
 
     it "has the correct format" do
-      puts uploader.inspect
+      
     end
   end
 end
