@@ -5,6 +5,10 @@
   <i class="fa fa-file-code-o" style="font-size:64px"></i>
   <% end %>
 
+  <% @asset.file.versions.each do |version| %>
+  <%= image_tag(@asset.file.url(version.first), :class => "img-responsive")%>
+  <% end %>
+
 <p>
   <strong>File:</strong>
   <%= @asset.file %>
@@ -14,6 +18,10 @@
   <strong>URL:</strong>
   <%= @asset.file.url %>
 </p>
+
+<% @asset.file.versions.each do |version| %>
+<p><strong><%= version.first %>: </strong><a href="<%= @asset.file.url(version.first)%>" target="_blank"><%= @asset.file.url(version.first) %></a></p>
+<% end %>
 
 <%= link_to 'Edit', edit_app_asset_path(@asset) %> |
 <%= link_to 'Back', app_assets_path %>

@@ -3,11 +3,30 @@
 
 <% if !@asset.file.url.end_with?('json') %>
 <%= image_tag(@asset.file.url, :class => "img-responsive")%>
+
+<% @asset.file.versions.each do |version| %>
+<%= image_tag(@asset.file.url(version.first), :class => "img-responsive")%>
+<% end %>
+
 <% else %>
 <i class="fa fa-file-code-o" style="font-size:64px"></i>
 <% end %>
 
 <%= render 'form', asset: @asset %>
+
+<p>
+  <strong>File:</strong>
+  <%= @asset.file %>
+</p>
+
+<p>
+  <strong>URL:</strong>
+  <%= @asset.file.url %>
+</p>
+
+<% @asset.file.versions.each do |version| %>
+<p><strong><%= version.first %>: </strong><a href="<%= @asset.file.url(version.first)%>" target="_blank"><%= @asset.file.url(version.first) %></a></p>
+<% end %>
 
 <%= link_to 'Show', [@app, @asset] %> |
 <%= link_to 'Back', app_assets_path %>

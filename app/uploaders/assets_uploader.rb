@@ -2,6 +2,8 @@ class AssetsUploader < CarrierWave::Uploader::Base
 
   include CarrierWave::MiniMagick
 
+  after :remove, :delete_empty_upstream_dirs
+
   process :validate_dimensions, if: :image?
   process :convert_to_png, if: :image?
 
@@ -24,15 +26,15 @@ class AssetsUploader < CarrierWave::Uploader::Base
 
   def convert_to_png()
     manipulate! do |img|
-
-      img.resize      "#{img[:width]}x#{img[:height]}>"
-      img.resize      "#{img[:width]}x#{img[:height]}<"
-
       img.format("png") do |c|
+        c.resize      "#{img[:width]}x#{img[:height]}>"
+        c.resize      "#{img[:width]}x#{img[:height]}<"
+        # Background workaround because of the commandline args arrangement
+        c.args.unshift "none"
+        c.args.unshift "-background"
         c.density      "512"
-        c.background   "none"
-        c.transparent  "white"
-        c.sharpen      ".8"
+        c.args.unshift ".8"
+        c.args.unshift "-sharpen"
       end
       img
     end
@@ -43,7 +45,21 @@ class AssetsUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    "uploads/app/#{model.try(:app_id) || model.id}/#{model.class.to_s.underscore}/#{model.id}"
+    "#{base_store_dir}/#{model.id}"
+  end
+
+  def base_store_dir
+    "uploads/app/#{model.try(:app_id) || model.id}/#{model.class.to_s.underscore}"
+  end
+
+  def delete_empty_upstream_dirs
+    path = ::File.expand_path(store_dir, root)
+    Dir.delete(path) # fails if path not empty dir
+
+    path = ::File.expand_path(base_store_dir, root)
+    Dir.delete(path) # fails if path not empty dir
+  rescue SystemCallError
+    true # nothing, the dir is not empty
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
@@ -76,17 +92,6 @@ class AssetsUploader < CarrierWave::Uploader::Base
     0..2.megabytes
   end
 
-  protected
-
-  def image?(new_file)
-    new_file.content_type.start_with? 'image'
-  end
-
-  def is_square?(new_file)
-    image = MiniMagick::Image.open(new_file.path)
-    image[:width] == image[:height]
-  end
-
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
@@ -95,6 +100,16 @@ class AssetsUploader < CarrierWave::Uploader::Base
       else
         original_filename
       end
+  end
+
+  protected
+  def image?(new_file)
+    new_file.content_type.start_with? 'image'
+  end
+
+  def is_square?(new_file)
+    image = MiniMagick::Image.open(new_file.path)
+    image[:width] == image[:height]
   end
 
 end
