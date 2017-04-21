@@ -21,17 +21,18 @@ class AssetsUploader < CarrierWave::Uploader::Base
     convert :png
     process :resize_to_fit => [36, 36]
   end
-  version :mdpi, :if => :image? do
-    convert :png
-    process :resize_to_fit => [24, 24]
-  end
 
   def convert_to_png()
     manipulate! do |img|
+
+      img.resize      "#{img[:width]}x#{img[:height]}>"
+      img.resize      "#{img[:width]}x#{img[:height]}<"
+
       img.format("png") do |c|
-        c.resize      "#{img[:width]}x#{img[:height]}>"
-        c.resize      "#{img[:width]}x#{img[:height]}<"
+        c.density      "512"
+        c.background   "none"
         c.transparent  "white"
+        c.sharpen      ".8"
       end
       img
     end
