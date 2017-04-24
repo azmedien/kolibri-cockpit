@@ -109,9 +109,10 @@ class AssetsUploader < CarrierWave::Uploader::Base
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
       if image? file
-        super.chomp(File.extname(super)) + '.png'
+        name = File.extname(super) if !super.nil?
+        super.chomp(name) + '.png' if name
       else
-        original_filename
+        original_filename if original_filename
       end
   end
 

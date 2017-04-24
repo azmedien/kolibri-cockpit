@@ -39,7 +39,10 @@ gem 'jbuilder', '~> 2.5'
 gem 'devise'
 gem 'authority'
 gem 'rolify'
+
 gem 'carrierwave', '~> 1.0'
+gem 'copy_carrierwave_file'
+
 gem 'mini_magick'
 
 gem 'bootstrap', '~> 4.0.0.alpha6'

@@ -31,6 +31,8 @@ class AppsController < ApplicationController
       @app.runtime = origin.runtime.dup
       @app.android_config = origin.android_config.dup
       @app.ios_config = origin.ios_config.dup
+      @app.android_icon = origin.android_icon.dup
+      @app.ios_icon = origin.ios_icon.dup
 
       notice = 'Application was successfully duplicated.'
     else
@@ -42,6 +44,14 @@ class AppsController < ApplicationController
 
     respond_to do |format|
       if @app.save
+
+        origin.assets.each do |item|
+          asset = Asset.new
+          asset.app_id = @app.id
+          asset.duplicate_file(item)
+          asset.save!
+        end
+
         format.html { redirect_to settings_app_path(@app), notice: 'App was successfully created.' }
         format.json { render json: @app, status: :created, location: :edit }
       else
