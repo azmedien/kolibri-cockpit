@@ -93,7 +93,7 @@ class AssetsController < ApplicationController
     end
 
     def set_apps
-      @apps = current_user.apps
+      @apps = current_user.apps if current_user
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
