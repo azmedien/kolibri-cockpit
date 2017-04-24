@@ -1,5 +1,9 @@
 class App < ApplicationRecord
+  extend FriendlyId
+
   include Authority::Abilities
+
+  friendly_id :internal_id, use: [:slugged, :finders]
 
   belongs_to :user
   has_many :builds, dependent: :destroy

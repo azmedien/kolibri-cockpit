@@ -45,6 +45,8 @@ gem 'copy_carrierwave_file'
 
 gem 'mini_magick'
 
+gem 'friendly_id', '~> 5.2.1'
+
 gem 'bootstrap', '~> 4.0.0.alpha6'
 
 source 'https://rails-assets.org' do

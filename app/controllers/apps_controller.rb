@@ -129,14 +129,14 @@ class AppsController < ApplicationController
     # Ensure we return in all cases an app.
     # This is used now to provide runtime configuraiton without any
     # authentication. This must be repalced with some kind of authentication
-    @app = App.find(params[:id])
+    @app = App.friendly.find(params[:id])
     render json: @app.runtime
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_app
-      @app = current_user.apps.find(params[:id])
+      @app = current_user.apps.friendly.find(params[:id])
     end
 
     def set_apps
