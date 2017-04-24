@@ -11,17 +11,30 @@ class AssetsUploader < CarrierWave::Uploader::Base
     convert :png
     process :resize_to_fit => [96, 96]
   end
+
   version :xxhdpi, :if => :image? do
     convert :png
     process :resize_to_fit => [72, 72]
   end
+
   version :xxhdpi, :if => :image? do
     convert :png
     process :resize_to_fit => [48, 48]
   end
+
   version :hdpi, :if => :image? do
     convert :png
     process :resize_to_fit => [36, 36]
+  end
+
+  version :x2, :if => :image? do
+    convert :png
+    process :resize_to_fit => [44, 44]
+  end
+
+  version :x3, :if => :image? do
+    convert :png
+    process :resize_to_fit => [88, 88]
   end
 
   def convert_to_png()
@@ -104,7 +117,7 @@ class AssetsUploader < CarrierWave::Uploader::Base
 
   protected
   def image?(new_file)
-    new_file.content_type.start_with? 'image'
+    new_file.content_type.start_with? 'image' if !new_file.nil?
   end
 
   def is_square?(new_file)

@@ -11,7 +11,7 @@
                     <i class="fa fa-file-code-o" style="font-size:32px"></i>
                     <% end %>
                 </span>
-                <a class="mr-auto p-2" href="<%= asset.file %>" target="_blank"><%= truncate(asset.file.url, :length => 50) %></a>
+                <%= link_to "#{asset.file}", edit_app_asset_path(@app, asset), :class => 'mr-auto p-2' %>
                 <span class="p-2"><%= button_to 'Edit', edit_app_asset_path(@app, asset), method: :get, :class => "btn btn-outline-primary" %></span>
                 <span class="p-2"><%= button_to 'Destroy', [@app, asset], method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %></span>
             </div>

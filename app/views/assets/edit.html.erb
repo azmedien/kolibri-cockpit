@@ -25,7 +25,10 @@
 </p>
 
 <% @asset.file.versions.each do |version| %>
-<p><strong><%= version.first %>: </strong><a href="<%= @asset.file.url(version.first)%>" target="_blank"><%= @asset.file.url(version.first) %></a></p>
+<p>
+  <strong><%= version.first %>: </strong>
+  <%= link_to 'Download', app_asset_download_path(:asset_id => @asset, :variant => version.first), :target => '_blank' %>
+</p>
 <% end %>
 
 <%= link_to 'Show', [@app, @asset] %> |

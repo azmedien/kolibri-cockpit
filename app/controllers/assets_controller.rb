@@ -1,5 +1,5 @@
 class AssetsController < ApplicationController
-  before_action :set_asset, only: [:show, :edit, :update, :destroy]
+  before_action :set_asset, only: [:show, :edit, :update, :destroy, :download]
   before_action :set_app
   before_action :set_apps
 
@@ -72,10 +72,20 @@ class AssetsController < ApplicationController
     end
   end
 
+  def download
+    puts params
+    if params[:variant].nil?
+      send_file @asset.file.path, type: 'image/png', disposition: 'inline'
+    else
+      version = params[:variant]
+      send_file @asset.file.versions[version.to_sym].path, type: 'image/png', disposition: 'inline'
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_asset
-      @asset = Asset.find(params[:id])
+      @asset = Asset.find(params[:id] || params[:asset_id])
     end
 
     def set_app
