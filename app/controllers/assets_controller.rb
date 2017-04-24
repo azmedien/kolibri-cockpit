@@ -75,10 +75,10 @@ class AssetsController < ApplicationController
   def download
     puts params
     if params[:variant].nil?
-      send_file @asset.file.path, type: 'image/png', disposition: 'inline'
+      redirect_to @asset.file.url
     else
       version = params[:variant]
-      send_file @asset.file.versions[version.to_sym].path, type: 'image/png', disposition: 'inline'
+      redirect_to @asset.file.versions[version.to_sym].url
     end
   end
 
