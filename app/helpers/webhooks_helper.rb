@@ -1,4 +1,5 @@
 module WebhooksHelper
+  include ActionView::Helpers::DateHelper
   def build_to_html_table_row(build)
 
     statuses = Array.new
