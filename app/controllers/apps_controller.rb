@@ -4,6 +4,7 @@ class AppsController < ApplicationController
   before_action :set_apps, except: [:show, :destroy, :jenkins, :runtime]
   before_action :set_jenkins
   before_action :set_jenkins_job, only: [:create, :update, :build]
+  after_action :configure_app, only: [:update]
 
   # GET /apps
   # GET /apps.json
@@ -158,6 +159,10 @@ class AppsController < ApplicationController
         flash[:danger] = e.message
         redirect_to request.referrer
       end
+    end
+
+    def configure_app
+      ConfigureAppJob.perform_later @app
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

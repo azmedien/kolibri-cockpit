@@ -40,6 +40,8 @@ gem 'devise'
 gem 'authority'
 gem 'rolify'
 
+gem 'git', '~> 1.3'
+
 gem 'carrierwave', '~> 1.0'
 gem 'copy_carrierwave_file'
 
