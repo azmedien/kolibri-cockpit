@@ -3,14 +3,34 @@ module AppsHelper
   include UrlHelper
 
   def modify_android_configuration_files folder, app
-      build_gradle = Dir.glob("#{folder}/**/build.gradle")
+      build_gradle = Dir.glob("#{folder}/**/app/**/build.gradle").first
       manifest = Dir.glob("#{folder}/**/app/**/AndroidManifest.xml").first
 
       update_or_append_android_meta manifest, 'kolibri_navigation_url', runtime_app_url(app)
       update_or_append_android_meta(manifest, 'kolibri_netmetrix_url', app.android_config['netmetrix_url']) unless app.android_config['netmetrix_url'].nil?
+
+      update_or_append_android_gradle build_gradle, 'applicationId', 'me.lekov.test'
   end
 
   private
+  def update_or_append_android_gradle gradle, meta, value
+    require 'tempfile'
+
+    Tempfile.open(".#{File.basename(gradle)}", File.dirname(gradle)) do |tempfile|
+      File.open(gradle).each do |line|
+        tempfile.puts line.gsub(/(applicationId) (\".*?\")/, '\1 "' + value + '"')
+
+        # s.gsub(/(applicationId).*?/, '\1replacement text')
+      end
+      tempfile.fdatasync
+      tempfile.close
+      stat = File.stat(gradle)
+      FileUtils.chown stat.uid, stat.gid, tempfile.path
+      FileUtils.chmod stat.mode, tempfile.path
+      FileUtils.mv tempfile.path, gradle
+    end
+  end
+
   def update_or_append_android_meta xml, meta, value
     attribute = nil
     document = Nokogiri::XML(File.open(xml), &:noblanks)
