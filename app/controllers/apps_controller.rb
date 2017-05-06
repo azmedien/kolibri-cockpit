@@ -162,7 +162,7 @@ class AppsController < ApplicationController
     end
 
     def configure_app
-      ConfigureAppJob.perform_later @app
+      ConfigureAppJob.perform_later @app, current_user
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
