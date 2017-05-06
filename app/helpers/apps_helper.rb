@@ -6,28 +6,33 @@ module AppsHelper
       build_gradle = Dir.glob("#{folder}/**/build.gradle")
       manifest = Dir.glob("#{folder}/**/app/**/AndroidManifest.xml").first
 
-      document = Nokogiri::XML(File.open(manifest))
-      application = document.at('application')
+      update_or_append_android_meta manifest, 'kolibri_navigation_url', runtime_app_url(app)
+      update_or_append_android_meta(manifest, 'kolibri_netmetrix_url', app.android_config['netmetrix_url']) unless app.android_config['netmetrix_url'].nil?
+  end
 
-      application.children.each { |item|
-        if (item.name == 'meta-data')
-          next unless item.attributes['name'].value == 'kolibri_navigation_url'
-          @attr = item
-        end
-      }
+  private
+  def update_or_append_android_meta xml, meta, value
+    attribute = nil
+    document = Nokogiri::XML(File.open(xml), &:noblanks)
+    application = document.at('application')
 
-      if @attr.nil?
-        builder = Nokogiri::XML::Builder.new do |xml|
-          xml.send(:"meta-data", 'android:name' => 'kolibri_navigation_url', 'android:value' => runtime_app_url(app))
-        end
-        @attr = builder.doc.root
-        application << @attr
-      else
-        @attr.attributes['value'].value = runtime_app_url app
+    application.children.each { |item|
+      if (item.name == 'meta-data')
+          attribute = item if item.attributes['name'].value == meta
+      end
+    }
+
+    if attribute.nil?
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.send(:"meta-data", 'android:name' => meta, 'android:value' => value)
       end
 
-      puts @attr.to_xml
+      attribute = builder.doc.root
+      application << attribute
+    else
+      attribute.attributes['value'].value = value
+    end
 
-      File.write(manifest, document.to_xml)
+    File.write(xml, document.to_xml(indent: 4))
   end
 end
