@@ -10,9 +10,35 @@ module AppsHelper
       update_or_append_android_meta(manifest, 'kolibri_netmetrix_url', app.android_config['netmetrix_url']) unless app.android_config['netmetrix_url'].nil?
 
       update_or_append_android_gradle build_gradle, 'applicationId', 'me.lekov.test'
+
+      update_or_append_android_fastlane folder, app
   end
 
   private
+  def update_or_append_android_fastlane folder, app
+
+    if Dir.glob("#{folder}/**/app/fastlane/Fastlane").any?
+      logger.info 'Fastlane already configured. Skipped'
+      return
+    end
+
+    require 'fileutils'
+
+    app_folder = Dir.glob("#{folder}/**/app/").first
+    dir = File.join(app_folder, "fastlane")
+
+    unless File.directory?(dir)
+      FileUtils.mkdir_p(dir)
+    end
+
+    fastlane = ApplicationController.renderer.render({
+      partial: 'layouts/fastlane',
+      locals: { app: app }
+    })
+
+    File.write(File.join(dir, "Fastlane"), fastlane.to_s)
+  end
+
   def update_or_append_android_gradle gradle, meta, value
     require 'tempfile'
 

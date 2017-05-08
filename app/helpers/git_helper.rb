@@ -20,10 +20,10 @@ module GitHelper
     git
   end
 
-  def manipulate_repo(url, user)
+  def manipulate_repo(url, app, user)
     repo = open_repo(url)
     repo.checkout('master')
-    repo.branch('new_branch').checkout
+    repo.branch("#{app.internal_name.parameterize}_#{app.internal_id}").checkout
 
     begin
       repo.chdir do
@@ -35,10 +35,10 @@ module GitHelper
 
        repo.add(:all=>true)
        repo.commit('Project configured by Kolibri Cockpit')
-       repo.push('origin', 'new_branch')
+       repo.push('origin', "#{app.internal_name.parameterize}_#{app.internal_id}")
      end
 
      repo.checkout('master')
-     repo.branch('new_branch').delete
+     repo.branch("#{app.internal_name.parameterize}_#{app.internal_id}").delete
   end
 end

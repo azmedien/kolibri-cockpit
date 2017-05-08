@@ -18,7 +18,7 @@ class ConfigureAppJob < ApplicationJob
 
     open_repo repo
 
-    manipulate_repo repo, user do |git|
+    manipulate_repo repo, app, user do |git|
       modify_android_configuration_files '.', app
     end
 

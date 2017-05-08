@@ -1,0 +1,103 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.19.1"
+
+default_platform :android
+
+platform :android do
+  before_all do
+    ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
+    ENV["KOLIBRI_URL"] = "https://kolibri.herokuapp.com"
+    ENV["KOLIBRI_PROJECT"] = "<%= app.internal_id %>"
+  end
+
+  desc "Kolibri Build & Test"
+  lane :all do
+    build
+    test
+  end
+
+  lane :beta do
+    build
+    test
+    publish
+  end
+
+  desc "Runs all the tests"
+  lane :test do
+    kolibri(
+      stage: "test",
+      state: "started"
+    )
+
+    gradle(task: "test")
+
+    kolibri(
+      stage: "test",
+      state: "finished"
+    )
+  end
+
+  desc "Build the project"
+  lane :build do
+
+    kolibri(
+      stage: "build",
+      state: "started"
+    )
+
+    gradle(task: "assembleDebug")
+
+    kolibri(
+      stage: "build",
+      state: "finished"
+    )
+  end
+
+  desc "Publish to Fabric Beta"
+  lane :publish do
+    commit = last_git_commit
+
+    crashlytics(
+        api_token: "5b0e4ca8fe72e1ad97ccbd82e18f18ba4cacd219",
+        build_secret: "8f94e66fae0366a48a613623166a2586ae77e7fab1b68d021471e0036ba46ad8"
+     )
+
+     kolibri(
+       stage: "publish",
+       state: "finished"
+      )
+  end
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+
+    slack(
+      message: "Successfully builded and tested"
+    )
+  end
+
+  error do |lane, exception|
+
+    kolibri(
+      stage: lane.to_s,
+      state: "failed"
+    )
+
+    slack(
+       message: exception.message,
+       success: false
+    )
+  end
+end
