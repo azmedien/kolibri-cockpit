@@ -21,9 +21,12 @@ module GitHelper
   end
 
   def manipulate_repo(url, app, user)
+
+    branch_name = "#{app.internal_name.parameterize}_#{app.internal_id}"
+
     repo = open_repo(url)
     repo.checkout('master')
-    repo.branch("#{app.internal_name.parameterize}_#{app.internal_id}").checkout
+    repo.checkout(repo.branch(branch_name))
 
     begin
       repo.chdir do
