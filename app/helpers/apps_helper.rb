@@ -6,16 +6,22 @@ module AppsHelper
       build_gradle = Dir.glob("#{folder}/**/app/**/build.gradle").first
       manifest = Dir.glob("#{folder}/**/app/**/AndroidManifest.xml").first
 
-      update_or_append_android_meta manifest, 'kolibri_navigation_url', runtime_app_url(app)
-      update_or_append_android_meta(manifest, 'kolibri_netmetrix_url', app.android_config['netmetrix_url']) unless app.android_config['netmetrix_url'].nil?
+      netmetrix_url = app.android_config['netmetrix_url']
+      bundle_id = app.android_config['bundle_id']
 
-      update_or_append_android_gradle build_gradle, 'applicationId', app.android_config['bundle_id']
+      update_android_meta(manifest, 'kolibri_navigation_url', runtime_app_url(app))
+      update_android_meta(manifest, 'kolibri_netmetrix_url', netmetrix_url) unless netmetrix_url.nil? || netmetrix_url.empty?
 
-      update_or_append_android_fastlane folder, app
+      # FIXME: Remove me
+      update_android_meta(manifest, 'io.fabric.ApiKey', '5b0e4ca8fe72e1ad97ccbd82e18f18ba4cacd219')
+
+      update_android_gradle(build_gradle, 'applicationId', bundle_id) unless bundle_id.nil? || bundle_id.empty?
+
+      update_android_fastlane(folder, app)
   end
 
   private
-  def update_or_append_android_fastlane folder, app
+  def update_android_fastlane folder, app
 
     if Dir.glob("#{folder}/**/app/fastlane/Fastlane").any?
       logger.info 'Fastlane already configured. Skipped'
@@ -43,14 +49,12 @@ module AppsHelper
     File.write(File.join(dir, "Fastfile"), fastlane.to_s)
   end
 
-  def update_or_append_android_gradle gradle, meta, value
+  def update_android_gradle gradle, meta, value
     require 'tempfile'
 
     Tempfile.open(".#{File.basename(gradle)}", File.dirname(gradle)) do |tempfile|
       File.open(gradle).each do |line|
         tempfile.puts line.gsub(/(applicationId) (\".*?\")/, '\1 "' + value + '"')
-
-        # s.gsub(/(applicationId).*?/, '\1replacement text')
       end
       tempfile.fdatasync
       tempfile.close
@@ -61,7 +65,7 @@ module AppsHelper
     end
   end
 
-  def update_or_append_android_meta xml, meta, value
+  def update_android_meta xml, meta, value
     attribute = nil
     document = Nokogiri::XML(File.open(xml), &:noblanks)
     application = document.at('application')
