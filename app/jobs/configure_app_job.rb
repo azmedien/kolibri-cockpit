@@ -16,6 +16,10 @@ class ConfigureAppJob < ApplicationJob
     repo = app.android_config['repository_url']
     bundle = app.android_config['bundle_id']
 
+    if repo.nil? || repo.empty? || bundle.nil? || bundle.empty?
+      return
+    end
+
     open_repo repo
 
     manipulate_repo repo, app, user do |git|
