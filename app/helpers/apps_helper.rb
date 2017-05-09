@@ -36,6 +36,10 @@ module AppsHelper
       locals: { app: app }
     })
 
+    # FIXME: Remove me
+    api = 'apiSecret=8f94e66fae0366a48a613623166a2586ae77e7fab1b68d021471e0036ba46ad8'
+
+    File.write(File.join(app_folder, "fabric.properties"), api.to_s)
     File.write(File.join(dir, "Fastfile"), fastlane.to_s)
   end
 
