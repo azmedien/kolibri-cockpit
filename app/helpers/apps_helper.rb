@@ -9,7 +9,7 @@ module AppsHelper
       update_or_append_android_meta manifest, 'kolibri_navigation_url', runtime_app_url(app)
       update_or_append_android_meta(manifest, 'kolibri_netmetrix_url', app.android_config['netmetrix_url']) unless app.android_config['netmetrix_url'].nil?
 
-      update_or_append_android_gradle build_gradle, 'applicationId', 'me.lekov.test'
+      update_or_append_android_gradle build_gradle, 'applicationId', app.android_config['bundle_id']
 
       update_or_append_android_fastlane folder, app
   end
@@ -36,7 +36,7 @@ module AppsHelper
       locals: { app: app }
     })
 
-    File.write(File.join(dir, "Fastlane"), fastlane.to_s)
+    File.write(File.join(dir, "Fastfile"), fastlane.to_s)
   end
 
   def update_or_append_android_gradle gradle, meta, value
