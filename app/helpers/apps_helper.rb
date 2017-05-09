@@ -25,7 +25,7 @@ module AppsHelper
     require 'fileutils'
 
     app_folder = Dir.glob("#{folder}/**/app/").first
-    dir = File.join(app_folder, "fastlane")
+    dir = File.join(File.dirname(app_folder), "fastlane")
 
     unless File.directory?(dir)
       FileUtils.mkdir_p(dir)
