@@ -21,4 +21,16 @@ class App < ApplicationRecord
   store %(:android_config :ios_config)
 
   has_secure_token :internal_id
+
+  def android_config=(new_config)
+    gs = self.android_config || {}
+    gs = gs.merge(new_config || {})
+    write_attribute(:android_config, gs)
+  end
+
+  def ios_config=(new_config)
+    gs = self.ios_config || {}
+    gs = gs.merge(new_config || {})
+    write_attribute(:ios_config, gs)
+  end
 end

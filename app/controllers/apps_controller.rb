@@ -46,11 +46,13 @@ class AppsController < ApplicationController
     respond_to do |format|
       if @app.save
 
-        origin.assets.each do |item|
-          asset = Asset.new
-          asset.app_id = @app.id
-          asset.duplicate_file(item)
-          asset.save!
+        if origin
+          origin.assets.each do |item|
+            asset = Asset.new
+            asset.app_id = @app.id
+            asset.duplicate_file(item)
+            asset.save!
+          end
         end
 
         format.html { redirect_to settings_app_path(@app), notice: 'App was successfully created.' }
@@ -66,6 +68,7 @@ class AppsController < ApplicationController
   # PATCH/PUT /apps/1.json
   def update
     respond_to do |format|
+
       if @app.update(app_params)
         format.html { redirect_to settings_app_path(@app), notice: 'App was successfully updated.' }
         format.json { render json: @app, status: :ok, location: :edit }
@@ -174,7 +177,7 @@ class AppsController < ApplicationController
         :android_icon,
         :ios_icon,
         :splash,
-        :android_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url],
-        :ios_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url])
+        :android_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url, :bundle_id],
+        :ios_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url, :bundle_id])
     end
 end
