@@ -24,8 +24,6 @@ module AppsHelper
 
   def modify_ios_configuration_files folder, app
 
-    identifier_key = 'PRODUCT_BUNDLE_IDENTIFIER'
-
     netmetrix_url = app.ios_config['netmetrix_url']
     netmetrix_ua = app.ios_config['netmetrix_ua']
     bundle_id = app.ios_config['bundle_id']
@@ -34,7 +32,7 @@ module AppsHelper
     update_ios_plist(folder, 'kolibri_netmetrix_url', netmetrix_url) unless netmetrix_url.nil? || netmetrix_url.empty?
     update_ios_plist(folder, 'kolibri_netmetrix_ua', netmetrix_ua) unless netmetrix_ua.nil? || netmetrix_ua.empty?
 
-    update_ios_bundle_id folder, identifier_key, bundle_id
+    update_ios_bundle_id folder, bundle_id
   end
 
   private
@@ -54,37 +52,44 @@ module AppsHelper
     File.write(plist_path, plist_string)
   end
 
-  def update_ios_bundle_id folder, meta, value
+  def update_ios_bundle_id folder, value
     require 'xcodeproj'
     require 'plist'
+    require 'pathname'
 
     info_plist_key = 'INFOPLIST_FILE'
+    identifier_key = 'PRODUCT_BUNDLE_IDENTIFIER'
 
-    project_path = Dir.glob("#{folder}/**/**.xcodeproj").first
+    project_path = Dir.glob("#{folder}/**.xcodeproj").first
     plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
-
-    project = Xcodeproj::Project.open(project_path)
     plist = Plist.parse_xml(plist_path)
 
-    if plist['CFBundleIdentifier'] == value
+    if plist['CFBundleIdentifier'] == "$(#{identifier_key})"
 
-      configs = project.objects.select { |obj| obj.isa == 'XCBuildConfiguration' && !obj.build_settings[meta].nil? }
-      configs = configs.select { |obj| obj.build_settings[info_plist_key] == plist_path }
+      # Load .xcodeproj
+      project = Xcodeproj::Project.open(project_path)
 
+      current = Pathname.new '.'
+      plist_pathname = Pathname.new plist_path
+
+      # Fetch the build configuration objects
+      configs = project.objects.select { |obj| obj.isa == 'XCBuildConfiguration' && !obj.build_settings[identifier_key].nil? }
+      configs = configs.select { |obj| obj.build_settings[info_plist_key] == plist_pathname.relative_path_from(current).to_s }
+      # For each of the build configurations, set app identifier
       configs.each do |c|
-        c.build_settings[meta] = value
+        c.build_settings[identifier_key] = value
       end
 
       # Write changes to the file
       project.save
     else
       # Update plist value
-       plist['CFBundleIdentifier'] = value
+      plist['CFBundleIdentifier'] = value
 
-       # Write changes to file
-       plist_string = Plist::Emit.dump(plist)
-       File.write(plist_path, plist_string)
-     end
+      # Write changes to file
+      plist_string = Plist::Emit.dump(plist)
+      File.write(info_plist_path, plist_string)
+    end
   end
 
 
