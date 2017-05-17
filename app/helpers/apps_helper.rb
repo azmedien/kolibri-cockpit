@@ -7,10 +7,12 @@ module AppsHelper
       manifest = Dir.glob("#{folder}/**/app/**/AndroidManifest.xml").first
 
       netmetrix_url = app.android_config['netmetrix_url']
+      netmetrix_ua = app.android_config['netmetrix_ua']
       bundle_id = app.android_config['bundle_id']
 
       update_android_meta(manifest, 'kolibri_navigation_url', runtime_app_url(app))
       update_android_meta(manifest, 'kolibri_netmetrix_url', netmetrix_url) unless netmetrix_url.nil? || netmetrix_url.empty?
+      update_android_meta(manifest, 'kolibri_netmetrix_ua', netmetrix_ua) unless netmetrix_ua.nil? || netmetrix_ua.empty?
 
       # FIXME: Remove me
       update_android_meta(manifest, 'io.fabric.ApiKey', '5b0e4ca8fe72e1ad97ccbd82e18f18ba4cacd219')
@@ -20,7 +22,72 @@ module AppsHelper
       update_android_fastlane(folder, app)
   end
 
+  def modify_ios_configuration_files folder, app
+
+    identifier_key = 'PRODUCT_BUNDLE_IDENTIFIER'
+
+    netmetrix_url = app.ios_config['netmetrix_url']
+    netmetrix_ua = app.ios_config['netmetrix_ua']
+    bundle_id = app.ios_config['bundle_id']
+
+    update_ios_plist(folder, 'kolibri_navigation_url', runtime_app_url(app))
+    update_ios_plist(folder, 'kolibri_netmetrix_url', netmetrix_url) unless netmetrix_url.nil? || netmetrix_url.empty?
+    update_ios_plist(folder, 'kolibri_netmetrix_ua', netmetrix_ua) unless netmetrix_ua.nil? || netmetrix_ua.empty?
+
+    update_ios_bundle_id folder, identifier_key, bundle_id
+  end
+
   private
+  def update_ios_plist folder, meta, value
+    plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
+    plist = Plist.parse_xml(plist_path)
+
+    if plist['KolibriParameters'].nil?
+      params = {}
+      params[meta] = value
+      plist['KolibriParameters'] = params
+    else
+      plist['KolibriParameters'][meta] = value
+    end
+
+    plist_string = Plist::Emit.dump(plist)
+    File.write(plist_path, plist_string)
+  end
+
+  def update_ios_bundle_id folder, meta, value
+    require 'xcodeproj'
+    require 'plist'
+
+    info_plist_key = 'INFOPLIST_FILE'
+
+    project_path = Dir.glob("#{folder}/**/**.xcodeproj").first
+    plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
+
+    project = Xcodeproj::Project.open(project_path)
+    plist = Plist.parse_xml(plist_path)
+
+    if plist['CFBundleIdentifier'] == value
+
+      configs = project.objects.select { |obj| obj.isa == 'XCBuildConfiguration' && !obj.build_settings[meta].nil? }
+      configs = configs.select { |obj| obj.build_settings[info_plist_key] == plist_path }
+
+      configs.each do |c|
+        c.build_settings[meta] = value
+      end
+
+      # Write changes to the file
+      project.save
+    else
+      # Update plist value
+       plist['CFBundleIdentifier'] = value
+
+       # Write changes to file
+       plist_string = Plist::Emit.dump(plist)
+       File.write(plist_path, plist_string)
+     end
+  end
+
+
   def update_android_fastlane folder, app
 
     if Dir.glob("#{folder}/**/app/fastlane/Fastlane").any?

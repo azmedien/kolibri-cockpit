@@ -59,6 +59,8 @@ end
 gem "font-awesome-rails"
 
 gem 'jenkins_api_client', '~> 1.4.5'
+gem 'xcodeproj'
+gem 'plist'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
