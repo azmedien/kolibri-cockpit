@@ -45,6 +45,25 @@ End with an example of getting some data out of the system or using it for a lit
 
 Add additional notes about how to deploy this on a live system
 
+### Setup env variables
+
+Jenkins:
+* `JENKINS_USER`
+* `JENKINS_SECRET`
+
+Amazon S3:
+* `S3_BUCKET_NAME`
+* `S3_KEY`
+* `S3_REGION`
+* `S3_SECRET`
+
+Access to repos:
+* `PKEY=/app/cockpit` - pointing to the private key which must be used to access repositories. Make sure the public key is added to the repository with read and write access.
+
+## Getting started with Cockpit
+
+> You must create the application in Google play before publish from Kolibri Cockpit
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
@@ -68,33 +87,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Hat tip to anyone who's code was used
 * Inspiration
 * etc
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-  `2.4.0`
-
-* System dependencies
-
-Mac OS X machine
-
-* Configuration
-  0. Setup following environment variables:
-
-    `PKEY=/app/cockpit` - pointing to the private key which must be used to access repositories. Make sure the public key is added to the repository with read and write access.
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
