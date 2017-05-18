@@ -22,6 +22,8 @@ class App < ApplicationRecord
 
   has_secure_token :internal_id
 
+  before_create :set_slug
+
   def android_config=(new_config)
     gs = self.android_config || {}
     gs = gs.merge(new_config || {})
@@ -33,4 +35,9 @@ class App < ApplicationRecord
     gs = gs.merge(new_config || {})
     write_attribute(:ios_config, gs)
   end
+
+  private
+  def set_slug
+      self.slug = internal_id
+    end
 end
