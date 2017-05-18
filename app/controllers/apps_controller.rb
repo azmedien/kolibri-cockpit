@@ -144,7 +144,7 @@ class AppsController < ApplicationController
     end
 
     def set_apps
-      @apps = current_user.apps
+      @apps = current_user.apps.order(:internal_name)
     end
 
     def set_jenkins
