@@ -36,13 +36,14 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'version'
 gem 'devise'
 gem 'authority'
 gem 'rolify'
 
 gem 'git', '~> 1.3'
 
-gem 'carrierwave', '~> 1.0'
+gem 'carrierwave', '~> 1.1'
 gem 'copy_carrierwave_file'
 
 gem 'mini_magick'

@@ -49,6 +49,8 @@ class AssetsUploader < CarrierWave::Uploader::Base
         c.args.unshift ".8"
         c.args.unshift "-sharpen"
       end
+      file.content_type="image/png"
+
       img
     end
   end
