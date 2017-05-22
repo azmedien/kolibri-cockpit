@@ -101,12 +101,27 @@ module AppsHelper
     end
 
     require 'fileutils'
+    require 'tempfile'
 
     app_folder = Dir.glob("#{folder}/**/app/").first
     dir = File.join(File.dirname(app_folder), "fastlane")
 
     unless File.directory?(dir)
       FileUtils.mkdir_p(dir)
+    end
+
+    appfile = Dir.glob("#{dir}/Appfile").first
+
+    Tempfile.open(".#{File.basename(appfile)}", File.dirname(appfile)) do |tempfile|
+      File.open(appfile).each do |line|
+        tempfile.puts line.gsub(/(package_name) (\".*?\")/, '\1 "' + app.android_config['bundle_id'] + '"')
+      end
+      tempfile.fdatasync
+      tempfile.close
+      stat = File.stat(appfile)
+      FileUtils.chown stat.uid, stat.gid, tempfile.path
+      FileUtils.chmod stat.mode, tempfile.path
+      FileUtils.mv tempfile.path, appfile
     end
 
     fastlane = ApplicationController.renderer.render({
@@ -136,6 +151,7 @@ module AppsHelper
       FileUtils.mv tempfile.path, gradle
     end
   end
+
 
   def update_android_meta xml, meta, value
     attribute = nil
