@@ -13,6 +13,7 @@ What things you need to install the software and how to install them
 Continuous integration server:
 * Mac OS X machine
 * Android SDK and Platform tools
+* Jenkins
 * Xcode
 * Fastlane
 * Maven server (optional)
@@ -25,21 +26,29 @@ Cockpit server:
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
+We assume you have already configured Mac OS X machine with installed prerequisites for the continuous integration server. Installation of each needed component is straightforward.
 
-Say what the step will be
+**Required Jenkins plugins are:**
+
+* Android Emulator Plugin
+* Android Lint Plugin
+* Android Signing Plugin
+* Artifactory Plugin (optional if you deploy your custom libraries)
+* Bitbucket Plugin (optional if you use Bitbucket as VCS)
+* Blue Ocean
+* CocoaPods Jenkins Integration
+* Xcode integration
+
+For the Cockpit server we assume you will deploy it on `Heroku` which again is straightforward.
+
+For local development use prerequisites as follow:
 
 ```
-Give the example
+brew install imagemagick --with-librsvg redis postgresql rbenv ruby-build
 ```
 
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+> You can follow this detailed guide for installing ruby rails on your machine:
+https://gorails.com/setup/osx/10.12-sierra
 
 ## Deployment
 
@@ -47,18 +56,23 @@ Add additional notes about how to deploy this on a live system
 
 ### Setup env variables
 
-Jenkins:
+**Jenkins:**
+
 * `JENKINS_USER`
 * `JENKINS_SECRET`
 
-Amazon S3:
+**Amazon S3:**
+
 * `S3_BUCKET_NAME`
 * `S3_KEY`
 * `S3_REGION`
 * `S3_SECRET`
 
-Access to repos:
+**Access to repos:**
+
 * `PKEY=/app/cockpit` - pointing to the private key which must be used to access repositories. Make sure the public key is added to the repository with read and write access.
+
+> Note that currently Kolibri Cockpit uses only one key for accessing all repositories.
 
 ## Getting started with Cockpit
 
