@@ -8,7 +8,6 @@ module AppsHelper
 
       netmetrix_url = app.android_config['netmetrix_url']
       netmetrix_ua = app.android_config['netmetrix_ua']
-      bundle_id = app.android_config['bundle_id']
 
       update_android_meta(manifest, 'kolibri_navigation_url', runtime_app_url(app))
       update_android_meta(manifest, 'kolibri_netmetrix_url', netmetrix_url) unless netmetrix_url.nil? || netmetrix_url.empty?
@@ -17,9 +16,8 @@ module AppsHelper
       # FIXME: Remove me
       update_android_meta(manifest, 'io.fabric.ApiKey', '5b0e4ca8fe72e1ad97ccbd82e18f18ba4cacd219')
 
-      update_android_gradle(build_gradle, 'applicationId', bundle_id) unless bundle_id.nil? || bundle_id.empty?
-
-      update_android_fastlane(folder, app)
+      update_android_gradle build_gradle, app
+      update_android_fastlane folder, app
   end
 
   def modify_ios_configuration_files folder, app
@@ -136,13 +134,22 @@ module AppsHelper
     File.write(File.join(dir, "Fastfile"), fastlane.to_s)
   end
 
-  def update_android_gradle gradle, meta, value
+  def update_android_gradle gradle, app
     require 'tempfile'
+
+    applicationId = app.android_config['bundle_id']
+    code = app.android_config['version_code']
+    name = app.android_config['version_name']
 
     Tempfile.open(".#{File.basename(gradle)}", File.dirname(gradle)) do |tempfile|
       File.open(gradle).each do |line|
-        tempfile.puts line.gsub(/(applicationId) (\".*?\")/, '\1 "' + value + '"')
+        new_line = line.gsub!(/(applicationId) (\".*?\")/, '\1 "' + applicationId + '"') ||
+          line.gsub!(/(versionCode) (\d*)/, '\1 ' + code + '') || 
+          line.gsub!(/(versionName) (\".*?\")/, '\1 "' + name + '"')
+
+        tempfile.puts new_line || line
       end
+
       tempfile.fdatasync
       tempfile.close
       stat = File.stat(gradle)

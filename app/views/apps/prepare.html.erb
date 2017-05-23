@@ -24,6 +24,18 @@
             <%= f.label "Bundle ID:" %><br/>
             <%= text_field_tag "app[android_config][bundle_id]", f.object.android_config["bundle_id"], :class => "form-control" %>
         </div>
+
+        <div class=" form-group">
+            <%= f.label "Version code:" %><br/>
+            <%= number_field_tag "app[android_config][version_code]", f.object.android_config["version_code"] || 1, min: 1, :class => "form-control", 'aria-describedby' => "versionCodeHelp" %>
+            <small id="versionCodeHelp" class="form-text text-muted">Positive number that must be greater than the previous one. Example: 100</small>
+        </div>
+
+        <div class=" form-group">
+            <%= f.label "Version name:" %><br/>
+            <%= text_field_tag "app[android_config][version_name]", f.object.android_config["version_name"] || "1.0.0", :class => "form-control", 'aria-describedby' => "versionNameHelp" %>
+            <small id="versionNameHelp" class="form-text text-muted">Human-readable version name of the app. Example: "v1.1.0-20170524"</small>
+        </div>
     </div>
 </section>
 
