@@ -1,6 +1,11 @@
 # Kolibri Framework
 
-What is kolibri goes here
+Kolibri is a mobile and web framework for bootstrapping Android and iOS applications in no time.
+Using preconfigured web interface `The Kolibri Cockpit`, non technical guys can easy clone existing app and distribute them to Google Play store and iTunes just using a few clicks within a minutes. Other cool feature of the platform is that once cloned and deployed, application can be easily configure
+trough the dynamic runtime configuration. There is also support for assets, both `png` and `svg` formats which are scaled and generated for all needed
+sizes and densities for the mobile devices. Here also we can include the configurable splash screens, fonts and app icons.
+
+For this case we provide `vanilla`, basic Android and iOS skeleton applications which supports dynamic runtime configuration, navigation and other mandatory useful stuff. This can be used for very simple applications or for starting point, so this way developers can add own custom components.
 
 ## Getting started
 
@@ -41,14 +46,28 @@ We assume you have already configured Mac OS X machine with installed prerequisi
 
 For the Cockpit server we assume you will deploy it on `Heroku` which again is straightforward.
 
-For local development use prerequisites as follow:
+For local development install prerequisites as follow:
 
-```
+```bash
 brew install imagemagick --with-librsvg redis postgresql rbenv ruby-build
 ```
 
 > You can follow this detailed guide for installing ruby rails on your machine:
 https://gorails.com/setup/osx/10.12-sierra
+
+Create an `PostreSQL` database using `Postico` for example. Name it `kolibri_development`
+
+Make sure you have exported the `PKEY` env which will grant you `push` rights to the repositories.
+
+```bash
+export PKEY=/Users/lekov/Workspace/Kolibri/kolibri-cockpit/cockpit
+```
+
+Now you are ready to run the server by executing this command from the project's folder:
+
+```bash
+bin/rails server
+```
 
 ## Deployment
 
@@ -88,7 +107,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Asen Lekov** - *Initial work* - [L3K0V](https://github.com/L3K0V)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
