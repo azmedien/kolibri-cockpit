@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       get 'settings'
       get 'build'
       post 'build', to: 'apps#jenkins', as: 'trigger_build'
+      post 'configure', to: 'apps#configure_app', as: 'trigger_configure'
       get 'prepare'
       get 'publish'
       get 'runtime'
