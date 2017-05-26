@@ -25,25 +25,42 @@ module GitHelper
     branch_name = "#{app.internal_name.parameterize}_#{app.internal_id}"
 
     repo = open_repo(url)
+
+    origin_app_id = app.android_config['origin']
+
     repo.checkout('master')
+
+    if origin_app_id
+      origin_app = App.friendly.find(origin_app_id)
+      origin_branch_name = "#{origin_app.internal_name.parameterize}_#{origin_app.internal_id}"
+      origin_branch = repo.branches["origin/#{origin_branch_name}"]
+    end
+
+    if origin_branch
+      repo.checkout(origin_branch_name)
+    end
+
     repo.branch(branch_name).checkout
 
-    repo.pull('origin', repo.branch(branch_name))
-
     begin
-      repo.chdir do
-        yield repo
+      repo.pull('origin', repo.branch(branch_name))
+    rescue
+    ensure
+      begin
+        repo.chdir do
+          yield repo
+
+          repo.config('user.name', 'Kolibri Cockpit')
+          repo.config('user.email', user.email)
+
+          repo.add(:all=>true)
+          repo.commit('Project configured by Kolibri Cockpit')
+          repo.push('origin', "#{app.internal_name.parameterize}_#{app.internal_id}")
+        end
+       ensure
+         repo.checkout('master')
+         repo.branch("#{app.internal_name.parameterize}_#{app.internal_id}").delete
+       end
       end
-     ensure
-       repo.config('user.name', 'Kolibri Cockpit')
-       repo.config('user.email', user.email)
-
-       repo.add(:all=>true)
-       repo.commit('Project configured by Kolibri Cockpit')
-       repo.push('origin', "#{app.internal_name.parameterize}_#{app.internal_id}")
-     end
-
-     repo.checkout('master')
-     repo.branch("#{app.internal_name.parameterize}_#{app.internal_id}").delete
-  end
+    end
 end
