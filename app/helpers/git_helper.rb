@@ -27,6 +27,7 @@ module GitHelper
     repo = open_repo(url)
     repo.checkout('master')
     repo.branch(branch_name).checkout
+    repo.pull
 
     begin
       repo.chdir do
