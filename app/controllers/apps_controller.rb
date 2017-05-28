@@ -34,6 +34,9 @@ class AppsController < ApplicationController
       @app.android_icon = origin.android_icon.dup
       @app.ios_icon = origin.ios_icon.dup
 
+      @app.android_config['origin'] = origin.id
+      @app.ios_config['origin'] = origin.id
+
       notice = 'Application was successfully duplicated.'
     else
       @app = App.new(app_params)
