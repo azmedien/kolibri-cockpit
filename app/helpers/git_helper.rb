@@ -23,7 +23,7 @@ module GitHelper
   def manipulate_repo(url, app, user)
 
     branch_name = "#{app.internal_name.parameterize}_#{app.internal_id}"
-    origin_app = App.friendly.find(origin_app_id) if app.android_config['origin']
+    origin_app = App.friendly.find(app.android_config['origin']) if app.android_config['origin']
 
     repo = open_repo(url)
     repo_branches = repo.branches
