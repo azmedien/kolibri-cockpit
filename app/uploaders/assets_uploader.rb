@@ -6,6 +6,7 @@ class AssetsUploader < CarrierWave::Uploader::Base
 
   process :validate_dimensions, if: :image?
   process :convert_to_png, if: :image?
+  process :save_content_type_and_size
 
   version :xxxhdpi, :if => :image? do
     convert :png
@@ -100,7 +101,7 @@ class AssetsUploader < CarrierWave::Uploader::Base
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_whitelist
-    %w(png svg json xml)
+    %w(png svg json xml otf ttf)
   end
 
   def size_range
@@ -126,6 +127,11 @@ class AssetsUploader < CarrierWave::Uploader::Base
   def is_square?(new_file)
     image = MiniMagick::Image.open(new_file.path)
     image[:width] == image[:height]
+  end
+
+  def save_content_type_and_size
+    model.content_type = file.content_type == 'application/octet-stream' || file.content_type.blank? ? MIME::Types.type_for(original_filename).first : file.content_type
+    model.file_size = file.size
   end
 
 end

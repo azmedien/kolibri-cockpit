@@ -1,30 +1,26 @@
 <main>
-  <% if !@asset.file.url.end_with?('json') %>
-  <%= image_tag(@asset.file.url, :class => "img-responsive")%>
-  <% else %>
-  <i class="fa fa-file-code-o" style="font-size:64px"></i>
+  <%= raw assets_content_type_icon(@asset, 64) %>
+
+  <%= render 'form', asset: @asset %>
+
+  <p>
+    <strong>File:</strong>
+    <%= @asset.file %>
+  </p>
+
+  <p>
+    <strong>URL:</strong>
+    <%= @asset.file.url %>
+  </p>
+
+  <% if @asset.content_type.start_with?('image') %>
+    <% @asset.file.versions.each do |version| %>
+    <p>
+      <strong><%= version.first %>: </strong>
+      <%= link_to 'Download', app_asset_download_path(:asset_id => @asset, :variant => version.first), :target => '_blank' %>
+    </p>
+    <% end %>
   <% end %>
-
-  <% @asset.file.versions.each do |version| %>
-  <%= image_tag(@asset.file.url(version.first), :class => "img-responsive")%>
-  <% end %>
-
-<p>
-  <strong>File:</strong>
-  <%= @asset.file %>
-</p>
-
-<p>
-  <strong>URL:</strong>
-  <%= @asset.file.url %>
-</p>
-
-<% @asset.file.versions.each do |version| %>
-<p>
-  <strong><%= version.first %>: </strong>
-  <%= link_to 'Download', app_asset_download_path(:asset_id => @asset, :variant => version.first), :target => '_blank' %>
-</p>
-<% end %>
 
 <%= link_to 'Edit', edit_app_asset_path(@app, @asset) %> |
 <%= link_to 'Back', app_assets_path %>

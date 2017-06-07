@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170424102404) do
+ActiveRecord::Schema.define(version: 20170607084404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,24 +39,28 @@ ActiveRecord::Schema.define(version: 20170424102404) do
   create_table "assets", force: :cascade do |t|
     t.string   "file"
     t.integer  "app_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "content_type"
+    t.integer  "file_size"
     t.index ["app_id"], name: "index_assets_on_app_id", using: :btree
   end
 
   create_table "builds", force: :cascade do |t|
-    t.string   "build_status",   default: "Not started", null: false
-    t.string   "test_status",    default: "Not started", null: false
-    t.string   "publish_status", default: "Not started", null: false
     t.string   "build_id"
     t.integer  "app_id"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.string   "url"
-    t.string   "platform",       default: "unknown",     null: false
+    t.string   "platform",       default: "unknown", null: false
+    t.integer  "user_id"
+    t.string   "publish_status"
+    t.string   "test_status"
+    t.string   "build_status"
     t.index ["app_id"], name: "index_builds_on_app_id", using: :btree
     t.index ["build_id"], name: "index_builds_on_build_id", using: :btree
     t.index ["platform", "build_id"], name: "index_builds_on_platform_and_build_id", unique: true, using: :btree
+    t.index ["user_id"], name: "index_builds_on_user_id", using: :btree
   end
 
   create_table "roles", force: :cascade do |t|
