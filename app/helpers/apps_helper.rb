@@ -25,21 +25,25 @@ module AppsHelper
       end
     end
 
-    app.android_icon.cache_stored_file!
-    app.android_icon.retrieve_from_cache!(app.android_icon.cache_name)
+    if app.android_icon
+      app.android_icon.cache_stored_file!
+      app.android_icon.retrieve_from_cache!(app.android_icon.cache_name)
 
-    app.android_icon.versions.each do |version|
-      dest = Dir.glob("#{folder}/**/app/**/res").first
-      FileUtils.mkdir_p(File.dirname("#{dest}/mipmap-#{version.first}/ic_launcher.png"))
-      FileUtils.cp version.last.file.path, "#{dest}/mipmap-#{version.first}/ic_launcher.png"
+      app.android_icon.versions.each do |version|
+        dest = Dir.glob("#{folder}/**/app/**/res").first
+        FileUtils.mkdir_p(File.dirname("#{dest}/mipmap-#{version.first}/ic_launcher.png"))
+        FileUtils.cp version.last.file.path, "#{dest}/mipmap-#{version.first}/ic_launcher.png"
+      end
     end
 
-    app.splash.cache_stored_file!
-    app.splash.retrieve_from_cache!(app.splash.cache_name)
+    if app.splash
+      app.splash.cache_stored_file!
+      app.splash.retrieve_from_cache!(app.splash.cache_name)
 
-    dest = Dir.glob("#{folder}/**/app/**/res").first
-    FileUtils.mkdir_p(File.dirname("#{dest}/drawable-anydpi/#{app.splash_identifier}"))
-    FileUtils.cp app.splash.path, "#{dest}/drawable-anydpi/#{app.splash_identifier}"
+      dest = Dir.glob("#{folder}/**/app/**/res").first
+      FileUtils.mkdir_p(File.dirname("#{dest}/drawable-anydpi/#{app.splash_identifier}"))
+      FileUtils.cp app.splash.path, "#{dest}/drawable-anydpi/#{app.splash_identifier}"
+    end
 
     CarrierWave.clean_cached_files!
   end
