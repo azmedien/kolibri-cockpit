@@ -9,7 +9,8 @@ class ConfigureAppJob < ApplicationJob
   queue_as :default
 
   rescue_from(StandardError) do |exception|
-     logger.fatal exception
+     logger.error exception.message
+     logger.error exception.backtrace.join("\n")
   end
 
   # TODO: Refactor me.

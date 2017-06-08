@@ -25,7 +25,7 @@ module AppsHelper
       end
     end
 
-    if app.android_icon
+    if !app.android_icon.file.nil?
       app.android_icon.cache_stored_file!
       app.android_icon.retrieve_from_cache!(app.android_icon.cache_name)
 
@@ -36,7 +36,7 @@ module AppsHelper
       end
     end
 
-    if app.splash
+    if !app.splash.file.nil?
       app.splash.cache_stored_file!
       app.splash.retrieve_from_cache!(app.splash.cache_name)
 
