@@ -14,9 +14,9 @@ class App < ApplicationRecord
   validates :internal_id, uniqueness: true
   validates :user, presence: true
 
-  mount_uploader :android_icon, AssetsUploader
-  mount_uploader :ios_icon, AssetsUploader
-  mount_uploader :splash, AssetsUploader
+  mount_uploader :android_icon, IconsUploader
+  mount_uploader :ios_icon, IconsUploader
+  mount_uploader :splash, IconsUploader
 
   store %(:android_config :ios_config)
 

@@ -1,41 +1,30 @@
-class AssetsUploader < CarrierWave::Uploader::Base
+class IconsUploader < CarrierWave::Uploader::Base
 
   include CarrierWave::MiniMagick
 
   after :remove, :delete_empty_upstream_dirs
 
-  process :validate_dimensions, if: :image?
-  process :convert_to_png, if: :image?
-  process :save_content_type_and_size
+  process :validate_dimensions
+  process :convert_to_png
 
-  version :xxxhdpi, :if => :image? do
+  version :xxxhdpi, :if => :icon? do
+    convert :png
+    process :resize_to_fit => [196, 196]
+  end
+
+  version :xxhdpi, :if => :icon? do
+    convert :png
+    process :resize_to_fit => [144, 144]
+  end
+
+  version :xxhdpi, :if => :icon? do
     convert :png
     process :resize_to_fit => [96, 96]
   end
 
-  version :xxhdpi, :if => :image? do
+  version :hdpi, :if => :icon? do
     convert :png
     process :resize_to_fit => [72, 72]
-  end
-
-  version :xxhdpi, :if => :image? do
-    convert :png
-    process :resize_to_fit => [48, 48]
-  end
-
-  version :hdpi, :if => :image? do
-    convert :png
-    process :resize_to_fit => [36, 36]
-  end
-
-  version :x2, :if => :image? do
-    convert :png
-    process :resize_to_fit => [44, 44]
-  end
-
-  version :x3, :if => :image? do
-    convert :png
-    process :resize_to_fit => [88, 88]
   end
 
   def convert_to_png()
@@ -57,12 +46,11 @@ class AssetsUploader < CarrierWave::Uploader::Base
   end
 
   def store_dir
-    "#{base_store_dir}/#{model.try(:slug)}"
+    "#{base_store_dir}/"
   end
 
   def base_store_dir
-    internal_id = model.internal_id(model.try(:app_id) || model.id)
-    "apps/#{internal_id}/assets"
+    "apps/#{model.internal_id}/assets"
   end
 
   def delete_empty_upstream_dirs
@@ -107,7 +95,7 @@ class AssetsUploader < CarrierWave::Uploader::Base
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_whitelist
-    %w(png svg json xml otf ttf)
+    %w(png svg)
   end
 
   def size_range
@@ -117,22 +105,13 @@ class AssetsUploader < CarrierWave::Uploader::Base
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
-      if image? file
-        name = File.extname(super) if !super.nil?
-        super.chomp(name) + '.png' if name
-      else
-        original_filename if original_filename
-      end
+    name = File.extname(super) if !super.nil?
+    mounted_as.to_s.chomp(name) + '.png' if name
   end
 
   protected
-  def image?(new_file)
-    new_file.content_type.start_with? 'image' if !new_file.nil?
-  end
-
-  def save_content_type_and_size
-    model.content_type = file.content_type == 'application/octet-stream' || file.content_type.blank? ? MIME::Types.type_for(original_filename).first : file.content_type
-    model.file_size = file.size
+  def icon?(new_file)
+    mounted_as.to_s != 'splash'
   end
 
 end
