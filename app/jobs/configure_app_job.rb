@@ -12,7 +12,7 @@ class ConfigureAppJob < ApplicationJob
      logger.fatal exception
   end
 
-  # TODO: Refactor me. 
+  # TODO: Refactor me.
   def perform(app, user)
     repo = app.android_config['repository_url']
     bundle = app.android_config['bundle_id']
@@ -25,6 +25,7 @@ class ConfigureAppJob < ApplicationJob
 
     manipulate_repo repo, app, user do |git|
       modify_android_configuration_files '.', app
+      setup_android_title '.', app
     end
 
     repo = app.ios_config['repository_url']

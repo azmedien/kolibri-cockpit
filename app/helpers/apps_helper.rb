@@ -2,6 +2,12 @@ module AppsHelper
 
   include UrlHelper
 
+
+  def setup_android_title folder, app
+    string_xml = Dir.glob("#{folder}/**/app/**/res/values/strings.xml").first
+    update_android_xml string_xml, 'app_name', app.internal_name if string_xml
+  end
+
   def modify_android_configuration_files folder, app
       build_gradle = Dir.glob("#{folder}/**/app/**/build.gradle").first
       manifest = Dir.glob("#{folder}/**/app/**/AndroidManifest.xml").first
@@ -144,7 +150,7 @@ module AppsHelper
     Tempfile.open(".#{File.basename(gradle)}", File.dirname(gradle)) do |tempfile|
       File.open(gradle).each do |line|
         new_line = line.gsub!(/(applicationId) (\".*?\")/, '\1 "' + applicationId + '"') ||
-          line.gsub!(/(versionCode) (\d*)/, '\1 ' + code + '') || 
+          line.gsub!(/(versionCode) (\d*)/, '\1 ' + code + '') ||
           line.gsub!(/(versionName) (\".*?\")/, '\1 "' + name + '"')
 
         tempfile.puts new_line || line
@@ -181,6 +187,22 @@ module AppsHelper
     else
       attribute.attributes['value'].value = value
     end
+
+    File.write(xml, document.to_xml(indent: 4))
+  end
+
+  def update_android_xml xml, meta, value
+    element = nil
+    document = Nokogiri::XML(File.open(xml), &:noblanks)
+    resources = document.at('resources')
+
+    resources.children.each { |item|
+      if (item.attributes['name'].value == meta)
+          element = item if item.attributes['name'].value == meta
+      end
+    }
+
+    element.children.first.content = value if element && element.children.any?
 
     File.write(xml, document.to_xml(indent: 4))
   end
