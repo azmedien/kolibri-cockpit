@@ -3,9 +3,57 @@
 Kolibri is a mobile and web framework for bootstrapping Android and iOS applications in no time.
 Using preconfigured web interface `The Kolibri Cockpit`, non technical guys can easy clone existing app and distribute them to Google Play store and iTunes just using a few clicks within a minutes. Other cool feature of the platform is that once cloned and deployed, application can be easily configure
 trough the dynamic runtime configuration. There is also support for assets, both `png` and `svg` formats which are scaled and generated for all needed
-sizes and densities for the mobile devices. Here also we can include the configurable splash screens, fonts and app icons.
+sizes and densities for the mobile devices. Also we support fonts and custom `json` files in the assets, configurable splash screens, and app icons.
 
-For this case we provide `vanilla`, basic Android and iOS skeleton applications which supports dynamic runtime configuration, navigation and other mandatory useful stuff. This can be used for very simple applications or for starting point, so this way developers can add own custom components.
+There is `vanilla`, basic Android and iOS skeleton applications which supports dynamic runtime configuration, navigation and other mandatory useful stuff. This can be used for very simple applications or for starting point, so this way developers can add own custom components.
+
+## Architecture
+
+This framework has multiple parts and links several services.
+First there is a continuous integration server which build, test and publish the applications.
+The process is configured using `Fastlane`. Other hand there is the mentioned above `Cockpit` which controls the creation, clone, configure and publish process.
+Imagine it as middleware between developers, testers, publishes and managers on one side and `Google Play`, `Fabric`, `TestFlgiht`, `AppStore` in other. For application management the framework lies on version control management and branching mechanism. This will be explained later.
+
+The big picture looks like this:
+
+```
+                                                                          +--------------------+
+                    +----------------------+       +------------+         |                    |
+             (5)    |                      |  (3)  |            |   (4)   |    TestFlight      |
+        +----------->   Cockpit Web App    <-------+ Jenkins CI +--------->    Fabric          |
+        |           |                      |       |            |         |    AppStore        |
+        |           +----+----------+------+       +-----^------+         |    GooglePlay      |
++-------+-------+        |          |                    |                |    Slack           |
+|               |        |          |                    |                |                    |
+|  User or Dev  |     (1)|          |(6)                 |                +--------------------+
+|               |        |          |                    | (2)
++-------+-------+        |          |                    |
+        |                |          |                    |
+        |           +----v----------v----+               |
+        |           |                    |               |
+        +-----------> Repository/Vanilla +---------------+
+            (7)     |                    |
+                    +--------------------+
+
+
+```
+
+0. When we create new application, cockpit clone the repository (or the vanilla) and branch from its master.
+New branch is created with the name and the id of the app containing fully configured and functional basic app.
+
+  _Updating an app will update the current branch if needed. Because the app is under VCS only changes will trigger the process._
+
+0. Repository `push` hook will notify Jenkins and build of this branch will be started.
+
+0. Jenkins will execute `Fastlane` build script and will notify the `cockpit` of the current stage and process status.
+
+0. `Fastlane` will try to upload to Fabric, AppStore and/or Google Play. Also will post notification on Slack.
+
+0. When user clone an app all configuration and assets will be copied.
+
+0. Cockpit also will branch the app from the origin application's branch. This means that all custom functionality will be available in the cloned app. And then the process continue from **point (2)**
+
+0. Developer can clone the app branch and can add custom functionality as writing a code or something else. Once published the process continue from **point (2)**
 
 ## Getting started
 
@@ -15,7 +63,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them
 
-Continuous integration server:
+**Continuous integration server:**
 * Mac OS X machine
 * Android SDK and Platform tools
 * Jenkins
@@ -23,7 +71,7 @@ Continuous integration server:
 * Fastlane
 * Maven server (optional)
 
-Cockpit server:
+**Cockpit server:**
 * Ruby
 * PostreSQL
 * Redis
@@ -95,7 +143,7 @@ Add additional notes about how to deploy this on a live system
 
 ## Getting started with Cockpit
 
-> You must create the application in Google play before publish from Kolibri Cockpit
+> You must create the application in Google play and make an initial upload before publish from Kolibri Cockpit
 
 ## Contributing
 
