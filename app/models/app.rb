@@ -38,6 +38,6 @@ class App < ApplicationRecord
 
   private
   def set_slug
-      self.slug = internal_id
-    end
+    self.slug = internal_id
+  end
 end

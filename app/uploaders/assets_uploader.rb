@@ -56,16 +56,13 @@ class AssetsUploader < CarrierWave::Uploader::Base
     end
   end
 
-  # convert collection-active.svg -resize 92x84> -resize 92x84< -background #000 out.png
-
-  # Override the directory where uploaded files will be stored.
-  # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    "#{base_store_dir}/#{model.id}"
+    "#{base_store_dir}/#{model.try(:slug)}"
   end
 
   def base_store_dir
-    "uploads/app/#{model.try(:app_id) || model.id}/#{model.class.to_s.underscore}"
+    internal_id = model.internal_id(model.try(:app_id) || model.id)
+    "apps/#{internal_id}/assets"
   end
 
   def delete_empty_upstream_dirs
@@ -74,6 +71,15 @@ class AssetsUploader < CarrierWave::Uploader::Base
 
     path = ::File.expand_path(base_store_dir, root)
     Dir.delete(path) # fails if path not empty dir
+
+    # Delete 'assets' empty forlder for the app
+    path = ::File.expand_path('..', path)
+    Dir.delete(path) # fails if path not empty dir
+
+    # Delete current app folder itself
+    path = ::File.expand_path('..', path)
+    Dir.delete(path) # fails if path not empty dir
+
   rescue SystemCallError
     true # nothing, the dir is not empty
   end

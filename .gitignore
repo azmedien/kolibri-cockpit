@@ -97,3 +97,4 @@ build-iPhoneSimulator/
 
 # End of https://www.gitignore.io/api/rails,ruby
 public/uploads
+public/apps

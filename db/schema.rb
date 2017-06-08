@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 20170607084404) do
     t.datetime "updated_at",   null: false
     t.string   "content_type"
     t.integer  "file_size"
+    t.string   "md5hash"
+    t.string   "slug"
     t.index ["app_id"], name: "index_assets_on_app_id", using: :btree
   end
 
