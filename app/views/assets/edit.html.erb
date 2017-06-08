@@ -12,7 +12,7 @@
 
 <p>
   <strong>URL:</strong>
-  <%= @asset.file.url %>
+  <%= link_to app_asset_download_path(:asset_id => @asset), app_asset_download_path(:asset_id => @asset), :target => '_blank' %>
 </p>
 
 <% if @asset.content_type.start_with?('image') %>

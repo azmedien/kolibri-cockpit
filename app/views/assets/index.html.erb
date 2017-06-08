@@ -7,7 +7,7 @@
                 <span class="p-2">
                     <%= raw assets_content_type_icon(asset, 32) %>
                 </span>
-                <%= link_to "#{asset.file}", edit_app_asset_path(@app, asset), :class => 'mr-auto p-2' %>
+                <%= link_to "#{asset.file_identifier}", edit_app_asset_path(@app, asset), :class => 'mr-auto p-2' %>
                 <span class="p-2"><%= button_to 'Edit', edit_app_asset_path(@app, asset), method: :get, :class => "btn btn-outline-primary" %></span>
                 <span class="p-2"><%= button_to 'Destroy', [@app, asset], method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %></span>
             </div>
