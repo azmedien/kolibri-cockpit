@@ -3,6 +3,31 @@ module AppsHelper
   include UrlHelper
 
 
+  def copy_android_assets folder, app
+    require 'fileutils'
+
+    assets = app.assets
+
+    assets.each do |asset|
+      asset.file.cache_stored_file!
+      asset.file.retrieve_from_cache!(asset.file.cache_name)
+
+      # Copy drawable resources
+      if asset.content_type.starts_with?('image/')
+        asset.file.versions.each do |version|
+
+          next if version.first.to_s == 'x2' || version.first.to_s == 'x3'
+
+          dest = Dir.glob("#{folder}/**/app/**/res").first
+          FileUtils.mkdir_p(File.dirname("#{dest}/drawable-#{version.first}/#{asset.file_identifier}"))
+          FileUtils.cp version.last.file.path, "#{dest}/drawable-#{version.first}/#{asset.file_identifier}"
+        end
+      end
+    end
+
+    CarrierWave.clean_cached_files!
+  end
+
   def setup_android_title folder, app
     string_xml = Dir.glob("#{folder}/**/app/**/res/values/strings.xml").first
     update_android_xml string_xml, 'app_name', app.internal_name if string_xml

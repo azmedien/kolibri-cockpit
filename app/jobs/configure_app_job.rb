@@ -26,6 +26,7 @@ class ConfigureAppJob < ApplicationJob
     manipulate_repo repo, app, user do |git|
       modify_android_configuration_files '.', app
       setup_android_title '.', app
+      copy_android_assets '.', app
     end
 
     repo = app.ios_config['repository_url']
