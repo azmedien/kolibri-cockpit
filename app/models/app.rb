@@ -1,6 +1,7 @@
 class App < ApplicationRecord
   include FriendlyId
   include Authority::Abilities
+  include CopyCarrierwaveFile
 
   belongs_to :user
   has_many :builds, dependent: :destroy
@@ -32,6 +33,12 @@ class App < ApplicationRecord
     gs = self.ios_config || {}
     gs = gs.merge(new_config || {})
     write_attribute(:ios_config, gs)
+  end
+
+  def duplicate_files(original)
+    copy_carrierwave_file(original, self, :android_icon) unless android_icon.file.nil?
+    copy_carrierwave_file(original, self, :ios_icon) unless ios_icon.file.nil?
+    copy_carrierwave_file(original, self, :splash) unless splash.file.nil?
   end
 
   private

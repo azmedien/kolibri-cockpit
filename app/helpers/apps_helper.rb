@@ -57,12 +57,7 @@ module AppsHelper
       build_gradle = Dir.glob("#{folder}/**/app/**/build.gradle").first
       manifest = Dir.glob("#{folder}/**/app/**/AndroidManifest.xml").first
 
-      netmetrix_url = app.android_config['netmetrix_url']
-      netmetrix_ua = app.android_config['netmetrix_ua']
-
       update_android_meta(manifest, 'kolibri_navigation_url', runtime_app_url(app))
-      update_android_meta(manifest, 'kolibri_netmetrix_url', netmetrix_url) unless netmetrix_url.nil? || netmetrix_url.empty?
-      update_android_meta(manifest, 'kolibri_netmetrix_ua', netmetrix_ua) unless netmetrix_ua.nil? || netmetrix_ua.empty?
 
       # FIXME: Remove me
       update_android_meta(manifest, 'io.fabric.ApiKey', '5b0e4ca8fe72e1ad97ccbd82e18f18ba4cacd219')
@@ -72,14 +67,9 @@ module AppsHelper
   end
 
   def modify_ios_configuration_files folder, app
-
-    netmetrix_url = app.ios_config['netmetrix_url']
-    netmetrix_ua = app.ios_config['netmetrix_ua']
     bundle_id = app.ios_config['bundle_id']
 
     update_ios_plist(folder, 'kolibri_navigation_url', runtime_app_url(app))
-    update_ios_plist(folder, 'kolibri_netmetrix_url', netmetrix_url) unless netmetrix_url.nil? || netmetrix_url.empty?
-    update_ios_plist(folder, 'kolibri_netmetrix_ua', netmetrix_ua) unless netmetrix_ua.nil? || netmetrix_ua.empty?
 
     update_ios_bundle_id folder, bundle_id
   end

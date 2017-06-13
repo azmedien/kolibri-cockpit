@@ -37,6 +37,8 @@ class AppsController < ApplicationController
       @app.android_config.delete('bundle_id')
       @app.ios_config.delete('bundle_id')
 
+      @app.duplicate_files(origin)
+
       notice = 'Application was successfully duplicated.'
     else
       @app = App.new(app_params)
