@@ -30,7 +30,6 @@ class AssetsController < ApplicationController
 
     asset_params[:file].each do |file|
       asset = Asset.new(file: file, app_id: @app.id)
-
       assets << asset
     end
 

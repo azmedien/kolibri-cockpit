@@ -57,12 +57,12 @@ class AssetsUploader < CarrierWave::Uploader::Base
   end
 
   def store_dir
-    "#{base_store_dir}/#{model.try(:slug)}"
+    "#{base_store_dir}/assets"
   end
 
   def base_store_dir
     internal_id = model.internal_id(model.try(:app_id) || model.id)
-    "apps/#{internal_id}/assets"
+    "apps/#{internal_id}"
   end
 
   def delete_empty_upstream_dirs
@@ -72,10 +72,6 @@ class AssetsUploader < CarrierWave::Uploader::Base
     path = ::File.expand_path(base_store_dir, root)
     Dir.delete(path) # fails if path not empty dir
 
-    # Delete 'assets' empty forlder for the app
-    path = ::File.expand_path('..', path)
-    Dir.delete(path) # fails if path not empty dir
-
     # Delete current app folder itself
     path = ::File.expand_path('..', path)
     Dir.delete(path) # fails if path not empty dir
@@ -83,26 +79,6 @@ class AssetsUploader < CarrierWave::Uploader::Base
   rescue SystemCallError
     true # nothing, the dir is not empty
   end
-
-  # Provide a default URL as a default if there hasn't been a file uploaded:
-  # def default_url
-  #   # For Rails 3.1+ asset pipeline compatibility:
-  #   # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
-  #
-  #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
-  # end
-
-  # Process files as they are uploaded:
-  # process scale: [200, 300]
-  #
-  # def scale(width, height)
-  #   # do something
-  # end
-
-  # Create different versions of your uploaded files:
-  # version :thumb do
-  #   process resize_to_fit: [50, 50]
-  # end
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
@@ -117,11 +93,13 @@ class AssetsUploader < CarrierWave::Uploader::Base
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
+      ext = File.extname(super) if !super.nil?
+      name = super.chomp(ext).parameterize.tr("-", "_") if ext
+
       if image? file
-        name = File.extname(super) if !super.nil?
-        super.chomp(name) + '.png' if name
+         name + '.png'
       else
-        original_filename if original_filename
+        name + ext
       end
   end
 
@@ -133,6 +111,9 @@ class AssetsUploader < CarrierWave::Uploader::Base
   def save_content_type_and_size
     model.content_type = file.content_type == 'application/octet-stream' || file.content_type.blank? ? MIME::Types.type_for(original_filename).first : file.content_type
     model.file_size = file.size
+
+    ext = File.extname(original_filename) if original_filename
+    model.slug = original_filename.chomp(ext).parameterize.tr!("-", "_") if ext
   end
 
 end

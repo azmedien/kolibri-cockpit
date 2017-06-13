@@ -1,9 +1,6 @@
 class App < ApplicationRecord
-  extend FriendlyId
-
+  include FriendlyId
   include Authority::Abilities
-
-  friendly_id :internal_id, use: [:slugged, :finders]
 
   belongs_to :user
   has_many :builds, dependent: :destroy
@@ -21,6 +18,7 @@ class App < ApplicationRecord
   store %(:android_config :ios_config)
 
   has_secure_token :internal_id
+  friendly_id :internal_id
 
   before_create :set_slug
 
