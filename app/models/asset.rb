@@ -9,6 +9,7 @@ class Asset < ApplicationRecord
 
   validates_integrity_of :file
   validates_processing_of :file
+  validates :slug, uniqueness: { scope: :id }
 
   belongs_to :app
   before_destroy :internal_id

@@ -223,8 +223,8 @@ module AppsHelper
     }
 
     if attribute.nil?
-      builder = Nokogiri::XML::Builder.new do |xml|
-        xml.send(:"meta-data", 'android:name' => meta, 'android:value' => value)
+      builder = Nokogiri::XML::Builder.new do |doc|
+        doc.send(:"meta-data", 'android:name' => meta, 'android:value' => value)
       end
 
       attribute = builder.doc.root

@@ -1,6 +1,8 @@
 module WebhooksHelper
   include ActionView::Helpers::DateHelper
-  def build_to_html_table_row(build)
+  include ActionView::Helpers::AssetTagHelper
+
+  def build_to_html_table_row(app, build)
 
     statuses = Array.new
     statuses << build.build_status << build.test_status << build.publish_status
@@ -13,9 +15,23 @@ module WebhooksHelper
       '<i class="fa fa-check-circle text-success text-center"></i>'
     end
 
-    hmtl = %{
+
+
+    meta = %{
+      <span>#{build.platform.capitalize}</span></br>
+      <span>
+      #{build.platform == 'android' ? app.android_config['version_name'] : app.ios_config['version_name']}(
+      #{build.platform == 'android' ? app.android_config['version_code'] : app.ios_config['version_code']})
+      </span></br>
+      <span>#{build.platform == 'android' ? app.android_config['bundle_id'] : app.ios_config['bundle_id']}</span>
+    }
+
+    html = %{
       <tr id="#{build.build_id}">
-        <th scope="row"><a href="#{build.url}" target="_blank">#{build.build_id}</a></th>
+        <th scope="row">
+          <a href="#{build.url}" target="_blank" data-toggle="tooltip" data-placement="left" data-html="true" title="#{meta}">
+          #{image_tag(app.android_icon.url, size: "32", :class => "img-responsive rounded-circle") if app.android_icon?}
+          </a></th>
         <th>#{status}</th>
         <td>#{build.build_status.capitalize}</td>
         <td>#{build.test_status.capitalize}</td>
@@ -23,5 +39,7 @@ module WebhooksHelper
         <td>#{time_ago_in_words(build.updated_at)}</td>
       </tr>
     }
+
+    html
   end
 end

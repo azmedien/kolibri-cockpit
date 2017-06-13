@@ -33,7 +33,7 @@ module GitHelper
     # Trying to find origin app branch we want to branch from. We want to skip this if we alredy cloned the app
     if origin_app && (repo_branches[branch_name].nil? || repo_branches["origin/#{branch_name}"].nil?)
       origin_branch_name = "#{origin_app.internal_name.parameterize}_#{origin_app.internal_id}"
-      origin_branch = repo_branches["origin/#{origin_branch_name}"]
+      # origin_branch = repo_branches["origin/#{origin_branch_name}"]
       repo.checkout(origin_branch_name) # Checkout the origin app branch so we will branch from it
       repo.pull()
     end

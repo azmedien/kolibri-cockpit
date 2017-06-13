@@ -36,6 +36,8 @@ class AppsController < ApplicationController
 
       @app.android_config['origin'] = origin.id
       @app.ios_config['origin'] = origin.id
+      @app.android_config.delete('bundle_id')
+      @app.ios_config.delete('bundle_id')
 
       notice = 'Application was successfully duplicated.'
     else
@@ -52,6 +54,7 @@ class AppsController < ApplicationController
           origin.assets.each do |item|
             asset = Asset.new
             asset.app_id = @app.id
+            asset.slug = item.slug
             asset.duplicate_file(item)
             asset.save!
           end

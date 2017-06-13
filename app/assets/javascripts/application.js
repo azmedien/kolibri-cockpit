@@ -17,3 +17,6 @@
 //= require_tree .
 //= require tether
 //= require bootstrap-sprockets
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})

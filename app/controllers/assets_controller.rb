@@ -1,7 +1,7 @@
 class AssetsController < ApplicationController
-  before_action :set_asset, only: [:show, :edit, :update, :destroy, :download]
   before_action :set_app
   before_action :set_apps
+  before_action :set_asset, only: [:show, :edit, :update, :destroy, :download]
 
   # GET /assets
   # GET /assets.json
@@ -85,7 +85,7 @@ class AssetsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_asset
-      @asset = Asset.find(params[:id] || params[:asset_id])
+      @asset = Asset.friendly.find_by!(slug: params[:id] || params[:asset_id], app_id: @app.id)
     end
 
     def set_app
