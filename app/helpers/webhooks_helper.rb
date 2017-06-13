@@ -3,19 +3,13 @@ module WebhooksHelper
   include ActionView::Helpers::AssetTagHelper
 
   def build_to_html_table_row(app, build)
-
-    statuses = Array.new
-    statuses << build.build_status << build.test_status << build.publish_status
-
-    if statuses.include? 'failed'
+    if build.code < 0
       status = '<i class="fa fa-times-circle text-danger text-center" aria-hidden="true"></i>'
     else
-      status = build.publish_status == 'not started' ?
+      status = build.code == 0 ?
       '<i class="fa fa-circle-o-notch fa-spin text-primary text-center" ></i>' :
       '<i class="fa fa-check-circle text-success text-center"></i>'
     end
-
-
 
     meta = %{
       <span>#{build.platform.capitalize}</span></br>
@@ -33,9 +27,8 @@ module WebhooksHelper
           #{image_tag(app.android_icon.url, size: "32", :class => "img-responsive rounded-circle") if app.android_icon?}
           </a></th>
         <th>#{status}</th>
-        <td>#{build.build_status.capitalize}</td>
-        <td>#{build.test_status.capitalize}</td>
-        <td>#{build.publish_status.capitalize}</td>
+        <td>#{build.stage.capitalize}</td>
+        <td>#{build.message.capitalize}</td>
         <td>#{time_ago_in_words(build.updated_at)}</td>
       </tr>
     }

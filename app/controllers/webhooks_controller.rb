@@ -6,13 +6,10 @@ class WebhooksController < ActionController::API
       build = @app.builds.find_or_create_by(build_id: params[:build])
       build.url = params[:url]
       build.platform = params[:platform]
-
-      begin
-        build.send(params[:type].downcase + '_status=', params[:status])
-      rescue
-      end
-
-      build.save
+      build.stage = params[:stage]
+      build.code = params[:code]
+      build.message = params[:message]
+      build.save!
 
       ActionCable.server.broadcast 'webhooks',
         id: build.build_id,
