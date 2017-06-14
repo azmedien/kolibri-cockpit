@@ -19,4 +19,16 @@
 //= require bootstrap-sprockets
 $(document).on("turbolinks:load", function() {
   $('[data-toggle="tooltip"]').tooltip()
+  $('.table tr[data-href]').each(function(){
+        $(this).css('cursor','pointer').hover(
+            function(){
+                $(this).addClass('active');
+            },
+            function(){
+                $(this).removeClass('active');
+            }).click( function(){
+                window.open($(this).attr('data-href'), '_blank');
+            }
+        );
+    });
 })
