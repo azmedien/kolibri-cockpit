@@ -41,8 +41,8 @@ module AppsHelper
       app.splash.retrieve_from_cache!(app.splash.cache_name)
 
       dest = Dir.glob("#{folder}/**/app/**/res").first
-      FileUtils.mkdir_p(File.dirname("#{dest}/drawable-anydpi/#{app.splash_identifier}"))
-      FileUtils.cp app.splash.path, "#{dest}/drawable-anydpi/#{app.splash_identifier}"
+      FileUtils.mkdir_p(File.dirname("#{dest}/drawable/#{app.splash_identifier}"))
+      FileUtils.cp app.splash.path, "#{dest}/drawable/#{app.splash_identifier}"
     end
 
     CarrierWave.clean_cached_files!
