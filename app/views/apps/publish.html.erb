@@ -6,17 +6,16 @@
     <table class="card-block table table-hover" id="android">
         <thead>
             <tr>
-                <th>#</th>
+                <th>App</th>
                 <th>Status</th>
-                <th>Build</th>
-                <th>Test</th>
-                <th>Ready</th>
-                <th>Updated on</th>
+                <th>Stage</th>
+                <th>Message</th>
+                <th>Updated</th>
             </tr>
         </thead>
         <tbody id="builds">
             <% @app.builds.where(platform: 'android').last(5).reverse.each do |build| %>
-              <%= raw build_to_html_table_row(build) %>
+              <%= raw build_to_html_table_row(@app, build) %>
             <% end %>
         </tbody>
     </table>
@@ -35,12 +34,11 @@
     <table class="card-block table table-hover" id="ios">
         <thead>
             <tr>
-                <th>#</th>
+                <th>App</th>
                 <th>Status</th>
-                <th>Build</th>
-                <th>Test</th>
-                <th>Ready</th>
-                <th>Updated on</th>
+                <th>Stage</th>
+                <th>Message</th>
+                <th>Updated </th>
             </tr>
         </thead>
         <tbody id="builds">

@@ -2,16 +2,62 @@ module AppsHelper
 
   include UrlHelper
 
+
+  def copy_android_assets folder, app
+    require 'fileutils'
+
+    assets = app.assets
+
+    assets.each do |asset|
+      asset.file.cache_stored_file!
+      asset.file.retrieve_from_cache!(asset.file.cache_name)
+
+      # Copy drawable resources
+      if asset.content_type.starts_with?('image/')
+        asset.file.versions.each do |version|
+
+          next if version.first.to_s == 'x2' || version.first.to_s == 'x3'
+
+          dest = Dir.glob("#{folder}/**/app/**/res").first
+          FileUtils.mkdir_p(File.dirname("#{dest}/drawable-#{version.first}/#{asset.file_identifier}"))
+          FileUtils.cp version.last.file.path, "#{dest}/drawable-#{version.first}/#{asset.file_identifier}"
+        end
+      end
+    end
+
+    if !app.android_icon.file.nil?
+      app.android_icon.cache_stored_file!
+      app.android_icon.retrieve_from_cache!(app.android_icon.cache_name)
+
+      app.android_icon.versions.each do |version|
+        dest = Dir.glob("#{folder}/**/app/**/res").first
+        FileUtils.mkdir_p(File.dirname("#{dest}/mipmap-#{version.first}/ic_launcher.png"))
+        FileUtils.cp version.last.file.path, "#{dest}/mipmap-#{version.first}/ic_launcher.png"
+      end
+    end
+
+    if !app.splash.file.nil?
+      app.splash.cache_stored_file!
+      app.splash.retrieve_from_cache!(app.splash.cache_name)
+
+      dest = Dir.glob("#{folder}/**/app/**/res").first
+      FileUtils.mkdir_p(File.dirname("#{dest}/drawable-anydpi/#{app.splash_identifier}"))
+      FileUtils.cp app.splash.path, "#{dest}/drawable-anydpi/#{app.splash_identifier}"
+    end
+
+    CarrierWave.clean_cached_files!
+  end
+
+  def setup_android_title folder, app
+    string_xml = Dir.glob("#{folder}/**/app/**/res/values/strings.xml").first
+    update_android_xml string_xml, 'app_name', app.internal_name if string_xml
+  end
+
   def modify_android_configuration_files folder, app
       build_gradle = Dir.glob("#{folder}/**/app/**/build.gradle").first
       manifest = Dir.glob("#{folder}/**/app/**/AndroidManifest.xml").first
 
-      netmetrix_url = app.android_config['netmetrix_url']
-      netmetrix_ua = app.android_config['netmetrix_ua']
-
       update_android_meta(manifest, 'kolibri_navigation_url', runtime_app_url(app))
-      update_android_meta(manifest, 'kolibri_netmetrix_url', netmetrix_url) unless netmetrix_url.nil? || netmetrix_url.empty?
-      update_android_meta(manifest, 'kolibri_netmetrix_ua', netmetrix_ua) unless netmetrix_ua.nil? || netmetrix_ua.empty?
 
       # FIXME: Remove me
       update_android_meta(manifest, 'io.fabric.ApiKey', '5b0e4ca8fe72e1ad97ccbd82e18f18ba4cacd219')
@@ -21,14 +67,9 @@ module AppsHelper
   end
 
   def modify_ios_configuration_files folder, app
-
-    netmetrix_url = app.ios_config['netmetrix_url']
-    netmetrix_ua = app.ios_config['netmetrix_ua']
     bundle_id = app.ios_config['bundle_id']
 
     update_ios_plist(folder, 'kolibri_navigation_url', runtime_app_url(app))
-    update_ios_plist(folder, 'kolibri_netmetrix_url', netmetrix_url) unless netmetrix_url.nil? || netmetrix_url.empty?
-    update_ios_plist(folder, 'kolibri_netmetrix_ua', netmetrix_ua) unless netmetrix_ua.nil? || netmetrix_ua.empty?
 
     update_ios_bundle_id folder, bundle_id
   end
@@ -144,7 +185,7 @@ module AppsHelper
     Tempfile.open(".#{File.basename(gradle)}", File.dirname(gradle)) do |tempfile|
       File.open(gradle).each do |line|
         new_line = line.gsub!(/(applicationId) (\".*?\")/, '\1 "' + applicationId + '"') ||
-          line.gsub!(/(versionCode) (\d*)/, '\1 ' + code + '') || 
+          line.gsub!(/(versionCode) (\d*)/, '\1 ' + code + '') ||
           line.gsub!(/(versionName) (\".*?\")/, '\1 "' + name + '"')
 
         tempfile.puts new_line || line
@@ -172,8 +213,8 @@ module AppsHelper
     }
 
     if attribute.nil?
-      builder = Nokogiri::XML::Builder.new do |xml|
-        xml.send(:"meta-data", 'android:name' => meta, 'android:value' => value)
+      builder = Nokogiri::XML::Builder.new do |doc|
+        doc.send(:"meta-data", 'android:name' => meta, 'android:value' => value)
       end
 
       attribute = builder.doc.root
@@ -181,6 +222,22 @@ module AppsHelper
     else
       attribute.attributes['value'].value = value
     end
+
+    File.write(xml, document.to_xml(indent: 4))
+  end
+
+  def update_android_xml xml, meta, value
+    element = nil
+    document = Nokogiri::XML(File.open(xml), &:noblanks)
+    resources = document.at('resources')
+
+    resources.children.each { |item|
+      if (item.attributes['name'].value == meta)
+          element = item if item.attributes['name'].value == meta
+      end
+    }
+
+    element.children.first.content = value if element && element.children.any?
 
     File.write(xml, document.to_xml(indent: 4))
   end

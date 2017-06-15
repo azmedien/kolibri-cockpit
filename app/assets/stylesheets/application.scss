@@ -28,6 +28,12 @@ section {
     margin-top: 20px;
 }
 
+.tooltip-inner {
+    white-space: pre;
+    max-width:none;
+
+}
+
 .field_with_errors {
   @extend .has-danger;
 }

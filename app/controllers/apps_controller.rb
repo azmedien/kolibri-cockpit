@@ -2,8 +2,6 @@ class AppsController < ApplicationController
   before_action :authenticate_user!, except: [:runtime]
   before_action :set_app, except: [:index, :create, :new, :runtime]
   before_action :set_apps, except: [:show, :destroy, :jenkins, :runtime]
-  before_action :set_jenkins
-  before_action :set_jenkins_job, only: [:create, :update, :build]
 
   # GET /apps
   # GET /apps.json
@@ -36,6 +34,10 @@ class AppsController < ApplicationController
 
       @app.android_config['origin'] = origin.id
       @app.ios_config['origin'] = origin.id
+      @app.android_config.delete('bundle_id')
+      @app.ios_config.delete('bundle_id')
+
+      @app.duplicate_files(origin)
 
       notice = 'Application was successfully duplicated.'
     else
@@ -52,6 +54,7 @@ class AppsController < ApplicationController
           origin.assets.each do |item|
             asset = Asset.new
             asset.app_id = @app.id
+            asset.slug = item.slug
             asset.duplicate_file(item)
             asset.save!
           end
@@ -135,7 +138,7 @@ class AppsController < ApplicationController
     # Ensure we return in all cases an app.
     # This is used now to provide runtime configuraiton without any
     # authentication. This must be repalced with some kind of authentication
-    @app = App.friendly.find(params[:id])
+    @app = App.find(params[:id])
     render json: @app.runtime
   end
 
@@ -148,28 +151,11 @@ class AppsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_app
-      @app = current_user.apps.friendly.find(params[:id])
+      @app = current_user.apps.find(params[:id])
     end
 
     def set_apps
       @apps = current_user.apps.order(:internal_name)
-    end
-
-    def set_jenkins
-      require 'jenkins_api_client'
-      @client = JenkinsApi::Client.new(
-                :server_url => Rails.configuration.cockpit['jenkins_url'],
-                :username => Rails.configuration.cockpit['jenkins_user'],
-                :password => Rails.configuration.cockpit['jenkins_secret'])
-    end
-
-    def set_jenkins_job
-      begin
-        @jobs = @client.job.list_all
-      rescue Exception => e
-        flash[:danger] = e.message
-        redirect_to request.referrer
-      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -181,7 +167,7 @@ class AppsController < ApplicationController
         :android_icon,
         :ios_icon,
         :splash,
-        :android_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url, :bundle_id, :version_code, :version_name],
-        :ios_config => [:repository_url, :jenkins_job, :netmetrix_ua, :netmetrix_url, :bundle_id])
+        :android_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id, :version_code, :version_name],
+        :ios_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id])
     end
 end

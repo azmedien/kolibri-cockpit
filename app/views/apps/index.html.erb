@@ -1,17 +1,26 @@
 <main>
-    <div class="list-group">
-        <%= link_to "Create new application", new_app_path, :class => "list-group-item active" %>
-        <% @apps.each do |app| %>
-        <div class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-end align-items-center">
-                <span class="p-2">
-                    <%= image_tag(app.android_icon.url, size: "32", :class => "img-responsive rounded-circle") if app.android_icon? %>
-                </span>
-                <span class="mr-auto p-2"><%= app.internal_name %></span>
-                <span class="p-2"><%= button_to 'Edit', edit_app_path(app), method: :get, :class => "btn btn-outline-primary" %></span>
-                <span class="p-2"><%= button_to 'Destroy', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %></span>
-            </div>
-        </div>
-        <% end %>
+  <div class="list-group">
+    <%= link_to(new_app_path, :class => 'list-group-item active justify-content-between') do %>
+    <div class="d-flex w-100 justify-content-end align-items-center">
+      <i class="fa fa-plus p-2" aria-hidden="true"></i>
+      <span class="mr-auto p-2">Create new application</span>
     </div>
+    <% end %>
+    <% @apps.each do |app| %>
+    <div class="list-group-item list-group-item-action flex-column align-items-start">
+      <div class="d-flex w-100 justify-content-end align-items-center">
+      <%= link_to(edit_app_path(app), :class=>'d-flex w-100') do %>
+        <span class="p-2">
+          <%= image_tag(app.android_icon.url, size: "32", :class => "img-responsive rounded-circle") if app.android_icon? %>
+        </span>
+        <span class="mr-auto p-2"><%= app.internal_name %></span>
+      <% end %>
+
+      <span class="p-2"><%= button_to 'Invite', edit_app_path(app), method: :get, :class => "btn btn-outline-primary disabled", :disabled => true %></span>
+      <span class="p-2"><%= button_to 'Edit', edit_app_path(app), method: :get, :class => "btn btn-outline-primary" %></span>
+      <span class="p-2"><%= button_to 'Delete', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %></span>
+        </div>
+    </div>
+    <% end %>
+  </div>
 </main>
