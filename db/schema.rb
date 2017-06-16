@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170613220742) do
+ActiveRecord::Schema.define(version: 20170616160325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20170613220742) do
     t.string   "platform",   default: "unknown", null: false
     t.integer  "user_id"
     t.string   "stage"
-    t.integer  "code",       default: 0
+    t.integer  "code",       default: 0,         null: false
     t.string   "message"
     t.index ["app_id"], name: "index_builds_on_app_id", using: :btree
     t.index ["build_id"], name: "index_builds_on_build_id", using: :btree
