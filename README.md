@@ -69,6 +69,7 @@ What things you need to install the software and how to install them
 * Jenkins
 * Xcode
 * Fastlane
+* Blade (https://github.com/jondot/blade)
 * Maven server (optional)
 
 **Cockpit server:**
@@ -97,7 +98,9 @@ For the Cockpit server we assume you will deploy it on `Heroku` which again is s
 For local development install prerequisites as follow:
 
 ```bash
-brew install imagemagick --with-librsvg redis postgresql rbenv ruby-build
+$ brew install imagemagick --with-librsvg redis postgresql rbenv ruby-build
+$ brew tap jondot/tap
+$ brew install blade
 ```
 
 > You can follow this detailed guide for installing ruby rails on your machine:
@@ -108,13 +111,13 @@ Create an `PostreSQL` database using `Postico` for example. Name it `kolibri_dev
 Make sure you have exported the `PKEY` env which will grant you `push` rights to the repositories.
 
 ```bash
-export PKEY=/Users/lekov/Workspace/Kolibri/kolibri-cockpit/cockpit
+$ export PKEY=/Users/lekov/Workspace/Kolibri/kolibri-cockpit/cockpit
 ```
 
 Now you are ready to run the server by executing this command from the project's folder:
 
 ```bash
-bin/rails server
+$ bin/rails server
 ```
 
 ## Deployment
