@@ -3,6 +3,45 @@ module AppsHelper
   include UrlHelper
 
 
+  def copy_ios_assets folder, app
+    assets = app.assets
+
+    assets.each do |asset|
+      asset.file.cache_stored_file!
+      asset.file.retrieve_from_cache!(asset.file.cache_name)
+
+      # Copy drawable resources
+      if asset.content_type.starts_with?('image/')
+          FileUtils.mkdir_p(File.dirname("#{folder}/blade/images/#{asset.file_identifier}"))
+          FileUtils.cp asset.file.path, "#{folder}/blade/images/#{asset.file_identifier}"
+      end
+    end
+
+    if !app.ios_icon.file.nil?
+      app.ios_icon.cache_stored_file!
+      app.ios_icon.retrieve_from_cache!(app.ios_icon.cache_name)
+
+      FileUtils.mkdir_p(File.dirname("#{folder}/blade/images/#{app.ios_icon_identifier}"))
+      FileUtils.cp app.ios_icon.path, "#{folder}/blade/images/#{app.ios_icon_identifier}"
+    end
+
+    if !app.splash.file.nil?
+      app.splash.cache_stored_file!
+      app.splash.retrieve_from_cache!(app.splash.cache_name)
+
+      FileUtils.mkdir_p(File.dirname("#{folder}/blade/images/#{app.splash_identifier}"))
+      FileUtils.cp app.splash.path, "#{folder}/blade/images/#{app.splash_identifier}"
+    end
+
+    bladefile = ApplicationController.renderer.render({
+      partial: 'layouts/bladefile',
+      locals: { app: app, assets: assets.select { |item| item.content_type.starts_with?('image/')} }
+    })
+
+    File.write(File.join(folder, "Bladefile"), bladefile.to_s)
+    CarrierWave.clean_cached_files!
+  end
+
   def copy_android_assets folder, app
     require 'fileutils'
 

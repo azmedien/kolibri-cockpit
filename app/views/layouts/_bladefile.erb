@@ -1,0 +1,24 @@
+# vim: syntax=yaml
+# Uncomment below to specify your own resources.
+# See https://github.com/jondot/blade for more information.
+#
+
+blades:
+  <% if !app.ios_icon.file.nil? %>
+  - source: blade/images/<%= app.ios_icon_identifier %>
+    template: blade/templates/appicon.json
+    out: Kolibri/Assets.xcassets/AppIcon.appiconset
+    contents: true
+  <% end %>
+  <% if !app.splash.file.nil? %>
+  - source: blade/images/<%= app.splash_identifier %>
+    template: blade/templates/universal.json
+    out: Kolibri/Assets.xcassets/LaunchImage.imageset
+    contents: true
+  <% end %>
+  <% assets.each do |asset| %>
+  - source: blade/images/<%= asset.file_identifier %>
+    template: blade/templates/universal.json
+    out: Kolibri/Assets.xcassets/<%= File.basename(asset.file_identifier, File.extname(asset.file_identifier)).camelize%>.imageset
+    contents: true
+  <% end %>

@@ -14,7 +14,24 @@ class ConfigureAppJob < ApplicationJob
   end
 
   # TODO: Refactor me.
-  def perform(app, user)
+  def perform(app, platform, user)
+
+    byebug
+
+    if platform == 'android'
+      perform_android app, user
+    elsif platform == 'ios'
+      perform_ios app, user
+    else
+      perform_android app, user
+      perform_ios app, user
+    end
+
+    send_cable
+  end
+
+  private
+  def perform_android app, user
     repo = app.android_config['repository_url']
     bundle = app.android_config['bundle_id']
 
@@ -29,7 +46,9 @@ class ConfigureAppJob < ApplicationJob
       setup_android_title '.', app
       copy_android_assets '.', app
     end
+  end
 
+  def perform_ios app, user
     repo = app.ios_config['repository_url']
     bundle = app.ios_config['bundle_id']
 
@@ -41,8 +60,7 @@ class ConfigureAppJob < ApplicationJob
 
     manipulate_repo repo, app, user do |git|
       modify_ios_configuration_files '.', app
+      copy_ios_assets '.', app
     end
-
-    send_cable
   end
 end

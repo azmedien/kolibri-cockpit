@@ -143,7 +143,7 @@ class AppsController < ApplicationController
   end
 
   def configure_app
-    ConfigureAppJob.perform_later @app, current_user
+    ConfigureAppJob.perform_later @app, params['platform'] || 'both', current_user
     flash[:notice] = 'Publish scheduled...'
     redirect_to request.referrer
   end
