@@ -165,6 +165,8 @@ class AppsController < ApplicationController
         :internal_id,
         :runtime,
         :android_icon,
+        :android_firebase,
+        :ios_firebase,
         :ios_icon,
         :splash,
         :android_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id, :version_code, :version_name],
