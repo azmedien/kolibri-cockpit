@@ -57,26 +57,24 @@ New branch is created with the name and the id of the app containing fully confi
 
 ## Getting started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a configured copy of the platform, both Jenkins for CI and the Cockpit up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+> Note that it's better that the Cockpit and Jenkins CI instances to be separated, on different machines.
+
+Continuous integration
+---
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Things you need to install and how to install and configure them:
 
-**Continuous integration server:**
 * Mac OS X machine
 * Android SDK and Platform tools
 * Jenkins
 * Xcode
 * Fastlane
 * Blade (https://github.com/jondot/blade)
-* Maven server (optional)
-
-**Cockpit server:**
-* Ruby
-* PostreSQL
-* Redis
-* imagemagic with librsvg
+* Maven server (optional, we used Artifactory)
 
 ### Installing
 
@@ -93,7 +91,39 @@ We assume you have already configured Mac OS X machine with installed prerequisi
 * CocoaPods Jenkins Integration
 * Xcode integration
 
-For the Cockpit server we assume you will deploy it on `Heroku` which again is straightforward.
+### Setup Apple Developer
+
+Login to the apple developer portal and generate development and production certificates for the continuous integration server, which will build the iOS applications.
+
+Now you must setup system environment `FL_APPLE_USER` with the email associated with configured profile.
+Next you must add the account credentials to the Fastlane credentials manager.
+
+```bash
+$ fastlane fastlane-credentials add --username john@doe.me
+Password: ***********
+Credential john@doe.me:*********** added to keychain.
+```
+
+### Configure it
+
+**TODO**
+
+Kolibri cockpit
+---
+
+### Prerequisites
+
+Things you need to install and how to install and configure them:
+
+* Ruby
+* PostreSQL
+* Redis
+* imagemagic with librsvg
+
+### Installing
+
+We assume you have already installed prerequisites. Installation of each needed component is straightforward.
+Currently you can deploy the Cockpit on `Heroku` without any doubts.
 
 For local development install prerequisites as follow:
 
@@ -106,8 +136,7 @@ $ brew install blade
 > You can follow this detailed guide for installing ruby rails on your machine:
 https://gorails.com/setup/osx/10.12-sierra
 
-Create an `PostreSQL` database using `Postico` for example. Name it `kolibri_development`
-
+Then create an `PostreSQL` database using `Postico` for example. Name it `kolibri_development`.
 Make sure you have exported the `PKEY` env which will grant you `push` rights to the repositories.
 
 ```bash
@@ -119,6 +148,10 @@ Now you are ready to run the server by executing this command from the project's
 ```bash
 $ bin/rails server
 ```
+
+## Run the testers
+
+**TODO**
 
 ## Deployment
 
@@ -147,6 +180,57 @@ Add additional notes about how to deploy this on a live system
 ## Getting started with Cockpit
 
 > You must create the application in Google play and make an initial upload before publish from Kolibri Cockpit
+
+### Create an app
+
+**TODO**
+
+### Clone an app
+
+**TODO**
+
+### Configure the app
+
+**TODO**
+
+### Runtime configuration
+
+**TODO**
+
+#### Styling guide
+
+Currently Kolibri Cockpit supports overrides for styling element as follow:
+
+* `toolbarBackground` - which tints the toolbar and the navigation header in case there's no background image.
+* `toolbarText` - which tints the toolbar title text
+* `menuItemSelectedColor` - which tints the menu item icons and text
+
+> Example styling object into the runtime configuration
+
+```json
+...
+
+"styling": {
+  "color-palette": {
+    ...
+  },
+  "overrides": {
+    "menuItemSelectedColor": "#00457A",
+    "toolbarBackground": "#00457A"
+  }
+},
+
+...
+```
+
+### Adding some assets
+
+**TODO**
+
+### Publishing
+
+**TODO**
+
 
 ## Contributing
 
