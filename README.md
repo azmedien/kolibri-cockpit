@@ -149,7 +149,7 @@ Now you are ready to run the server by executing this command from the project's
 $ bin/rails server
 ```
 
-## Run the testers
+## Run the tests
 
 **TODO**
 
@@ -195,6 +195,202 @@ Add additional notes about how to deploy this on a live system
 
 ### Runtime configuration
 
+Runtime configuration is the core, essential of the framework, providing easy way to configure the application
+on the fly. Menus, some styles, configuration and information about the custom components used are in this runtime json.
+The Android and iOS SDKs load and manage this automatically - populating, styling and configuring the app when there's new changes.
+
+> Runtime configuration format
+
+```json
+
+{
+  "kolibri-version": "0.4",
+  "domain": "wildeisen-features.herokuapp.com",
+  "scheme": "kolibri",
+  "amazon": "https://yanova-kolibri-assets-dev.s3.amazonaws.com",
+  "netmetrix": "https://wildeis-ssl.wemfbox-test.ch/cgi-bin/ivw/CP/testssl/wildeisen",
+  "adtech": {
+    "settings": {
+      ...
+      "max_display_time": 1,
+      "app_name": "wildeisen"
+    }
+  },
+  "styling": {
+    "color-palette": {
+      "primary": "#121212",
+      "primaryDark": "#d72b53",
+      "primaryLight": "#de0000",
+      "icons": "#242424",
+      "accent": "#242424",
+      "primaryText": "#ffffff",
+      "secondaryText": "#000000",
+      "alternativeText": "#9E9E9E"
+    },
+    "font-sizes": {
+      "primary": "36",
+      "secondary": "14",
+      "alternative": "12"
+    }
+  },
+  "navigation": {
+    "type": "drawer",
+    "settings": {
+      "default-item": 0,
+      "logo": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/sidelogo-png/download",
+    },
+    "header": {
+      "background": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/cover-png/download",
+      "image": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/sidelogo-png/download",
+      "title": ""
+    },
+    "items": [
+      {
+        "component": "kolibri://content/link",
+        "id": "home",
+        "label": "Home",
+        "url": "https://wildeisen-features.herokuapp.com/amp?kolibri-target=_self",
+        "nav-title": "image",
+        "search": true,
+        "icon-normal": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/home-png-8ee7d1e2-cef4-436d-a884-80b39e3f3553/download"
+      },
+      {
+        "component": "kolibri://content/link",
+        "id": "recepies",
+        "label": "Rezepte",
+        "url": "https://wildeisen-features.herokuapp.com/amp/suche/rezepte?kolibri-target=_self",
+        "nav-title": "image",
+        "search": true,
+        "icon-normal": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/recipes-png/download"
+      },
+      {
+        "component": "kolibri://content/link",
+        "id": "ingredients",
+        "search": "true",
+        "label": "Zutaten",
+        "url": "https://wildeisen-features.herokuapp.com/amp/kochwissen/zutaten?kolibri-target=_self",
+        "icon-normal": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/ingredients-png/download"
+      },
+      {
+        "component": "kolibri://content/link",
+        "id": "howtos",
+        "search": "true",
+        "label": "How to",
+        "url": "https://wildeisen-features.herokuapp.com/amp/kochwissen/howtos?kolibri-target=_self",
+        "icon-normal": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/howtos-png/download"
+      },
+      {
+        "component": "kolibri://content/link",
+        "id": "sammlungen",
+        "search": "true",
+        "label": "Sammlungen",
+        "url": "https://wildeisen-features.herokuapp.com/amp/suche/sammlungen?kolibri-target=_self",
+        "icon-normal": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/collections-png/download"
+      },
+      {
+        "component": "kolibri://navigation/favorites",
+        "id": "favorites",
+        "label": "Favoriten",
+        "icon-normal": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/favorites-png/download"
+      },
+      {
+        "component": "kolibri://navigation/shaker",
+        "id": "shaker",
+        "label": "Rezept Shaker",
+        "icon-normal": "https://kolibri.herokuapp.com/apps/EDmYrJSNBCkyfWKK49w3SNfi/assets/shake-png/download"
+      }
+    ],
+    "footer": {
+      "type": "horizontal",
+      "items": [
+        {
+          "id": "impressum",
+          "component": "kolibri://content/link",
+          "label": "Impressum",
+          "url": "https://wildeisen-features.herokuapp.com/impressum"
+        },
+        {
+          "id": "agb",
+          "component": "kolibri://content/link",
+          "label": "AGB",
+          "url": "https://wildeisen-features.herokuapp.com/agb"
+        },
+        {
+          "id": "contact",
+          "component": "kolibri://content/link",
+          "label": "Kontakt",
+          "url": "https://wildeisen-features.herokuapp.com/service/kontakt"
+        }
+      ]
+    }
+  },
+  "shakeapp": {
+    "settings": {
+      "suggestions": "http://wildeisen-features.herokuapp.com/amp/suche/zutaten/suggest.json",
+      "recipes": "http://wildeisen-features.herokuapp.com/amp/suche/rezepte.json"
+    }
+  },
+  "search": {
+    "settings": {
+      "url": "http://wildeisen-features.herokuapp.com/amp/suche",
+      "icon-normal": "https://cdn.zeplin.io/58bd6103d716ba4338c8a9c2/assets/BCD71950-A0B3-4239-8219-A8213C1C9E3A.png",
+      "icon-selected": "https://cdn.zeplin.io/58bd6103d716ba4338c8a9c2/assets/BCD71950-A0B3-4239-8219-A8213C1C9E3A.png",
+      "search-param": "q"
+    },
+    "navigation": {
+      "type": "tabs",
+      "items": [
+        {
+          "options": true,
+          "label": "Rezepte",
+          "id": "recepies",
+          "url": "https://wildeisen-features.herokuapp.com/amp/suche/rezepte",
+          "query-tags": "http://wildeisen-features.herokuapp.com/amp/suche/rezepte.json"
+        },
+        {
+          "label": "Zutaten",
+          "id": "ingredients",
+          "url": "https://wildeisen-features.herokuapp.com/amp/suche/zutaten",
+          "query-tags": "http://wildeisen-features.herokuapp.com/amp/suche/zutaten.json"
+        },
+        {
+          "label": "How to",
+          "id": "howtos",
+          "url": " https://wildeisen-features.herokuapp.com/amp/suche/howtos",
+          "query-tags": "http://wildeisen-features.herokuapp.com/amp/suche/howtos.json"
+        },
+        {
+          "label": "Sammlung",
+          "id": "sammlungen",
+          "url": " https://wildeisen-features.herokuapp.com/amp/suche/sammlungen",
+          "query-tags": "http://wildeisen-features.herokuapp.com/amp/suche/sammlungen.json"
+        }
+      ]
+    }
+  }
+}
+
+```
+
+#### Main structure
+
+Mandatory object and fields that must persist:
+
+* `domain` - Domain of the app, basically the domain of the AMPs. Used to determine whenever to open external, internal or self
+* `scheme` - Scheme used to determine custom components
+* `navigation` - The root navigation of the app
+  * `type`
+  * `settings`
+  * `items`
+
+**TODO**
+
+#### Navigation
+
+**TODO**
+
+#### Define custom component
+
 **TODO**
 
 #### Styling guide
@@ -204,6 +400,11 @@ Currently Kolibri Cockpit supports overrides for styling element as follow:
 * `toolbarBackground` - which tints the toolbar and the navigation header in case there's no background image.
 * `toolbarText` - which tints the toolbar title text
 * `menuItemSelectedColor` - which tints the menu item icons and text
+
+There is `color-palette` object the idea of which is to tint and colors different elements of the UI.
+This palette is immutable and cannot be change for a particular screen. It works between application restarts.
+This is the reason why all non default behavior of styling is located in `overrides` object. Overrides as the name hints, override
+specific style and can be changed for every custom component.
 
 > Example styling object into the runtime configuration
 
