@@ -37,6 +37,8 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 gem 'rpush'
+gem 'net-http-persistent', '< 3'
+
 gem 'version'
 gem 'devise'
 gem 'authority'

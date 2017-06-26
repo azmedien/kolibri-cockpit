@@ -2,12 +2,13 @@ Rails.application.routes.draw do
 
   post 'webhooks/receive'
 
-
   devise_for :users
   resources :apps do
     resources :assets do
         get 'download', action: 'download', as: 'download'
     end
+
+    resources :devices
 
     member do
       get 'settings'
@@ -17,6 +18,8 @@ Rails.application.routes.draw do
       get 'prepare'
       get 'publish'
       get 'runtime'
+      get 'notifications'
+      post 'notifications/send', to: 'apps#send_notifications', as: 'send_notifications'
     end
   end
   root to: 'apps#index'

@@ -40,6 +40,10 @@
                 <li class="nav-item align-self-center <%= 'active' if current_page?(publish_app_path(@app)) %>">
                     <a class="nav-link" href="<%= publish_app_path(@app) %>" aria-controls="publish">Publish</a>
                 </li>
+
+                <li class="nav-item align-self-center <%= 'active' if current_page?(notifications_app_path(@app)) %>">
+                    <a class="nav-link" href="<%= notifications_app_path(@app) %>" aria-controls="publish">Notifications</a>
+                </li>
                 <% end %>
             </ul>
 

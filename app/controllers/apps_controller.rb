@@ -2,6 +2,7 @@ class AppsController < ApplicationController
   before_action :authenticate_user!, except: [:runtime]
   before_action :set_app, except: [:index, :create, :new, :runtime]
   before_action :set_apps, except: [:show, :destroy, :jenkins, :runtime]
+  before_action :set_nofication_app, only: [:notifications]
 
   # GET /apps
   # GET /apps.json
@@ -134,6 +135,33 @@ class AppsController < ApplicationController
 
   end
 
+  def notifications
+
+  end
+
+  def send_notifications
+    if @notification.nil?
+      api_key = notification_params['firebase_server_key']
+
+      @notification = Rpush::Gcm::App.new
+      @notification.name = "#{@app.internal_id}"
+      @notification.auth_key = api_key
+      @notification.connections = 1
+      @notification.save!
+    end
+
+    n = Rpush::Gcm::Notification.new
+    n.app = @notification
+    n.registration_ids = notification_params['ids']
+    n.data = { component: 'kolibri://content/link/howtos?url=https://wildeisen-features.herokuapp.com/amp/rezepte/fisch-lauch-tarte-mit-kraeutern?kolibri-target=_internal' }
+    n.priority = 'high'
+    n.content_available = true
+    n.notification = { body: notification_params['title'],
+                       title: notification_params['message']
+                     }
+    n.save!
+  end
+
   def runtime
     # Ensure we return in all cases an app.
     # This is used now to provide runtime configuraiton without any
@@ -154,6 +182,10 @@ class AppsController < ApplicationController
       @app = current_user.apps.find(params[:id])
     end
 
+    def set_nofication_app
+      @notification = Rpush::Gcm::App.find_by_name("#{@app.internal_id}")
+    end
+
     def set_apps
       @apps = current_user.apps.order(:internal_name)
     end
@@ -171,5 +203,15 @@ class AppsController < ApplicationController
         :splash,
         :android_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id, :version_code, :version_name],
         :ios_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id])
+    end
+
+    def notification_params
+      params.require(:notification).permit(
+        :firebase_server_key,
+        :url,
+        :title,
+        :message,
+        :ids => []
+      )
     end
 end

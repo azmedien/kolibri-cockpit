@@ -4,8 +4,11 @@ class App < ApplicationRecord
   include CopyCarrierwaveFile
 
   belongs_to :user
+
   has_many :builds, dependent: :destroy
   has_many :assets, dependent: :destroy
+  has_many :devices, dependent: :destroy
+
   accepts_nested_attributes_for :assets
 
   validates :internal_name, uniqueness: true,  presence: true
