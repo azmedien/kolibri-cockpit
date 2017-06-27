@@ -8,8 +8,6 @@ Rails.application.routes.draw do
         get 'download', action: 'download', as: 'download'
     end
 
-    resources :devices
-
     member do
       get 'settings'
       get 'build'

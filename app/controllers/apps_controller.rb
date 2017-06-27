@@ -2,7 +2,8 @@ class AppsController < ApplicationController
   before_action :authenticate_user!, except: [:runtime]
   before_action :set_app, except: [:index, :create, :new, :runtime]
   before_action :set_apps, except: [:show, :destroy, :jenkins, :runtime]
-  before_action :set_nofication_app, only: [:notifications]
+  before_action :set_nofication_app, only: [:notifications, :send_notifications, :destroy]
+  before_action :set_nofications, only: [:notifications, :send_notifications]
 
   # GET /apps
   # GET /apps.json
@@ -93,6 +94,7 @@ class AppsController < ApplicationController
   # DELETE /apps/1
   # DELETE /apps/1.json
   def destroy
+    @notification.destroy if @notification
     @app.destroy
     respond_to do |format|
       format.html { redirect_to apps_url, notice: 'App was successfully destroyed.' }
@@ -136,7 +138,6 @@ class AppsController < ApplicationController
   end
 
   def notifications
-
   end
 
   def send_notifications
@@ -152,14 +153,20 @@ class AppsController < ApplicationController
 
     n = Rpush::Gcm::Notification.new
     n.app = @notification
-    n.registration_ids = notification_params['ids']
-    n.data = { component: 'kolibri://content/link/howtos?url=https://wildeisen-features.herokuapp.com/amp/rezepte/fisch-lauch-tarte-mit-kraeutern?kolibri-target=_internal' }
+    n.data = {
+      component: notification_params['url'],
+      to: '/topics/main'
+    }
     n.priority = 'high'
     n.content_available = true
     n.notification = { body: notification_params['title'],
                        title: notification_params['message']
                      }
     n.save!
+
+    respond_to do |format|
+      format.html { redirect_to notifications_app_path(@app), notice: 'Notification send' }
+    end
   end
 
   def runtime
@@ -186,6 +193,10 @@ class AppsController < ApplicationController
       @notification = Rpush::Gcm::App.find_by_name("#{@app.internal_id}")
     end
 
+    def set_nofications
+      @notifications = Rpush::Gcm::Notification.where(app_id: @notification.id).last(10).reverse
+    end
+
     def set_apps
       @apps = current_user.apps.order(:internal_name)
     end
@@ -210,8 +221,7 @@ class AppsController < ApplicationController
         :firebase_server_key,
         :url,
         :title,
-        :message,
-        :ids => []
+        :message
       )
     end
 end

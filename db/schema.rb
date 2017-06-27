@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170625204235) do
+ActiveRecord::Schema.define(version: 20170622203030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,16 +64,6 @@ ActiveRecord::Schema.define(version: 20170625204235) do
     t.index ["build_id"], name: "index_builds_on_build_id", using: :btree
     t.index ["platform", "build_id"], name: "index_builds_on_platform_and_build_id", unique: true, using: :btree
     t.index ["user_id"], name: "index_builds_on_user_id", using: :btree
-  end
-
-  create_table "devices", force: :cascade do |t|
-    t.string   "token",                  null: false
-    t.integer  "platform",   default: 0, null: false
-    t.integer  "app_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.index ["app_id"], name: "index_devices_on_app_id", using: :btree
-    t.index ["token"], name: "index_devices_on_token", using: :btree
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
