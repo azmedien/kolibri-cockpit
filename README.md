@@ -432,6 +432,10 @@ specific style and can be changed for every custom component.
 
 **TODO**
 
+### Send push notifications
+
+When open the `Notifications` tab on the cockpit you will see there is a `Firebase Server key`. This key can be obtain from the firebase console and once you have set it in the field cannot be changed and will be used in future.
+
 
 ## Contributing
 

@@ -45,6 +45,7 @@ class ConfigureAppJob < ApplicationJob
       modify_android_configuration_files '.', app
       setup_android_title '.', app
       copy_android_assets '.', app
+      copy_anroid_firebase '.', app
     end
   end
 
@@ -61,6 +62,7 @@ class ConfigureAppJob < ApplicationJob
     manipulate_repo repo, app, user do |git|
       modify_ios_configuration_files '.', app
       copy_ios_assets '.', app
+      copy_ios_firebase '.', app
     end
   end
 end

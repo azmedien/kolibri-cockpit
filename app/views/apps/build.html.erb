@@ -24,6 +24,13 @@
             <%= f.label "Repository url:" %><br/>
             <%= text_field_tag "app[android_config][repository_url]", f.object.android_config["repository_url"], :class => "form-control" %>
         </div>
+
+        <div class="form-group <%= class_string("has-success" => !@app.android_firebase.file.nil?)%>">
+            <%= f.label "Firebase JSON", :class => "form-control-label" %>
+            <%= f.file_field :android_firebase, accept: 'application/json', :class => class_string("form-control-file" => true, "form-control-success" => !@app.android_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
+            <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "form-control-feedback") if !@app.android_firebase.file.nil? %>
+            <small id="fileHelp" class="form-text text-muted"></small>
+        </div>
     </div>
 </section>
 
@@ -35,6 +42,13 @@
         <div class="form-group">
             <%= f.label "Repository url:" %><br/>
             <%= text_field_tag "app[ios_config][repository_url]", f.object.ios_config["repository_url"], :class => "form-control" %>
+        </div>
+
+        <div class="form-group <%= class_string("has-success" => !@app.ios_firebase.file.nil?)%>">
+            <%= f.label "Firebase plist", :class => "form-control-label" %>
+            <%= f.file_field :ios_firebase, :class => class_string("form-control-file" => true, "form-control-success" => !@app.ios_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
+            <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "form-control-feedback") if !@app.ios_firebase.file.nil? %>
+            <small id="fileHelp" class="form-text text-muted"></small>
         </div>
     </div>
 </section>
