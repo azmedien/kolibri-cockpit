@@ -36,7 +36,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'rpush', git: 'git@github.com:L3K0V/rpush.git', branch: 'fcm'
+gem 'rpush', github: 'L3K0V/rpush', branch: 'fcm'
 gem 'net-http-persistent', '< 3'
 
 gem 'version'
