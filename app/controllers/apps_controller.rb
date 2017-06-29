@@ -154,7 +154,7 @@ class AppsController < ApplicationController
     n = Rpush::Gcm::Notification.new
     n.app = @notification
     n.data = {
-      component: "kolibri://notification?url=#{notification_params['url']}",
+      component: "#{notification_params['url']}",
       title: notification_params['title'],
       body: notification_params['message'],
       to: '/topics/main'
