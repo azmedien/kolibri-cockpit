@@ -54,7 +54,7 @@
         <% @notifications.each do |notification| %>
         <tr>
           <td><%= notification.processing ? 'Processing' : notification.failed ? 'Failed' : 'Delivered'%></td>
-          <td><pre><%= notification.error_description || "#{time_ago_in_words(notification.delivered_at)}" %></pre></td>
+          <td><pre><%= notification.error_description || "#{time_ago_in_words(notification.delivered_at) if notification.delivered_at}" %></pre></td>
           <td><code><%= notification.data.tap { |hs| hs.delete('to') } %></code></td>
           <td><code><%= notification.notification.tap { |hs| hs.delete('to') } %></code></td>
         </tr>
