@@ -154,13 +154,15 @@ class AppsController < ApplicationController
     n = Rpush::Gcm::Notification.new
     n.app = @notification
     n.data = {
-      component: notification_params['url'],
+      component: "kolibri://notification?url=#{notification_params['url']}",
+      title: notification_params['title'],
+      body: notification_params['message'],
       to: '/topics/main'
     }
     n.priority = 'high'
     n.content_available = true
-    n.notification = { body: notification_params['title'],
-                       title: notification_params['message']
+    n.notification = { title: notification_params['title'],
+                       body: notification_params['message']
                      }
     n.save!
 
@@ -194,7 +196,8 @@ class AppsController < ApplicationController
     end
 
     def set_nofications
-      @notifications = Rpush::Gcm::Notification.where(app_id: @notification.id).last(10).reverse
+      @notifications = Rpush::Gcm::Notification.where(app_id: @notification.id).last(10).reverse if @notification
+      @notifications = Array.new unless @notifications
     end
 
     def set_apps
