@@ -80,8 +80,6 @@ class AssetsUploader < CarrierWave::Uploader::Base
     true # nothing, the dir is not empty
   end
 
-  # Add a white list of extensions which are allowed to be uploaded.
-  # For images you might use something like this:
   def extension_whitelist
     %w(png svg json xml otf ttf)
   end
@@ -90,8 +88,6 @@ class AssetsUploader < CarrierWave::Uploader::Base
     0..2.megabytes
   end
 
-  # Override the filename of the uploaded files:
-  # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
       ext = File.extname(super) if !super.nil?
       name = super.chomp(ext).parameterize.tr("-", "_") if ext

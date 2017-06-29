@@ -3,6 +3,67 @@ module AppsHelper
   include UrlHelper
 
 
+  def copy_ios_firebase folder, app
+
+    unless app.ios_firebase.file.nil?
+      app.ios_firebase.cache_stored_file!
+      app.ios_firebase.retrieve_from_cache!(asset.file.cache_name)
+
+      FileUtils.cp asset.file.path, "#{folder}/GoogleService-Info.plist"
+      CarrierWave.clean_cached_files!
+    end
+  end
+
+  def copy_android_firebase folder, app
+    unless app.android_firebase.file.nil?
+      app.android_firebase.cache_stored_file!
+      app.android_firebase.retrieve_from_cache!(asset.file.cache_name)
+
+      app_folder = Dir.glob("#{folder}/**/app/").first
+      FileUtils.cp asset.file.path, "#{app_folder}/google-services.json"
+      CarrierWave.clean_cached_files!
+    end
+  end
+
+  def copy_ios_assets folder, app
+    assets = app.assets
+
+    assets.each do |asset|
+      asset.file.cache_stored_file!
+      asset.file.retrieve_from_cache!(asset.file.cache_name)
+
+      # Copy drawable resources
+      if asset.content_type.starts_with?('image/')
+          FileUtils.mkdir_p(File.dirname("#{folder}/blade/images/#{asset.file_identifier}"))
+          FileUtils.cp asset.file.path, "#{folder}/blade/images/#{asset.file_identifier}"
+      end
+    end
+
+    if !app.ios_icon.file.nil?
+      app.ios_icon.cache_stored_file!
+      app.ios_icon.retrieve_from_cache!(app.ios_icon.cache_name)
+
+      FileUtils.mkdir_p(File.dirname("#{folder}/blade/images/#{app.ios_icon_identifier}"))
+      FileUtils.cp app.ios_icon.path, "#{folder}/blade/images/#{app.ios_icon_identifier}"
+    end
+
+    if !app.splash.file.nil?
+      app.splash.cache_stored_file!
+      app.splash.retrieve_from_cache!(app.splash.cache_name)
+
+      FileUtils.mkdir_p(File.dirname("#{folder}/blade/images/#{app.splash_identifier}"))
+      FileUtils.cp app.splash.path, "#{folder}/blade/images/#{app.splash_identifier}"
+    end
+
+    bladefile = ApplicationController.renderer.render({
+      partial: 'layouts/bladefile',
+      locals: { app: app, assets: assets.select { |item| item.content_type.starts_with?('image/')} }
+    })
+
+    File.write(File.join(folder, "Bladefile"), bladefile.to_s)
+    CarrierWave.clean_cached_files!
+  end
+
   def copy_android_assets folder, app
     require 'fileutils'
 
@@ -67,11 +128,8 @@ module AppsHelper
   end
 
   def modify_ios_configuration_files folder, app
-    bundle_id = app.ios_config['bundle_id']
-
     update_ios_plist(folder, 'kolibri_navigation_url', runtime_app_url(app))
-
-    update_ios_bundle_id folder, bundle_id
+    update_ios_meta folder, app
   end
 
   private
@@ -91,7 +149,7 @@ module AppsHelper
     File.write(plist_path, plist_string)
   end
 
-  def update_ios_bundle_id folder, value
+  def update_ios_meta folder, app
     require 'xcodeproj'
     require 'plist'
     require 'pathname'
@@ -102,6 +160,9 @@ module AppsHelper
     project_path = Dir.glob("#{folder}/**.xcodeproj").first
     plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
     plist = Plist.parse_xml(plist_path)
+
+    plist['CFBundleShortVersionString'] = app.ios_config['version_name']
+    plist['CFBundleVersion'] = app.ios_config['version_code']
 
     if plist['CFBundleIdentifier'] == "$(#{identifier_key})"
 
@@ -116,19 +177,44 @@ module AppsHelper
       configs = configs.select { |obj| obj.build_settings[info_plist_key] == plist_pathname.relative_path_from(current).to_s }
       # For each of the build configurations, set app identifier
       configs.each do |c|
-        c.build_settings[identifier_key] = value
+        c.build_settings[identifier_key] = app.ios_config['bundle_id']
       end
 
       # Write changes to the file
       project.save
     else
       # Update plist value
-      plist['CFBundleIdentifier'] = value
+      plist['CFBundleIdentifier'] = app.ios_config['bundle_id']
 
       # Write changes to file
       plist_string = Plist::Emit.dump(plist)
       File.write(info_plist_path, plist_string)
     end
+  end
+
+  def update_ios_fastlane folder, app
+
+    if Dir.glob("#{folder}/Fastlane").any?
+      logger.info 'Fastlane already configured. Skipped'
+      return
+    end
+
+    require 'fileutils'
+    require 'tempfile'
+
+    app_folder = Dir.glob("#{folder}").first
+    dir = File.join(File.dirname(app_folder), "fastlane")
+
+    unless File.directory?(dir)
+      FileUtils.mkdir_p(dir)
+    end
+
+    fastlane = ApplicationController.renderer.render({
+      partial: 'layouts/fastlane',
+      locals: { app: app }
+    })
+
+    File.write(File.join(dir, "Fastfile"), fastlane.to_s)
   end
 
 

@@ -21,7 +21,7 @@
     </table>
 
     <div class="card-footer text-muted">
-        <%= link_to "Publish", trigger_configure_app_path(@app), method: :post, :class => "btn btn-success" %>
+        <%= link_to "Publish", trigger_configure_app_path(@app, :platform => 'android'), method: :post, :class => "btn btn-success" %>
     </div>
 </div>
 
@@ -49,7 +49,7 @@
     </table>
 
     <div class="card-footer text-muted">
-        <%= link_to "Publish", trigger_configure_app_path(@app, :platform => 'ios'), method: :post, :class => "btn btn-success disabled" %>
+        <%= link_to "Publish", trigger_configure_app_path(@app, :platform => 'ios'), method: :post, :class => "btn btn-success" %>
     </div>
 </div>
 </main>

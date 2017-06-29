@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, unless: -> { request.format.json? }
   add_flash_types :success, :warning, :danger, :info
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found

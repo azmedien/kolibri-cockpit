@@ -2,6 +2,8 @@ class AppsController < ApplicationController
   before_action :authenticate_user!, except: [:runtime]
   before_action :set_app, except: [:index, :create, :new, :runtime]
   before_action :set_apps, except: [:show, :destroy, :jenkins, :runtime]
+  before_action :set_nofication_app, only: [:notifications, :send_notifications, :destroy]
+  before_action :set_nofications, only: [:notifications, :send_notifications]
 
   # GET /apps
   # GET /apps.json
@@ -92,6 +94,7 @@ class AppsController < ApplicationController
   # DELETE /apps/1
   # DELETE /apps/1.json
   def destroy
+    @notification.destroy if @notification
     @app.destroy
     respond_to do |format|
       format.html { redirect_to apps_url, notice: 'App was successfully destroyed.' }
@@ -134,6 +137,40 @@ class AppsController < ApplicationController
 
   end
 
+  def notifications
+  end
+
+  def send_notifications
+    if @notification.nil?
+      api_key = notification_params['firebase_server_key']
+
+      @notification = Rpush::Gcm::App.new
+      @notification.name = "#{@app.internal_id}"
+      @notification.auth_key = api_key
+      @notification.connections = 1
+      @notification.save!
+    end
+
+    n = Rpush::Gcm::Notification.new
+    n.app = @notification
+    n.data = {
+      component: "#{notification_params['url']}",
+      title: notification_params['title'],
+      body: notification_params['message'],
+      to: '/topics/main'
+    }
+    n.priority = 'high'
+    n.content_available = true
+    n.notification = { title: notification_params['title'],
+                       body: notification_params['message']
+                     }
+    n.save!
+
+    respond_to do |format|
+      format.html { redirect_to notifications_app_path(@app), notice: 'Notification send' }
+    end
+  end
+
   def runtime
     # Ensure we return in all cases an app.
     # This is used now to provide runtime configuraiton without any
@@ -143,7 +180,7 @@ class AppsController < ApplicationController
   end
 
   def configure_app
-    ConfigureAppJob.perform_later @app, current_user
+    ConfigureAppJob.perform_later @app, params['platform'] || 'both', current_user
     flash[:notice] = 'Publish scheduled...'
     redirect_to request.referrer
   end
@@ -152,6 +189,15 @@ class AppsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_app
       @app = current_user.apps.find(params[:id])
+    end
+
+    def set_nofication_app
+      @notification = Rpush::Gcm::App.find_by_name("#{@app.internal_id}")
+    end
+
+    def set_nofications
+      @notifications = Rpush::Gcm::Notification.where(app_id: @notification.id).last(10).reverse if @notification
+      @notifications = Array.new unless @notifications
     end
 
     def set_apps
@@ -165,9 +211,20 @@ class AppsController < ApplicationController
         :internal_id,
         :runtime,
         :android_icon,
+        :android_firebase,
+        :ios_firebase,
         :ios_icon,
         :splash,
         :android_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id, :version_code, :version_name],
         :ios_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id])
+    end
+
+    def notification_params
+      params.require(:notification).permit(
+        :firebase_server_key,
+        :url,
+        :title,
+        :message
+      )
     end
 end

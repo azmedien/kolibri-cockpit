@@ -36,6 +36,9 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'rpush', git: 'git@github.com:L3K0V/rpush.git', branch: 'fcm'
+gem 'net-http-persistent', '< 3'
+
 gem 'version'
 gem 'devise'
 gem 'authority'
@@ -54,7 +57,7 @@ gem 'bootstrap', '~> 4.0.0.alpha6'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
-  gem 'rails-assets-jsoneditor'
+  gem 'rails-assets-jsoneditor', '5.7.0'
 end
 
 gem "font-awesome-rails"
