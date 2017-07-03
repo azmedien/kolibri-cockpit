@@ -15,9 +15,6 @@ class ConfigureAppJob < ApplicationJob
 
   # TODO: Refactor me.
   def perform(app, platform, user)
-
-    byebug
-
     if platform == 'android'
       perform_android app, user
     elsif platform == 'ios'
