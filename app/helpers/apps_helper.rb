@@ -189,7 +189,7 @@ module AppsHelper
 
       # Write changes to file
       plist_string = Plist::Emit.dump(plist)
-      File.write(info_plist_path, plist_string)
+      File.write(plist_path, plist_string)
     end
   end
 
