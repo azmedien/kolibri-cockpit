@@ -9,7 +9,7 @@ module AppsHelper
       app.ios_firebase.cache_stored_file!
       app.ios_firebase.retrieve_from_cache!(asset.file.cache_name)
 
-      FileUtils.cp asset.file.path, "#{folder}/GoogleService-Info.plist"
+      FileUtils.cp app.ios_firebase.path, "#{folder}/GoogleService-Info.plist"
       CarrierWave.clean_cached_files!
     end
   end
@@ -20,7 +20,7 @@ module AppsHelper
       app.android_firebase.retrieve_from_cache!(asset.file.cache_name)
 
       app_folder = Dir.glob("#{folder}/**/app/").first
-      FileUtils.cp asset.file.path, "#{app_folder}/google-services.json"
+      FileUtils.cp app.android_firebase.path, "#{app_folder}/google-services.json"
       CarrierWave.clean_cached_files!
     end
   end
