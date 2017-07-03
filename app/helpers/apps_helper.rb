@@ -130,6 +130,7 @@ module AppsHelper
   def modify_ios_configuration_files folder, app
     update_ios_plist(folder, 'kolibri_navigation_url', runtime_app_url(app))
     update_ios_meta folder, app
+    update_ios_fastlane folder, app
   end
 
   private
@@ -194,7 +195,7 @@ module AppsHelper
 
   def update_ios_fastlane folder, app
 
-    if Dir.glob("#{folder}/Fastlane").any?
+    if Dir.glob("#{folder}/fastlane/Fastfile").any?
       logger.info 'Fastlane already configured. Skipped'
       return
     end
@@ -220,7 +221,7 @@ module AppsHelper
 
   def update_android_fastlane folder, app
 
-    if Dir.glob("#{folder}/**/app/fastlane/Fastlane").any?
+    if Dir.glob("#{folder}/**/app/fastlane/Fastfile").any?
       logger.info 'Fastlane already configured. Skipped'
       return
     end
