@@ -43,7 +43,7 @@
         </thead>
         <tbody id="builds">
             <% @app.builds.where(platform: 'ios').last(5).reverse.each do |build| %>
-              <%= raw build_to_html_table_row(build) %>
+              <%= raw build_to_html_table_row(@app, build) %>
             <% end %>
         </tbody>
     </table>
