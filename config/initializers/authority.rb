@@ -52,8 +52,7 @@ Authority.configure do |config|
     :build => 'buildable',
     :prepare => 'preparable',
     :publish => 'publishable',
-    :notify => 'notifyable',
-    :report => 'reportable'
+    :notify => 'notifyable'
   }
 
   # LOGGER

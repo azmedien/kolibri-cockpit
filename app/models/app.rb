@@ -3,11 +3,14 @@ class App < ApplicationRecord
   include Authority::Abilities
   include CopyCarrierwaveFile
 
+  resourcify
+
+  self.authorizer_name = 'AppsAuthorizer'
+
   belongs_to :user
 
   has_many :builds, dependent: :destroy
   has_many :assets, dependent: :destroy
-  has_many :devices, dependent: :destroy
 
   accepts_nested_attributes_for :assets
 
@@ -28,6 +31,7 @@ class App < ApplicationRecord
   friendly_id :internal_id
 
   before_create :set_slug
+  after_create :set_role
 
   def android_config=(new_config)
     gs = self.android_config || {}
@@ -50,5 +54,9 @@ class App < ApplicationRecord
   private
   def set_slug
     self.slug = internal_id
+  end
+
+  def set_role
+    self.user.add_role(:admin, self)
   end
 end

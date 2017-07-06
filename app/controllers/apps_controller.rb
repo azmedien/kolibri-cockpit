@@ -94,11 +94,19 @@ class AppsController < ApplicationController
   # DELETE /apps/1
   # DELETE /apps/1.json
   def destroy
-    @notification.destroy if @notification
-    @app.destroy
-    respond_to do |format|
-      format.html { redirect_to apps_url, notice: 'App was successfully destroyed.' }
-      format.json { head :no_content }
+
+    if @app.deletable_by?(current_user)
+      @notification.destroy if @notification
+      @app.destroy
+      respond_to do |format|
+        format.html { redirect_to apps_url, notice: 'App was successfully destroyed.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to apps_url, danger: 'You cannot delete this application.' }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -185,10 +193,38 @@ class AppsController < ApplicationController
     redirect_to request.referrer
   end
 
+  def invite
+
+    if !request.xhr? && params[:app][:invite]
+
+      user = User.find_by_email(params[:app][:invite])
+      already_invated = user.has_role?(:admin, @app) || @app.user == user
+
+      if already_invated
+        respond_to do |format|
+          format.js
+          format.html {
+            redirect_to request.referrer,
+            alert: 'User already invited'
+          }
+        end
+      else
+        user.add_role :admin, @app
+        respond_to do |format|
+          format.js
+          format.html {
+            redirect_to request.referrer,
+            notice: 'User successfully invited'
+          }
+        end
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_app
-      @app = current_user.apps.find(params[:id])
+      @app = App.with_roles([:admin], current_user).find(params[:id] || params[:app_id])
     end
 
     def set_nofication_app
@@ -201,7 +237,7 @@ class AppsController < ApplicationController
     end
 
     def set_apps
-      @apps = current_user.apps.order(:internal_name)
+      @apps = App.with_roles([:admin], current_user).order(:internal_name)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
