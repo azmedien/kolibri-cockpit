@@ -160,7 +160,10 @@ module AppsHelper
 
     project_path = Dir.glob("#{folder}/**.xcodeproj").first
     plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
-    plist = Plist.parse_xml(plist_path)
+
+    sanitarized_plist = IO.read(plist_path).force_encoding("ISO-8859-1").encode("utf-8", replace: nil)
+
+    plist = Plist.parse_xml(sanitarized_plist)
 
     plist['CFBundleShortVersionString'] = app.ios_config['version_name']
     plist['CFBundleVersion'] = app.ios_config['version_code']
