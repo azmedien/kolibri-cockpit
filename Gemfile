@@ -40,7 +40,9 @@ gem 'rpush', github: 'L3K0V/rpush', branch: 'fcm'
 gem 'net-http-persistent', '< 3'
 
 gem 'version'
+
 gem 'devise'
+gem 'devise_invitable'
 gem 'authority'
 gem 'rolify'
 

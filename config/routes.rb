@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   post 'webhooks/receive'
 
   devise_for :users
+
   resources :apps do
     resources :assets do
         get 'download', action: 'download', as: 'download'
