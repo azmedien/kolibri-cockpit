@@ -34,6 +34,8 @@ class AppsController < ApplicationController
       @app.android_icon = origin.android_icon.dup
       @app.ios_icon = origin.ios_icon.dup
 
+      @app.splash = origin.splash.dup
+
       @app.android_config['origin'] = origin.id
       @app.ios_config['origin'] = origin.id
       @app.android_config.delete('bundle_id')
