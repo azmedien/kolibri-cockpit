@@ -22,7 +22,7 @@ module GitHelper
 
   def manipulate_repo(url, app, user)
 
-    branch_name = "#{app.internal_name.parameterize}_#{app.internal_id}"
+    branch_name = app.internal_name.parameterize
     origin_app = App.friendly.find(app.android_config['origin']) if app.android_config['origin']
 
     repo = open_repo(url)
@@ -32,7 +32,7 @@ module GitHelper
 
     # Trying to find origin app branch we want to branch from. We want to skip this if we alredy cloned the app
     if origin_app && (repo_branches[branch_name].nil? || repo_branches["origin/#{branch_name}"].nil?)
-      origin_branch_name = "#{origin_app.internal_name.parameterize}_#{origin_app.internal_id}"
+      origin_branch_name = origin_app.internal_name.parameterize
       # origin_branch = repo_branches["origin/#{origin_branch_name}"]
       repo.checkout(origin_branch_name) # Checkout the origin app branch so we will branch from it
       repo.pull()
@@ -53,11 +53,11 @@ module GitHelper
 
           repo.add(:all=>true)
           repo.commit('Project configured by Kolibri Cockpit')
-          repo.push('origin', "#{app.internal_name.parameterize}_#{app.internal_id}")
+          repo.push('origin', app.internal_name.parameterize)
         end
        ensure
          repo.checkout('master')
-         repo.branch("#{app.internal_name.parameterize}_#{app.internal_id}").delete
+         repo.branch(app.internal_name.parameterize).delete
        end
       end
     end
