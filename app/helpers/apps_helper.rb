@@ -189,11 +189,11 @@ module AppsHelper
     else
       # Update plist value
       plist['CFBundleIdentifier'] = app.ios_config['bundle_id']
-
-      # Write changes to file
-      plist_string = Plist::Emit.dump(plist)
-      File.write(plist_path, plist_string)
     end
+
+    # Write changes to file
+    plist_string = Plist::Emit.dump(plist)
+    File.write(plist_path, plist_string)
   end
 
   def update_ios_fastlane folder, app
