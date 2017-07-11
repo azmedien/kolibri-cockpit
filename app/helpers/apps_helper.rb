@@ -165,6 +165,7 @@ module AppsHelper
 
     plist = Plist.parse_xml(sanitarized_plist)
 
+    plist['CFBundleDisplayName'] = app.internal_name
     plist['CFBundleShortVersionString'] = app.ios_config['version_name']
     plist['CFBundleVersion'] = app.ios_config['version_code']
 
