@@ -80,6 +80,8 @@ Things you need to install and how to install and configure them:
 
 We assume you have already configured Mac OS X machine with installed prerequisites for the continuous integration server. Installation of each needed component is straightforward.
 
+**Make sure that Jenkins run as a LaunchAgent, so this way can start GUI applications like emulators for example**
+
 **Required Jenkins plugins are:**
 
 * Android Emulator Plugin
