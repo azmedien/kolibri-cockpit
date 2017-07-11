@@ -215,8 +215,8 @@ class AppsController < ApplicationController
         :ios_firebase,
         :ios_icon,
         :splash,
-        :android_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id, :version_code, :version_name],
-        :ios_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id, :version_code, :version_name])
+        :android_config => [:repository_url, :bundle_id, :version_code, :version_name],
+        :ios_config => [:repository_url, :bundle_id, :version_code, :version_name])
     end
 
     def notification_params
