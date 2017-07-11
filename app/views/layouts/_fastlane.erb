@@ -189,7 +189,7 @@ platform :ios do
       message: "Publish app TestFlight",
     )
 
-    pilot
+    pilot(skip_waiting_for_build_processing: true)
 
     kolibri(
       stage: "publish",
