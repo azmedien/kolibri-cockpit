@@ -326,7 +326,7 @@ module AppsHelper
 
       logger.debug item.inspect
 
-      if (item.attributes['name'].value == meta)
+      if (item.element? && item.attributes['name'].value == meta)
           element = item if item.attributes['name'].value == meta
       end
     }
