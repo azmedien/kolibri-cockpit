@@ -15,6 +15,7 @@ module GitHelper
     folder = url.split('/').last
     clone_repo(url) if !repo_exist?(folder)
     git = Git.open(Rails.root.join('tmp', folder), :log => Logger.new(STDOUT))
+    git.reset_hard()
     git.pull()
 
     git
