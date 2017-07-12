@@ -7,7 +7,6 @@ class App < ApplicationRecord
 
   has_many :builds, dependent: :destroy
   has_many :assets, dependent: :destroy
-  has_many :devices, dependent: :destroy
 
   accepts_nested_attributes_for :assets
 

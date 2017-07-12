@@ -79,7 +79,7 @@ class AppsController < ApplicationController
     respond_to do |format|
 
       if @app.update(app_params)
-        format.html { redirect_to settings_app_path(@app), notice: 'App was successfully updated.' }
+        format.html { redirect_to request.referrer, notice: 'App was successfully updated.' }
         format.json { render json: @app, status: :ok, location: :edit }
       else
         format.html { render :settings }
@@ -182,9 +182,9 @@ class AppsController < ApplicationController
   end
 
   def configure_app
-    ConfigureAppJob.perform_later @app, params['platform'] || 'both', current_user
-    flash[:notice] = 'Publish scheduled...'
     redirect_to request.referrer
+
+    ConfigureAppJob.set(wait: 2.seconds).perform_later @app, params['platform'] || 'both', current_user
   end
 
   private
