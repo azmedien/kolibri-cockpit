@@ -29,6 +29,9 @@ module GitHelper
     repo = open_repo(url)
     repo_branches = repo.branches
 
+    repo.config('user.name', "#{user.first_name} #{user.last_name}")
+    repo.config('user.email', user.email)
+
     repo.checkout('master')
 
     # Trying to find origin app branch we want to branch from. We want to skip this if we alredy cloned the app
@@ -48,10 +51,6 @@ module GitHelper
       begin
         repo.chdir do
           yield repo
-
-          repo.config('user.name', "#{user.first_name} #{user.last_name}")
-          repo.config('user.email', user.email)
-
           repo.add(:all=>true)
           repo.commit('Project configured by Kolibri Cockpit')
           repo.push('origin', app.internal_name.parameterize)
