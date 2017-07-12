@@ -37,7 +37,10 @@ module GitHelper
       origin_branch_name = origin_app.internal_name.parameterize
       # origin_branch = repo_branches["origin/#{origin_branch_name}"]
       repo.checkout(origin_branch_name) # Checkout the origin app branch so we will branch from it
-      repo.pull()
+      begin
+        repo.pull('origin', repo.branch(origin_branch_name))
+      rescue
+      end
     end
 
     repo.branch(branch_name).checkout
