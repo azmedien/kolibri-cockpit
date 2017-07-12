@@ -50,6 +50,9 @@ module GitHelper
         repo.commit('Project configured by Kolibri Cockpit')
         repo.push('origin', branch_name)
       end
+    rescue Exception => e
+      logger.error e.message
+      logger.error e.backtrace.inspect
     ensure
       repo.checkout('master')
       repo.branch(branch_name).delete
