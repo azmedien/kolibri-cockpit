@@ -333,6 +333,6 @@ module AppsHelper
 
     element.children.first.content = value if element && element.children.any?
 
-    File.write(xml, document.to_xml(indent: 4))
+    File.write(xml, document.to_xml(indent: 4, encoding: 'UTF-8'))
   end
 end
