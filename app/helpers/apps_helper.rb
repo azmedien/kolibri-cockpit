@@ -323,6 +323,9 @@ module AppsHelper
     resources = document.at('resources')
 
     resources.children.each { |item|
+
+      logger.debug item.inspect
+
       if (item.attributes['name'].value == meta)
           element = item if item.attributes['name'].value == meta
       end
