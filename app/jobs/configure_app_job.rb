@@ -42,7 +42,7 @@ class ConfigureAppJob < ApplicationJob
       modify_android_configuration_files '.', app
       setup_android_title '.', app
       copy_android_assets '.', app
-      copy_anroid_firebase '.', app
+      copy_android_firebase '.', app
     end
   end
 
