@@ -36,16 +36,12 @@ module GitHelper
     if origin_app && (repo_branches[branch_name].nil? || repo_branches["origin/#{branch_name}"].nil?)
       origin_branch_name = origin_app.internal_name.parameterize
 
-      if repo_branches[origin_branch_name]
+      if repo_branches[origin_branch_name] || repo_branches["origin/#{origin_branch_name}"]
         repo.checkout(origin_branch_name) # Checkout the origin app branch so we will branch from it
       end
     end
 
     repo.branch(branch_name).checkout
-
-    if repo_branches["origin/#{branch_name}"]
-      repo.pull('origin', repo.branch(branch_name))
-    end
 
     begin
       repo.chdir do
