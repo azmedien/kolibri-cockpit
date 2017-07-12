@@ -56,9 +56,6 @@ module GitHelper
          ensure
            repo.checkout('master')
            repo.branch(app.internal_name.parameterize).delete
-
-           folder = url.split('/').last
-           FileUtils.rm_rf(Rails.root.join('tmp', folder))
          end
       end
     end
