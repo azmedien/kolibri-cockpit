@@ -53,6 +53,7 @@ module GitHelper
     rescue Exception => e
       logger.error e.message
       logger.error e.backtrace.join("\n")
+      raise
     ensure
       repo.checkout('master')
       repo.branch(branch_name).delete
