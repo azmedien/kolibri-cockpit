@@ -116,12 +116,16 @@ platform :ios do
   desc "Kolibri Pipeline (build, test and publish)"
   lane :all do
 
+    unless ENV.key?('FL_APPLE_USER')
+      UI.user_error!("FL_APPLE_USER not set.  Exiting")
+    end
+
     kolibri(
       stage: "initialize",
       message: "Setup provisioning and certificates before we go...",
     )
 
-    keychain_entry = CredentialsManager::AccountManager.new(user: ENV['FL_APPLE_USER'])
+    keychain_entry = CredentialsManager::AccountManager.new(user: ENV['FL_APPLE_USER'] || '')
 
     produce(
       app_name: "<%= app.internal_name %>",
@@ -185,7 +189,7 @@ platform :ios do
       message: "Publish app TestFlight",
     )
 
-    pilot
+    pilot(skip_waiting_for_build_processing: true)
 
     kolibri(
       stage: "publish",

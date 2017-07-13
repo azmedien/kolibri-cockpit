@@ -34,6 +34,8 @@ class AppsController < ApplicationController
       @app.android_icon = origin.android_icon.dup
       @app.ios_icon = origin.ios_icon.dup
 
+      @app.splash = origin.splash.dup
+
       @app.android_config['origin'] = origin.id
       @app.ios_config['origin'] = origin.id
       @app.android_config.delete('bundle_id')
@@ -77,7 +79,7 @@ class AppsController < ApplicationController
     respond_to do |format|
 
       if @app.update(app_params)
-        format.html { redirect_to settings_app_path(@app), notice: 'App was successfully updated.' }
+        format.html { redirect_to request.referrer, notice: 'App was successfully updated.' }
         format.json { render json: @app, status: :ok, location: :edit }
       else
         format.html { render :settings }
@@ -188,9 +190,9 @@ class AppsController < ApplicationController
   end
 
   def configure_app
-    ConfigureAppJob.perform_later @app, params['platform'] || 'both', current_user
-    flash[:notice] = 'Publish scheduled...'
     redirect_to request.referrer
+
+    ConfigureAppJob.set(wait: 2.seconds).perform_later @app, params['platform'] || 'both', current_user
   end
 
   def invite
@@ -267,8 +269,8 @@ class AppsController < ApplicationController
         :ios_firebase,
         :ios_icon,
         :splash,
-        :android_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id, :version_code, :version_name],
-        :ios_config => [:repository_url, :netmetrix_ua, :netmetrix_url, :bundle_id])
+        :android_config => [:repository_url, :bundle_id, :version_code, :version_name],
+        :ios_config => [:repository_url, :bundle_id, :version_code, :version_name])
     end
 
     def notification_params

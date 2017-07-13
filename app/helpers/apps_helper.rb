@@ -136,7 +136,10 @@ module AppsHelper
   private
   def update_ios_plist folder, meta, value
     plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
-    plist = Plist.parse_xml(plist_path)
+
+    sanitarized_plist = IO.read(plist_path).force_encoding("us-ascii").encode("utf-8", replace: '')
+
+    plist = Plist.parse_xml(sanitarized_plist)
 
     if plist['KolibriParameters'].nil?
       params = {}
@@ -160,8 +163,12 @@ module AppsHelper
 
     project_path = Dir.glob("#{folder}/**.xcodeproj").first
     plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
-    plist = Plist.parse_xml(plist_path)
 
+    sanitarized_plist = IO.read(plist_path).force_encoding("us-ascii").encode("utf-8", replace: '')
+
+    plist = Plist.parse_xml(sanitarized_plist)
+
+    plist['CFBundleDisplayName'] = app.internal_name
     plist['CFBundleShortVersionString'] = app.ios_config['version_name']
     plist['CFBundleVersion'] = app.ios_config['version_code']
 
@@ -186,11 +193,11 @@ module AppsHelper
     else
       # Update plist value
       plist['CFBundleIdentifier'] = app.ios_config['bundle_id']
-
-      # Write changes to file
-      plist_string = Plist::Emit.dump(plist)
-      File.write(plist_path, plist_string)
     end
+
+    # Write changes to file
+    plist_string = Plist::Emit.dump(plist)
+    File.write(plist_path, plist_string)
   end
 
   def update_ios_fastlane folder, app
@@ -319,13 +326,16 @@ module AppsHelper
     resources = document.at('resources')
 
     resources.children.each { |item|
-      if (item.attributes['name'].value == meta)
+
+      logger.debug item.inspect
+
+      if (item.element? && item.attributes['name'].value == meta)
           element = item if item.attributes['name'].value == meta
       end
     }
 
     element.children.first.content = value if element && element.children.any?
 
-    File.write(xml, document.to_xml(indent: 4))
+    File.write(xml, document.to_xml(indent: 4, encoding: 'UTF-8'))
   end
 end

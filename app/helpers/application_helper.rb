@@ -13,8 +13,8 @@ module ApplicationHelper
     action.include?(params[:action])
   end
 
-  def send_cable
-    html = render_message('message', 'warning')
+  def send_cable message, type
+    html = render_message(message, type)
     ActionCable.server.broadcast 'app_configure',
       html: html
   end
