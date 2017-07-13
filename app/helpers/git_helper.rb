@@ -15,8 +15,9 @@ module GitHelper
     folder = url.split('/').last
     clone_repo(url) unless repo_exist?(folder)
     git = Git.open(Rails.root.join('tmp', folder), log: Logger.new(STDOUT))
-    git.checkout('master')
     git.reset_hard
+    git.clean(force: true, d: true)
+    git.checkout('master')
     git.pull
 
     git
@@ -41,10 +42,11 @@ module GitHelper
       end
     end
 
-    repo.branch(branch_name).checkout
-
     if repo_branches["origin/#{branch_name}"]
-      repo.pull('origin', branch_name)
+      repo.checkout(branch_name)
+      repo.pull('origin', branch_name) if repo_branches["origin/#{branch_name}"]
+    else
+      repo.branch(branch_name).checkout
     end
 
     begin
@@ -59,6 +61,8 @@ module GitHelper
       logger.error e.backtrace.join("\n")
       raise
     ensure
+      repo.reset_hard
+      repo.clean(force: true, d: true)
       repo.checkout('master')
       repo.branch(branch_name).delete
     end
