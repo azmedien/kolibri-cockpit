@@ -14,7 +14,7 @@ class ConfigureAppJob < ApplicationJob
 
   def perform(app, platform, user)
 
-    send_cable('Configure the app...', 'notice')
+    send_cable('Configure the app...', 'info')
 
     begin
       if platform == 'android'

@@ -43,6 +43,10 @@ module GitHelper
 
     repo.branch(branch_name).checkout
 
+    if repo_branches["origin/#{branch_name}"]
+      repo.pull('origin', branch_name)
+    end
+
     begin
       repo.chdir do
         yield repo
