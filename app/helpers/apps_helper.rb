@@ -136,7 +136,10 @@ module AppsHelper
   private
   def update_ios_plist folder, meta, value
     plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
-    plist = Plist.parse_xml(plist_path)
+
+    sanitarized_plist = IO.read(plist_path).force_encoding("us-ascii").encode("utf-8", replace: '')
+
+    plist = Plist.parse_xml(sanitarized_plist)
 
     if plist['KolibriParameters'].nil?
       params = {}
@@ -161,7 +164,7 @@ module AppsHelper
     project_path = Dir.glob("#{folder}/**.xcodeproj").first
     plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
 
-    sanitarized_plist = IO.read(plist_path).force_encoding("ISO-8859-1").encode("utf-8", replace: nil)
+    sanitarized_plist = IO.read(plist_path).force_encoding("us-ascii").encode("utf-8", replace: '')
 
     plist = Plist.parse_xml(sanitarized_plist)
 
