@@ -135,7 +135,7 @@ module AppsHelper
 
   private
   def update_ios_plist folder, meta, value
-    plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
+    plist_path = Dir.glob("#{folder}/Kolibri/Info.plist").first
 
     sanitarized_plist = IO.read(plist_path).force_encoding("us-ascii").encode("utf-8", replace: '')
 
@@ -162,7 +162,7 @@ module AppsHelper
     identifier_key = 'PRODUCT_BUNDLE_IDENTIFIER'
 
     project_path = Dir.glob("#{folder}/**.xcodeproj").first
-    plist_path = Dir.glob("#{folder}/**/**/Info.plist").first
+    plist_path = Dir.glob("#{folder}/Kolibri/Info.plist").first
 
     sanitarized_plist = IO.read(plist_path).force_encoding("us-ascii").encode("utf-8", replace: '')
 
