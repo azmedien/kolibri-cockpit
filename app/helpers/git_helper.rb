@@ -8,13 +8,13 @@ module GitHelper
 
   def clone_repo(url)
     folder = url.split('/').last
-    Git.clone(url, folder, path: Rails.root.join('tmp'), log: Logger.new(STDOUT)) unless repo_exist?(folder)
+    Git.clone(url, folder, path: Rails.root.join('tmp'), log: Logger.new(STDOUT, level: :info)) unless repo_exist?(folder)
   end
 
   def open_repo(url)
     folder = url.split('/').last
     clone_repo(url) unless repo_exist?(folder)
-    git = Git.open(Rails.root.join('tmp', folder), log: Logger.new(STDOUT))
+    git = Git.open(Rails.root.join('tmp', folder), log: Logger.new(STDOUT, level: :info))
     git.reset_hard
     git.clean(force: true, d: true)
     git.checkout('master')

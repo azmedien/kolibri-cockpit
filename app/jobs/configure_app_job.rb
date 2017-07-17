@@ -1,9 +1,7 @@
 class ConfigureAppJob < ApplicationJob
   include GitHelper
   include ApplicationHelper
-  include AppsHelper
   include AssetsHelper
-  include UrlHelper
 
   queue_as :default
 
@@ -17,14 +15,7 @@ class ConfigureAppJob < ApplicationJob
     send_cable('Configure the app...', 'info')
 
     begin
-      if platform == 'android'
-        perform_android app, user
-      elsif platform == 'ios'
-        perform_ios app, user
-      else
-        perform_android app, user
-        perform_ios app, user
-      end
+      self.send("perform_#{platform}", app, user)
     rescue Exception => e
       send_cable("<h4 class='alert-heading'>Cannot configure the app.</h4> <p>#{e.message}</p>", 'danger')
       raise
@@ -34,7 +25,6 @@ class ConfigureAppJob < ApplicationJob
   end
 
   private
-
   def perform_android(app, user)
     repo = app.android_config['repository_url']
     bundle = app.android_config['bundle_id']
@@ -43,11 +33,12 @@ class ConfigureAppJob < ApplicationJob
 
     open_repo repo
 
-    manipulate_repo repo, app, user do |_git|
-      modify_android_configuration_files '.', app
-      setup_android_title '.', app
-      copy_android_assets '.', app
-      copy_android_firebase '.', app
+    service = AppConfigureService.new('android', '.', app)
+
+    logger.tagged('Android') do
+      manipulate_repo repo, app, user do |_git|
+        service.configure_it
+      end
     end
   end
 
@@ -59,10 +50,15 @@ class ConfigureAppJob < ApplicationJob
 
     open_repo repo
 
+    service = AppConfigureService.new('ios', '.', app)
+
     manipulate_repo repo, app, user do |_git|
-      modify_ios_configuration_files '.', app
-      copy_ios_assets '.', app
-      copy_ios_firebase '.', app
+      service.configure_it
     end
+  end
+
+  def platform_both(app, user)
+    perform_android app, user
+    perform_ios app, user
   end
 end
