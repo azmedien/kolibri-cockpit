@@ -155,7 +155,11 @@ platform :ios do
       message: "Running all the tests..."
     )
 
-    scan
+    scan(
+      device: 'iPhone 6',
+      scheme: "KolibriTests",
+      clean: true
+    )
 
     kolibri(
       stage: "test",
