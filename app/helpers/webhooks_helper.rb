@@ -23,6 +23,7 @@ module WebhooksHelper
           #{image_tag(app.android_icon.url, size: "32", :class => "img-responsive rounded-circle") if app.android_icon?}
         </th>
         <th>#{status}</th>
+        <th><a href="#{build.url}" target="_blank">Link</a></th>
         <td>#{build.stage.capitalize}</td>
         <td data-toggle="tooltip" data-placement="bottom" data-html="true" title="#{build.message}">#{build.message.lines.first.capitalize}</td>
         <td data-toggle="tooltip" data-placement="bottom" title="#{build.updated_at}">#{time_ago_in_words(build.updated_at)}</td>

@@ -16,12 +16,11 @@ class ConfigureAppJob < ApplicationJob
 
     begin
       self.send("perform_#{platform}", app, user)
+      send_cable("<h4 class='alert-heading'>The application is configured.</h4> <p>Shortly Jenkins will start publishing it and status indicator will appear below.</p>", 'warning')
     rescue Exception => e
       send_cable("<h4 class='alert-heading'>Cannot configure the app.</h4> <p>#{e.message}</p>", 'danger')
       raise
     end
-
-    send_cable("<h4 class='alert-heading'>The application is configured.</h4> <p>Shortly Jenkins will start publishing it and status indicator will appear below.</p>", 'warning')
   end
 
   private
@@ -29,7 +28,8 @@ class ConfigureAppJob < ApplicationJob
     repo = app.android_config['repository_url']
     bundle = app.android_config['bundle_id']
 
-    return if repo.nil? || repo.empty? || bundle.nil? || bundle.empty?
+    raise "Repository must be set" if repo.nil? || repo.empty?
+    raise "Application or Bundle Id must be set" if bundle.nil? || bundle.empty?
 
     open_repo repo
 
@@ -46,7 +46,8 @@ class ConfigureAppJob < ApplicationJob
     repo = app.ios_config['repository_url']
     bundle = app.ios_config['bundle_id']
 
-    return if repo.nil? || repo.empty? || bundle.nil? || bundle.empty?
+    raise "Repository must be set" if repo.nil? || repo.empty?
+    raise "Application or Bundle Id must be set" if bundle.nil? || bundle.empty?
 
     open_repo repo
 

@@ -171,9 +171,6 @@ class AppsController < ApplicationController
     }
     n.priority = 'high'
     n.content_available = true
-    n.notification = { title: notification_params['title'],
-                       body: notification_params['message']
-                     }
     n.save!
 
     respond_to do |format|
