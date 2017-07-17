@@ -26,7 +26,7 @@ class AppsController < ApplicationController
   def create
     if params[:create] == 'existing'
       @app = App.new(app_params)
-      origin = current_user.apps.find(params[:origin])
+      origin = @apps.find(params[:origin])
 
       @app.runtime = origin.runtime.dup
       @app.android_config = origin.android_config.dup

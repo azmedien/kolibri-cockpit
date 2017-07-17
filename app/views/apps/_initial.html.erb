@@ -30,7 +30,7 @@
         <div id="chooseExistingApp" class="panel-collapse collapse in">
             <div class="panel-body form-group">
                 <%= label_tag(:origin, "Application") %>
-                <%= select_tag "origin", options_from_collection_for_select(current_user.apps, :id, :internal_name), :class => "form-control" %>
+                <%= select_tag "origin", options_from_collection_for_select(@apps, :id, :internal_name), :class => "form-control" %>
             </div>
         </div>
     </div>

@@ -33,6 +33,28 @@ class App < ApplicationRecord
   before_create :set_slug
   after_create :set_role
 
+  def origin?
+    return App.exists?(self.android_config['origin']) if self.android_config['origin']
+  end
+
+  def origin
+    return App.find(self.android_config['origin'])
+  end
+
+  def icon?
+    return self.android_icon? || self.ios_icon?
+  end
+
+  def icon
+    icon = self.android_icon if self.android_icon?
+
+    unless icon
+      icon = self.ios_icon if self.ios_icon?
+    end
+
+    icon
+  end
+
   def android_config=(new_config)
     gs = self.android_config || {}
     gs = gs.merge(new_config || {})

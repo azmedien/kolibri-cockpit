@@ -4,7 +4,7 @@ $(document).on("turbolinks:load", function() {
     target = $(this);
     container = $('<div class="jsoneditor-container">').insertAfter(target);
     editor = new JSONEditor(container[0], {
-      modes: ['code','tree'],
+      modes: ['tree','code'],
       change: function() {
         return target.val(JSON.stringify(editor.get()));
       }

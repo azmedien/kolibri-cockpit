@@ -7,18 +7,27 @@
     </div>
     <% end %>
     <% @apps.each do |app| %>
-    <div class="list-group-item list-group-item-action flex-column align-items-start">
-      <div class="d-flex w-100 justify-content-end align-items-center">
-        <%= link_to(edit_app_path(app), :class=>'d-flex w-100') do %>
-        <span class="p-2">
-          <%= image_tag(app.android_icon.url, size: "32", :class => "img-responsive rounded-circle") if app.android_icon? %>
-        </span>
-        <span class="mr-auto p-2"><%= app.internal_name %></span>
-        <% end %>
 
-        <span class="p-2"><%= button_to 'Invite', app_autority_invite_path(app), remote: true, method: :post, :class => "btn btn-outline-primary" %></span>
-        <span class="p-2"><%= button_to 'Edit', edit_app_path(app), method: :get, :class => "btn btn-outline-primary" %></span>
-        <span class="p-2"><%= button_to 'Delete', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %></span>
+    <div class="list-group-item list-group-item-action d-flex flex-row justify-content-start">
+      <%= link_to(edit_app_path(app), :class=>'w-75 mr-auto d-flex flex-row align-items-center') do %>
+        <div class="p-2">
+          <% if app.icon? %>
+            <%= image_tag(app.icon.url, size: "48", :class => "img-fluid")%>
+          <% else %>
+            <%= image_tag('placeholder.png', size: "48", :class => "img-fluid")%>
+            <% end %>
+        </div>
+
+        <div class="p-2 mr-auto d-flex flex-column">
+          <h5 class="mb-1"><%= app.internal_name %></h5>
+          <%= content_tag(:small, "cloned from #{app.origin.internal_name}") if app.origin? %>
+        </div>
+      <% end %>
+
+      <div class="mr-auto d-flex flex-row justify-content-between">
+        <%= button_to 'Invite', app_autority_invite_path(app), remote: true, method: :post, :class => "mx-1 btn btn-outline-primary" %>
+        <%= button_to 'Edit', edit_app_path(app), method: :get, :class => "mx-1 btn btn-outline-primary" %>
+        <%= button_to 'Delete', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "mx-1 btn btn-outline-danger" %>
       </div>
     </div>
     <% end %>
