@@ -11,12 +11,12 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group">
     <%= f.label :file %>
-    <%= f.file_field :file, :multiple => true %>
+    <%= f.file_field :file, :multiple => true, :class => "form-control-file" %>
   </div>
-
+  
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit :class => "btn btn-primary" %>
   </div>
 <% end %>

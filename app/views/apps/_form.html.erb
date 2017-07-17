@@ -1,20 +1,20 @@
 <%= form_for(app) do |f| %>
 <% if app.errors.any? %>
 <div id="error_explanation">
-    <h2><%= pluralize(app.errors.count, "error") %>
-        prohibited this app from being saved:</h2>
+  <h2><%= pluralize(app.errors.count, "error") %>
+    prohibited this app from being saved:</h2>
 
-    <ul>
-        <% app.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-        <% end %>
-    </ul>
+  <ul>
+    <% app.errors.full_messages.each do |message| %>
+    <li><%= message %></li>
+    <% end %>
+  </ul>
 </div>
 <% end %>
 
 <div class="form-group">
-    <%= f.label :internal_name %>
-    <%= f.text_field :internal_name, :class => "form-control" %>
+  <%= f.label :internal_name %>
+  <%= f.text_field :internal_name, :class => "form-control" %>
 </div>
 
 <% if app.new_record? %>
@@ -25,45 +25,45 @@
 <%= label_tag(:create_existing, "Duplicate existing one") %>
 
 <div class="panel-group" id="accordion">
-    <div class="panel panel-default">
-        <div id="chooseExistingApp" class="panel-collapse collapse in">
-            <div class="panel-body">
-                <%= label_tag(:origin, "Application") %>
-                <%= select_tag "origin", options_from_collection_for_select(App.all, :id, :internal_name) %>
-            </div>
-        </div>
+  <div class="panel panel-default">
+    <div id="chooseExistingApp" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <%= label_tag(:origin, "Application") %>
+        <%= select_tag "origin", options_from_collection_for_select(App.all, :id, :internal_name) %>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        $("#create_new").click(function () {
-            $("#chooseExistingApp").collapse('hide');
-        });
-        $("#create_existing").click(function () {
-            $("#chooseExistingApp").collapse('show');
-        });
+  $(document).ready(function () {
+    $("#create_new").click(function () {
+      $("#chooseExistingApp").collapse('hide');
     });
+    $("#create_existing").click(function () {
+      $("#chooseExistingApp").collapse('show');
+    });
+  });
 </script>
 
 <% end %>
 
 <div class="form-group">
-    <%= f.label :runtime %>
-    <%= f.text_area :runtime, :class => "jsoneditor-target form-control"%>
+  <%= f.label :runtime %>
+  <%= f.text_area :runtime, :class => "jsoneditor-target form-control"%>
 </div>
 
 <div class="form-group">
-    <%= f.label :android_config %>
-    <%= f.text_area :android_config, :class => "form-control" %>
+  <%= f.label :android_config %>
+  <%= f.text_area :android_config, :class => "form-control" %>
 </div>
 
 <div class="form-group">
-    <%= f.label :ios_config %>
-    <%= f.text_area :ios_config, :class => "form-control" %>
+  <%= f.label :ios_config %>
+  <%= f.text_area :ios_config, :class => "form-control" %>
 </div>
 
 <div class="actions">
-    <%= f.submit :class => "btn btn-primary" %>
+  <%= f.submit :class => "btn btn-primary" %>
 </div>
 <% end %>
