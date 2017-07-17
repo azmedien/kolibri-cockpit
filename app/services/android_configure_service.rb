@@ -17,7 +17,7 @@ class AndroidConfigureService
       firebase = @app.android_firebase
 
       unless firebase.file.nil?
-        @log.info "Processing #{firebase.file_identifier}"
+        @log.info "Processing #{@app.android_firebase_identifier}"
         @log.debug "Caching..."
         firebase.cache_stored_file!
         firebase.retrieve_from_cache!(firebase.cache_name)

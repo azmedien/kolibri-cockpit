@@ -17,7 +17,7 @@ class IosConfigureService
       firebase = @app.ios_firebase
 
       unless firebase.file.nil?
-        @log.info "Processing #{firebase.file_identifier}"
+        @log.info "Processing #{@app.ios_firebase_identifier}"
         @log.debug "Caching..."
         firebase.cache_stored_file!
         firebase.retrieve_from_cache!(firebase.cache_name)
@@ -69,8 +69,8 @@ class IosConfigureService
     info_plist_key = 'INFOPLIST_FILE'
     identifier_key = 'PRODUCT_BUNDLE_IDENTIFIER'
 
-    project_path = Dir.glob("#{folder}/**.xcodeproj").first
-    plist_path = Dir.glob("#{folder}/Kolibri/Info.plist").first
+    project_path = Dir.glob("#{@app_folder}/**.xcodeproj").first
+    plist_path = Dir.glob("#{@app_folder}/Kolibri/Info.plist").first
 
     modify_plist(plist_path) do |plist|
       plist['CFBundleDisplayName'] = @app.internal_name
@@ -100,14 +100,14 @@ class IosConfigureService
         configs = configs.select { |obj| obj.build_settings[info_plist_key] == plist_pathname.relative_path_from(current).to_s }
         # For each of the build configurations, set app identifier
         configs.each do |c|
-          c.build_settings[identifier_key] = app.ios_config['bundle_id']
+          c.build_settings[identifier_key] = @app.ios_config['bundle_id']
         end
 
         # Write changes to the file
         project.save
       else
         # Update plist value
-        plist['CFBundleIdentifier'] = app.ios_config['bundle_id']
+        plist['CFBundleIdentifier'] = @app.ios_config['bundle_id']
       end
     end
   end
@@ -137,7 +137,7 @@ class IosConfigureService
       locals: { app: @app, assets: assets.select { |item| item.content_type.starts_with?('image/')} }
     })
 
-    File.write(File.join(folder, "Bladefile"), bladefile.to_s)
+    File.write(File.join(@app_folder, "Bladefile"), bladefile.to_s)
 
     @log.info "Bladefile done"
   end
