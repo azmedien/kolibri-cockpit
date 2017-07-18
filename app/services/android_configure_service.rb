@@ -177,10 +177,10 @@ class AndroidConfigureService
       @log.debug "Retrieved from cache!"
 
       dest = Dir.glob("#{@app_folder}/**/res").first
-      FileUtils.mkdir_p(File.dirname("#{dest}/drawable/#{@app.splash_identifier}"))
-      FileUtils.cp splash.path, "#{dest}/drawable/#{@app.splash_identifier}"
+      FileUtils.mkdir_p(File.dirname("#{dest}/drawable-nodpi/#{@app.splash_identifier}"))
+      FileUtils.cp splash.path, "#{dest}/drawable-nodpi/#{@app.splash_identifier}"
 
-      @log.debug "Copy #{splash.path} -> #{dest}/drawable/#{@app.splash_identifier}"
+      @log.debug "Copy #{splash.path} -> #{dest}/drawable-nodpi/#{@app.splash_identifier}"
       @log.info "Successfully processed #{@app.splash_identifier}"
     else
       @log.warn "Application splash is not set. Skipping.."
