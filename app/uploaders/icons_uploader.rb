@@ -17,7 +17,7 @@ class IconsUploader < CarrierWave::Uploader::Base
     process :resize_to_fit => [144, 144]
   end
 
-  version :xxhdpi, :if => :icon? do
+  version :xhdpi, :if => :icon? do
     convert :png
     process :resize_to_fit => [96, 96]
   end
