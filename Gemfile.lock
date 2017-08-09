@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/L3K0V/rpush.git
-  revision: 881987dc73f0c430e6e803242a7d473f9bad40e0
+  revision: 71cd7d2a0acc00b92434e5a876b9351fb4e1753f
   branch: fcm
   specs:
-    rpush (3.0.0)
+    rpush (3.0.0.pre.fcm)
       activesupport
       ansi
       multi_json (~> 1.0)
