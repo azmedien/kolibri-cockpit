@@ -24,10 +24,10 @@
         </div>
       <% end %>
 
-      <div class="mr-auto d-flex flex-row justify-content-between">
-        <%= button_to 'Invite', app_autority_invite_path(app), remote: true, method: :post, :class => "mx-1 btn btn-outline-primary" %>
+      <div class="mr-auto d-flex flex-row justify-content-end">
+        <%= button_to 'Invite', app_autority_invite_path(app), remote: true, method: :post, :class => "mx-1 btn btn-outline-primary" if current_user.has_role? :admin, app %>
         <%= button_to 'Edit', edit_app_path(app), method: :get, :class => "mx-1 btn btn-outline-primary" %>
-        <%= button_to 'Delete', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "mx-1 btn btn-outline-danger" %>
+        <%= button_to 'Delete', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "mx-1 btn btn-outline-danger" if current_user.has_role? :admin, app %>
       </div>
     </div>
     <% end %>

@@ -1,9 +1,17 @@
 class AppsController < ApplicationController
+
   before_action :authenticate_user!, except: [:runtime]
   before_action :set_app, except: [:index, :create, :new, :runtime]
   before_action :set_apps, except: [:show, :destroy, :jenkins, :runtime]
   before_action :set_nofication_app, only: [:notifications, :send_notifications, :destroy]
   before_action :set_nofications, only: [:notifications, :send_notifications]
+
+  authority_actions :settings => 'update',
+                    :build => 'build',
+                    :prepare => 'prepare',
+                    :publish => 'publish',
+                    :configure_app => 'publish',
+                    :notifications => 'notify'
 
   # GET /apps
   # GET /apps.json
@@ -76,6 +84,9 @@ class AppsController < ApplicationController
   # PATCH/PUT /apps/1
   # PATCH/PUT /apps/1.json
   def update
+
+    authorize_action_for @app
+
     respond_to do |format|
 
       if @app.update(app_params)
@@ -90,12 +101,15 @@ class AppsController < ApplicationController
 
   # GET /apps/1/edit
   def edit
-    redirect_to settings_app_path(@app)
+    redirect_to settings_app_path(@app) and return if current_user.has_role?(:admin, @app)
+    redirect_to notifications_app_path(@app) and return if current_user.can_notify?(@app)
   end
 
   # DELETE /apps/1
   # DELETE /apps/1.json
   def destroy
+
+    authorize_action_for @app
 
     if @app.deletable_by?(current_user)
       @notification.destroy if @notification
@@ -112,23 +126,10 @@ class AppsController < ApplicationController
     end
   end
 
-  # POST /apps/1/jenkins
-  def jenkins
-    begin
-      if :type == 'android'
-        code = @client.job.build(@app.android_config['jenkins_job'])
-      else
-        code = @client.job.build(@app.ios_config['jenkins_job'])
-      end
-
-    rescue Exception => e
-      flash[:danger] = e.message
-      redirect_to request.referrer
-    end
-    # raise "Could not build the job specified" unless code == '201'
-  end
-
   def settings
+
+    authorize_action_for @app
+
     respond_to do |format|
       format.json { render json: @app }
       format.html { render :settings }
@@ -136,18 +137,19 @@ class AppsController < ApplicationController
   end
 
   def build
-
+      authorize_action_for @app
   end
 
   def prepare
-
+      authorize_action_for @app
   end
 
   def publish
-
+      authorize_action_for @app
   end
 
   def notifications
+      authorize_action_for @app
   end
 
   def send_notifications
@@ -187,8 +189,9 @@ class AppsController < ApplicationController
   end
 
   def configure_app
-    redirect_to request.referrer
+    authorize_action_for @app
 
+    redirect_to request.referrer
     ConfigureAppJob.set(wait: 2.seconds).perform_later @app, params['platform'] || 'both', current_user
   end
 
@@ -239,7 +242,7 @@ class AppsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_app
-      @app = App.with_roles([:admin], current_user).find(params[:id] || params[:app_id])
+      @app = App.with_roles([:admin, :notifier], current_user).find(params[:id] || params[:app_id])
     end
 
     def set_nofication_app
@@ -252,7 +255,7 @@ class AppsController < ApplicationController
     end
 
     def set_apps
-      @apps = App.with_roles([:admin], current_user).order(:internal_name)
+      @apps = App.with_roles([:admin, :notifier], current_user).order(:internal_name)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
