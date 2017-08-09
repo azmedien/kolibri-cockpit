@@ -12,7 +12,7 @@ namespace :roles do
     user = User.find_by_email(args[:user])
 
     if user && app
-      user.add_role(:push, app)
+      user.add_role(:notifier, app)
       puts "#{user.email} now has push permissions to #{app.internal_name}"
     else
       puts "Invalid task arguments"
