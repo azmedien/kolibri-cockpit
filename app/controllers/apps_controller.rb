@@ -167,6 +167,14 @@ class AppsController < ApplicationController
     n.app = @notification
     n.data = {
       component: "#{notification_params['url']}",
+      url: "#{notification_params['url']}",
+      title: notification_params['title'],
+      body: notification_params['message'],
+      to: '/topics/main'
+    }
+    n.notification = {
+      component: "#{notification_params['url']}",
+      url: "#{notification_params['url']}",
       title: notification_params['title'],
       body: notification_params['message'],
       to: '/topics/main'
