@@ -86,6 +86,7 @@ end
 group :production do
   gem 'redis'
   gem 'fog-aws'
+  gem 'newrelic_rpm'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

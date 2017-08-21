@@ -159,6 +159,7 @@ GEM
     net-http-persistent (2.9.4)
     net-http2 (0.15.0)
       http-2 (= 0.8.2)
+    newrelic_rpm (4.3.0.335)
     nio4r (2.1.0)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
@@ -297,6 +298,7 @@ DEPENDENCIES
   listen (~> 3.1)
   mini_magick
   net-http-persistent (< 3)
+  newrelic_rpm
   pg
   plist
   puma (~> 3.9)
@@ -321,4 +323,4 @@ RUBY VERSION
    ruby 2.4.0p0
 
 BUNDLED WITH
-   1.15.3
+   1.15.4
