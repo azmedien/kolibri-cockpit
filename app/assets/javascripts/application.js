@@ -31,4 +31,12 @@ $(document).on("turbolinks:load", function() {
             }
         );
     });
+  $('.preload').each(function(index, obj){
+    var img = new Image();
+    img.src = $(obj).attr('data-source');
+
+    $(img).ready(function(){
+      $(obj).attr('src', img.src);
+    });
+  });
 })
