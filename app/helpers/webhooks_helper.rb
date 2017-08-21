@@ -20,7 +20,7 @@ module WebhooksHelper
     html = %{
       <tr id="#{build.build_id}" data-href="#{build.url}" target="_blank">
         <th scope="row" data-toggle="tooltip" data-placement="bottom" data-html="true" title="#{meta}">
-          #{image_tag(app.android_icon.url, size: "32", :class => "img-responsive rounded-circle") if app.android_icon?}
+          #{image_tag("placeholder.png", size: "32", :class => "img-fluid rounded-circle preload", data: {source: app.android_icon.url}) if app.android_icon?}
         </th>
         <th>#{status}</th>
         <th><a href="#{build.url}" target="_blank">Link</a></th>
