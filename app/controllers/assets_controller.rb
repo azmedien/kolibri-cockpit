@@ -1,11 +1,14 @@
 class AssetsController < ApplicationController
 
+  respond_to :html, :json
+
   before_action :set_app
   before_action :set_apps
   before_action :authenticate_user!, except: [:download]
   before_action :set_asset, only: [:show, :edit, :update, :destroy, :download]
 
   authorize_actions_for :parent_resource, all_actions: :build
+  authority_actions :download => :build 
 
   # GET /assets
   # GET /assets.json
@@ -21,10 +24,12 @@ class AssetsController < ApplicationController
   # GET /assets/new
   def new
     @asset = Asset.new
+    respond_modal_with @asset
   end
 
   # GET /assets/1/edit
   def edit
+    respond_modal_with @asset
   end
 
   # POST /assets

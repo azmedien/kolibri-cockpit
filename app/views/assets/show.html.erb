@@ -1,27 +1,2 @@
-<main>
-  <%= raw assets_content_type_icon(@asset, 64) %>
-
-  <%= render 'form', asset: @asset %>
-
-  <p>
-    <strong>File:</strong>
-    <%= @asset.file %>
-  </p>
-
-  <p>
-    <strong>URL:</strong>
-    <%= link_to app_asset_download_path(:asset_id => @asset), app_asset_download_path(:asset_id => @asset), :target => '_blank' %>
-  </p>
-
-  <% if @asset.content_type.start_with?('image') %>
-    <% @asset.file.versions.each do |version| %>
-    <p>
-      <strong><%= version.first %>: </strong>
-      <%= link_to 'Download', app_asset_download_path(:asset_id => @asset, :variant => version.first), :target => '_blank' %>
-    </p>
-    <% end %>
-  <% end %>
-
-<%= link_to 'Edit', edit_app_asset_path(@app, @asset) %> |
-<%= link_to 'Back', app_assets_path %>
-</main>
+<% content_for :title, 'Showing asset' %>
+<%= render 'form', asset: @asset %>

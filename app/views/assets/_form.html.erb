@@ -1,22 +1,44 @@
-<%= form_for([@app, asset], :html => { :multipart => true }) do |f| %>
+<%= form_for([@app, asset], remote: request.xhr?, html: { data: { modal: true }}, :html => { :multipart => true }) do |f| %>
+<div class="modal-body">
   <% if asset.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(asset.errors.count, "error") %> prohibited this asset from being saved:</h2>
+  <div id="error_explanation">
+    <h2><%= pluralize(asset.errors.count, "error") %>
+      prohibited this asset from being saved:</h2>
 
-      <ul>
+    <ul>
       <% asset.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+      <li><%= message %></li>
       <% end %>
-      </ul>
-    </div>
+    </ul>
+  </div>
+  <% end %>
+
+  <% if asset.persisted? %>
+  <%= raw asset_icon(asset, 64) %>
   <% end %>
 
   <div class="form-group">
     <%= f.label :file %>
     <%= f.file_field :file, :multiple => true, :class => "form-control-file" %>
   </div>
-  
-  <div class="actions">
-    <%= f.submit :class => "btn btn-primary" %>
-  </div>
+
+<% if asset.persisted? %>
+<div class="form-group">
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <% if @asset.content_type.start_with?('image') %>
+      <%= link_to "Original", app_asset_download_path(:asset_id => @asset), :class => "btn btn-primary btn-sm", :target => '_blank' %>
+  <% @asset.file.versions.each do |version| %>
+    <%= link_to version.first, app_asset_download_path(:asset_id => @asset, :variant => version.first), :class => "btn btn-secondary btn-sm", :target => '_blank' %>
+  <% end %>
+  <% end %>
+    </div>
+</div>
+
+</div>
+<% end %>
+
+<div class="modal-footer">
+  <%= f.submit :class => "btn btn-success" %>
+  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+</div>
 <% end %>
