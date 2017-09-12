@@ -11,12 +11,13 @@
 // about supported directives.
 //
 //= require jsoneditor
-//= require jquery
+//= require jquery3
 //= require jquery_ujs
+//= require popper
 //= require turbolinks
 //= require_tree .
-//= require tether
-//= require bootstrap-sprockets
+//= require bootstrap
+
 $(document).on("turbolinks:load", function() {
   $('[data-toggle="tooltip"]').tooltip()
   $('.table tr[data-href]').each(function(){

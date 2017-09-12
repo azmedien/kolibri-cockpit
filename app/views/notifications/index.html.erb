@@ -1,0 +1,22 @@
+<main>
+  <div class="list-group">
+    <%= link_to(new_app_notification_path, remote: true, data: { modal: true }, :class => 'list-group-item active justify-content-between') do %>
+    <div class="d-flex w-100 justify-content-end align-items-center">
+      <i class="fa fa-plus p-2" aria-hidden="true"></i>
+      <span class="mr-auto p-2">Create new application</span>
+    </div>
+    <% end %>
+    <% @notifications.each do |notification| %>
+
+    <div class="list-group-item list-group-item-action d-flex flex-row justify-content-start">
+      <%= link_to(edit_app_notification_path(@app, notification), remote: true, data: { modal: true }, :class=>'w-75 mr-auto d-flex flex-row align-items-center') do %>
+
+      <div class="p-2 mr-auto d-flex flex-column">
+        <h6 class="mb-1"><%= notification.title %></h6>
+        <%= content_tag(:small, notification.url) %>
+      </div>
+      <% end %>
+    </div>
+    <% end %>
+  </div>
+</main>

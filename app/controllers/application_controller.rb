@@ -9,6 +9,12 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_apps
 
+  def respond_modal_with(*args, &blk)
+    options = args.extract_options!
+    options[:responder] = ModalResponder
+    respond_with *args, options, &blk
+  end
+
   protected
 
   def configure_permitted_parameters

@@ -1,5 +1,5 @@
-<main>
-<%= form_for(app) do |f| %>
+<%= form_for(app, remote: request.xhr?, html: { data: { modal: true }}) do |f| %>
+<div class="modal-body">
 <% if app.errors.any? %>
 <div id="error_explanation">
     <h2><%= pluralize(app.errors.count, "error") %>
@@ -20,16 +20,19 @@
 
 <% if app.new_record? and current_user.apps.any? %>
 
-<%= radio_button_tag(:create, "new", true) %>
-<%= label_tag(:create_new, "New") %>
-<%= radio_button_tag(:create, "existing") %>
-<%= label_tag(:create_existing, "Duplicate existing one") %>
+<div class="form-group btn-group" data-toggle="buttons">
+  <%= label_tag(:create_new, "Create new", :class => "btn btn-outline-primary active", :id => "create_new") do %>
+    <%= radio_button_tag(:send, "now", true) %> Create new
+  <% end %>
+  <%= label_tag(:create_existing, "Clone existing one", :class => "btn btn btn-outline-primary", :id => "create_existing") do %>
+    <%= radio_button_tag(:create, "existing") %> Clone an existing one
+  <% end %>
+</div>
 
 <div class="panel-group" id="accordion">
     <div class="panel panel-default">
         <div id="chooseExistingApp" class="panel-collapse collapse in">
             <div class="panel-body form-group">
-                <%= label_tag(:origin, "Application") %>
                 <%= select_tag "origin", options_from_collection_for_select(@apps, :id, :internal_name), :class => "form-control" %>
             </div>
         </div>
@@ -48,8 +51,10 @@
 </script>
 
 <% end %>
-<div class="actions">
-    <%= f.submit :class => "btn btn-primary" %>
+
+</div>
+<div class="modal-footer">
+  <%= f.submit :class => "btn btn-success" %>
+  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
 </div>
 <% end %>
-</main>

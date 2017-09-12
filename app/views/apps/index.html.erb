@@ -1,6 +1,6 @@
 <main>
   <div class="list-group">
-    <%= link_to(new_app_path, remote: true, :class => 'list-group-item active justify-content-between') do %>
+    <%= link_to(new_app_path, remote: true, data: { modal: true }, :class => 'list-group-item active justify-content-between') do %>
     <div class="d-flex w-100 justify-content-end align-items-center">
       <i class="fa fa-plus p-2" aria-hidden="true"></i>
       <span class="mr-auto p-2">Create new application</span>
@@ -24,7 +24,7 @@
       </div>
       <% end %>
 
-      <div class="mr-auto d-flex flex-row justify-content-end">
+      <div class="mr-auto d-flex flex-row justify-content-end align-items-center">
         <%= button_to 'Invite', app_autority_invite_path(app), remote: true, method: :post, :class => "mx-1 btn btn-outline-primary" if current_user.has_role? :admin, app %>
         <%= button_to 'Edit', edit_app_path(app), method: :get, :class => "mx-1 btn btn-outline-primary" %>
         <%= button_to 'Delete', app, method: :delete, data: { confirm: 'Are you sure?' }, :class => "mx-1 btn btn-outline-danger" if current_user.has_role? :admin, app %>

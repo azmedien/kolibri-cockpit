@@ -13,6 +13,8 @@ class AppsController < ApplicationController
                     :configure_app => 'publish',
                     :notifications => 'notify'
 
+  respond_to :html, :json
+
   # GET /apps
   # GET /apps.json
   def index
@@ -27,6 +29,7 @@ class AppsController < ApplicationController
   # GET /apps/new
   def new
     @app = App.new
+    respond_modal_with @app
   end
 
   # POST /apps
@@ -59,26 +62,19 @@ class AppsController < ApplicationController
 
     @app.user = current_user
 
-    respond_to do |format|
-      if @app.save
-
-        if origin
-          origin.assets.each do |item|
-            asset = Asset.new
-            asset.app_id = @app.id
-            asset.slug = item.slug
-            asset.duplicate_file(item)
-            asset.save!
-          end
+    if @app.save
+      if origin
+        origin.assets.each do |item|
+          asset = Asset.new
+          asset.app_id = @app.id
+          asset.slug = item.slug
+          asset.duplicate_file(item)
+          asset.save!
         end
-
-        format.html { redirect_to settings_app_path(@app), notice: 'App was successfully created.' }
-        format.json { render json: @app, status: :created, location: :edit }
-      else
-        format.html { render :new }
-        format.json { render json: @app.errors, status: :unprocessable_entity }
       end
     end
+
+    respond_modal_with @app, location: @app
   end
 
   # PATCH/PUT /apps/1

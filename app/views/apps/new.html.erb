@@ -1,8 +1,2 @@
-<main>
-    <h1>New App</h1>
-
-    <%= render 'initial', app: @app %>
-
-    <%= link_to 'Back', apps_path %>
-
-</main>
+<% content_for :title, 'Crate new application' %>
+<%= render 'initial', app: @app %>
