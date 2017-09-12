@@ -1,7 +1,11 @@
 class AssetsController < ApplicationController
+
   before_action :set_app
   before_action :set_apps
+  before_action :authenticate_user!, except: [:download]
   before_action :set_asset, only: [:show, :edit, :update, :destroy, :download]
+
+  authorize_actions_for :parent_resource, all_actions: :build
 
   # GET /assets
   # GET /assets.json
@@ -87,12 +91,16 @@ class AssetsController < ApplicationController
       @asset = Asset.friendly.find_by!(slug: params[:id] || params[:asset_id], app_id: @app.id)
     end
 
+    def parent_resource
+      @app
+    end
+
     def set_app
-      @app = App.find(params[:app_id])
+      @app = App.with_roles([:admin, :notifier], current_user).find(params[:app_id])
     end
 
     def set_apps
-      @apps = current_user.apps if current_user
+      @apps = App.with_roles([:admin, :notifier], current_user).order(:internal_name)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

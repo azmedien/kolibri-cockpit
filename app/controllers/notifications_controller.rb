@@ -4,12 +4,18 @@ class NotificationsController < ApplicationController
 
   before_action :set_app
   before_action :set_apps
+  before_action :authenticate_user!
+  before_action :set_nofication_app
   before_action :set_notification, only: [:show, :edit, :update, :destroy]
+
+  authorize_actions_for :parent_resource, all_actions: :notify
+
+  after_action :schedule_notification, only: [:create, :update]
 
   # GET /notifications
   # GET /notifications.json
   def index
-    @notifications = Notification.all
+    @notifications = Notification.where(app_id: @app.id)
   end
 
   # GET /notifications/1
@@ -34,6 +40,7 @@ class NotificationsController < ApplicationController
     @notification = Notification.new(notification_params)
     @notification.app = @app
     @notification.user = current_user
+    @notification.rpush_app = @notification_app
     @notification.save
 
     respond_modal_with @notification, location: app_notifications_url
@@ -42,7 +49,15 @@ class NotificationsController < ApplicationController
   # PATCH/PUT /notifications/1
   # PATCH/PUT /notifications/1.json
   def update
+
+    byebug
+
     @notification.update(notification_params)
+
+    if params[:send] == 'now'
+      @notification.update(scheduled_for: Time.zone.now)
+    end
+
     respond_modal_with @notification, location: app_notifications_url
   end
 
@@ -51,23 +66,63 @@ class NotificationsController < ApplicationController
   def destroy
     @notification.destroy
     respond_to do |format|
-      format.html { redirect_to notifications_url, notice: 'Notification was successfully destroyed.' }
+      format.html { redirect_to app_notifications_url, notice: 'Notifiation was successfully deleted.' }
+      format.json { head :no_content }
+    end
+  end
+
+  def configure
+    if @notification_app.nil?
+      api_key = settings_params['firebase_server_key']
+
+      @notification_app = Rpush::Gcm::App.new
+      @notification_app.name = "#{@app.internal_id}"
+      @notification_app.auth_key = api_key
+      @notification_app.connections = 1
+      @notification_app.save!
+    end
+
+    respond_to do |format|
+      format.html { redirect_to app_notifications_url, notice: 'Settings was successfully applied.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_notification
       @notification = Notification.find(params[:id])
     end
 
+    def set_nofication_app
+      @notification_app = Rpush::Gcm::App.find_by_name("#{@app.internal_id}")
+    end
+
+    def schedule_notification
+
+      require 'sidekiq/api'
+
+      jid = @notification.job_id
+
+      if jid
+        Sidekiq::ScheduledSet.new.find_job(jid).try(:delete)
+        Sidekiq::Queue.new.find_job(jid).try(:delete)
+      end
+
+      job_id = NotificationWorker.perform_at(@notification.scheduled_for, @notification.id)
+      puts job_id.inspect
+      @notification.update(job_id: job_id)
+    end
+
+    def parent_resource
+      @app
+    end
+
     def set_app
-      @app = App.find(params[:app_id])
+      @app = App.with_roles([:admin, :notifier], current_user).find(params[:app_id])
     end
 
     def set_apps
-      @apps = current_user.apps if current_user
+      @apps = App.with_roles([:admin, :notifier], current_user).order(:internal_name)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -78,5 +133,9 @@ class NotificationsController < ApplicationController
         :url,
         :send,
         :scheduled_for)
+    end
+
+    def settings_params
+      params.require(:notification).permit(:firebase_server_key)
     end
 end

@@ -12,7 +12,7 @@ class CreateNotifications < ActiveRecord::Migration[5.1]
       t.json :extras
       t.datetime :scheduled_for     , default: -> { 'CURRENT_TIMESTAMP' }
 
-      t.integer :job_id
+      t.string :job_id
 
       t.timestamps
     end

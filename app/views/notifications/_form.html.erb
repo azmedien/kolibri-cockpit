@@ -59,8 +59,8 @@
 </div>
 
 <div class="modal-footer">
-  <%= f.submit :class => "btn btn-success" %>
+  <%= f.submit :class => "btn btn-success" unless notification.delivered? %>
+  <% end %>
+  <%= button_to 'Delete', [notification.app, notification], method: :delete, data: { confirm: 'Are you sure?' }, :class => "mx-1 btn btn-outline-danger" if notification.persisted? %>
   <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
 </div>
-
-<% end %>

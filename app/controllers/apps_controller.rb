@@ -3,15 +3,12 @@ class AppsController < ApplicationController
   before_action :authenticate_user!, except: [:runtime]
   before_action :set_app, except: [:index, :create, :new, :runtime]
   before_action :set_apps, except: [:show, :destroy, :jenkins, :runtime]
-  before_action :set_nofication_app, only: [:notifications, :send_notifications, :destroy]
-  before_action :set_nofications, only: [:notifications, :send_notifications]
 
   authority_actions :settings => 'update',
                     :build => 'build',
                     :prepare => 'prepare',
                     :publish => 'publish',
-                    :configure_app => 'publish',
-                    :notifications => 'notify'
+                    :configure_app => 'publish'
 
   respond_to :html, :json
 
@@ -97,8 +94,8 @@ class AppsController < ApplicationController
 
   # GET /apps/1/edit
   def edit
-    redirect_to settings_app_path(@app) and return if current_user.has_role?(:admin, @app)
-    redirect_to notifications_app_path(@app) and return if current_user.can_notify?(@app)
+    redirect_to settings_app_path @app and return if current_user.has_role?(:admin, @app)
+    redirect_to app_notifications_path @app and return if current_user.can_notify?(@app)
   end
 
   # DELETE /apps/1
@@ -144,20 +141,8 @@ class AppsController < ApplicationController
       authorize_action_for @app
   end
 
-  def notifications
-      authorize_action_for @app
-  end
-
   def send_notifications
-    if @notification.nil?
-      api_key = notification_params['firebase_server_key']
 
-      @notification = Rpush::Gcm::App.new
-      @notification.name = "#{@app.internal_id}"
-      @notification.auth_key = api_key
-      @notification.connections = 1
-      @notification.save!
-    end
 
     n = Rpush::Gcm::Notification.new
     n.app = @notification
@@ -200,7 +185,6 @@ class AppsController < ApplicationController
   end
 
   def invite
-
     unless request.xhr?
 
       email = params[:app][:invite]
@@ -249,15 +233,6 @@ class AppsController < ApplicationController
       @app = App.with_roles([:admin, :notifier], current_user).find(params[:id] || params[:app_id])
     end
 
-    def set_nofication_app
-      @notification = Rpush::Gcm::App.find_by_name("#{@app.internal_id}")
-    end
-
-    def set_nofications
-      @notifications = Rpush::Gcm::Notification.where(app_id: @notification.id).last(10).reverse if @notification
-      @notifications = Array.new unless @notifications
-    end
-
     def set_apps
       @apps = App.with_roles([:admin, :notifier], current_user).order(:internal_name)
     end
@@ -275,14 +250,5 @@ class AppsController < ApplicationController
         :splash,
         :android_config => [:repository_url, :bundle_id, :version_code, :version_name],
         :ios_config => [:repository_url, :bundle_id, :version_code, :version_name])
-    end
-
-    def notification_params
-      params.require(:notification).permit(
-        :firebase_server_key,
-        :url,
-        :title,
-        :message
-      )
     end
 end
