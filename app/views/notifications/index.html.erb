@@ -32,9 +32,7 @@
     <div class="d-flex w-100 justify-content-end">
       <h6 class="mr-1"><%= notification.title %></h6>
       <%= content_tag(:small, notification.url, :class => "mr-auto text-muted") %>
-      <small class="mr-1 text-muted">
-        <%= notification.status %>
-      </small>
+      <%= content_tag(:small, notification.status, :class => class_string("mr-1" => true, "text-danger" => notification.failed?)) %>
     </div>
       <p class="mb-1"><%= notification.body %></p>
   <% end %>

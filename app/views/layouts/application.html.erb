@@ -40,7 +40,6 @@
 
     <% if current_user %>
     <%= render 'layouts/navigation', application: @app, applications: @apps %>
-    <% end %>
 
     <div id="modal-holder"></div>
 
@@ -72,6 +71,8 @@
       </div>
       <% end %>
     </div>
+    <% end %>
+    
     <%= yield %>
 
     <footer class="footer">

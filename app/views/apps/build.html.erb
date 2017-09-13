@@ -19,7 +19,7 @@
     <div class="card-header">
         Android
     </div>
-    <div class="card-block">
+    <div class="card-body">
         <div class=" form-group">
             <%= f.label "Repository url:" %><br/>
             <%= text_field_tag "app[android_config][repository_url]", f.object.android_config["repository_url"], :class => "form-control" %>
@@ -38,7 +38,7 @@
     <div class="card-header">
         iOS
     </div>
-    <div class="card-block">
+    <div class="card-body">
         <div class="form-group">
             <%= f.label "Repository url:" %><br/>
             <%= text_field_tag "app[ios_config][repository_url]", f.object.ios_config["repository_url"], :class => "form-control" %>

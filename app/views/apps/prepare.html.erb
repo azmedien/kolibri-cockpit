@@ -19,7 +19,7 @@
     <div class="card-header">
         Android
     </div>
-    <div class="card-block">
+    <div class="card-body">
         <div class=" form-group">
             <%= f.label 'Application ID:' %><br/>
             <%= text_field_tag "app[android_config][bundle_id]", f.object.android_config["bundle_id"], :class => "form-control", 'aria-describedby' => "bundleIdHelp" %>
@@ -44,7 +44,7 @@
     <div class="card-header">
         iOS
     </div>
-    <div class="card-block">
+    <div class="card-body">
       <div class=" form-group">
           <%= f.label "Bundle ID:" %><br/>
           <%= text_field_tag "app[ios_config][bundle_id]", f.object.ios_config["bundle_id"], :class => "form-control", 'aria-describedby' => "bundleIdHelp" %>

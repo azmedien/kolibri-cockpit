@@ -34,4 +34,8 @@ class Notification < ApplicationRecord
   def delivered?
     self.rpush_notification and self.rpush_notification.delivered
   end
+
+  def failed?
+    self.rpush_notification and self.rpush_notification.failed
+  end
 end
