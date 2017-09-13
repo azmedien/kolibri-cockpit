@@ -151,10 +151,12 @@ Now you are ready to run the server by executing this command from the project's
 $ bin/rails server
 ```
 
-Also make sure you have start rpush serivce using
+Also make sure you have start rpush, redis and sidekiq serivce using
 
 ```bash
 $ bundle exec rpush start
+$ bundle exec rpush sidekiq
+$ redis-server
 ```
 
 And don't forget to stop it after that with
