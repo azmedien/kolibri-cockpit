@@ -1,7 +1,8 @@
 class NotificationWorker
   include Sidekiq::Worker
 
-  sidekiq_options :retry => false
+  # sidekiq_options :retry => false
+  sidekiq_options :retry => 3, :dead => false
 
   def perform(notification_id)
     notification = Notification.find_by(id: notification_id)
