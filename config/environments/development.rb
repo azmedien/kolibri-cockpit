@@ -39,6 +39,8 @@ Rails.application.configure do
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
+  config.active_record.default_timezone = :local
+
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
@@ -57,4 +59,6 @@ Rails.application.configure do
   config.action_cable.url = "ws://localhost:3000/cable"
 
   config.encoding = "utf-8"
+
+  config.time_zone = 'Europe/Sofia'
 end

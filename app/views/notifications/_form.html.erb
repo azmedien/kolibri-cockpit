@@ -1,0 +1,66 @@
+<%= form_for([@app, notification], remote: request.xhr?, html: { data: { modal: true }}) do |f| %>
+  <div class="modal-body">
+  <% if notification.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(notification.errors.count, "error") %> prohibited this asset from being saved:</h2>
+
+      <ul>
+      <% notification.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+      <%= f.label :title %>
+      <%= f.text_field :title, :class => "form-control" %>
+  </div>
+
+  <div class="form-group">
+      <%= f.label :body %>
+      <%= f.text_area :body, :class => "form-control", size: 3 %>
+  </div>
+
+  <div class="form-group">
+      <%= f.label :url %>
+      <%= f.url_field :url, :class => "form-control" %>
+  </div>
+
+  <div class="form-group btn-group" data-toggle="buttons">
+    <%= label_tag(:send_now, "Send now", :class => "btn btn-outline-primary active", :id => "send_now") do %>
+      <%= radio_button_tag(:send, "now", !notification.is_scheduled?) %> Send now
+    <% end %>
+    <%= label_tag(:send_later, "Send later", :class => "btn btn-outline-primary", :id => "send_later") do %>
+      <%= radio_button_tag(:send, "later", notification.is_scheduled?) %> Send later
+    <% end %>
+  </div>
+
+  <div class="panel-group" id="accordion">
+      <div class="panel panel-default">
+          <div id="chooseDatetime" class="panel-collapse collapse in">
+              <div class="panel-body form-group">
+                  <%= f.datetime_local_field :scheduled_for, class: 'form-control' %>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script>
+      $(document).ready(function () {
+          $("#send_now").click(function () {
+              $("#chooseDatetime").collapse('hide');
+          });
+          $("#send_later").click(function () {
+              $("#chooseDatetime").collapse('show');
+          });
+      });
+  </script>
+</div>
+
+<div class="modal-footer">
+  <%= f.submit :class => "btn btn-success" unless notification.delivered? %>
+  <% end %>
+  <%= button_to 'Delete', [notification.app, notification], method: :delete, data: { confirm: 'Are you sure?' }, :class => "mx-1 btn btn-outline-danger" if notification.persisted? %>
+  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+</div>

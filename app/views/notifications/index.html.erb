@@ -1,0 +1,41 @@
+<main>
+
+  <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    Settings
+  </button>
+</p>
+
+<div class="form-group collapse" id="collapseExample">
+  <div class="card card-body">
+
+    <%= form_tag(app_notifications_configure_path, method: :post) do |f| %>
+    <div class=" form-group">
+      <%= label_tag 'notification[firebase_server_key]', "Firebase Server key:" %><br/>
+      <%= text_field_tag "notification[firebase_server_key]", @notification_app.try(:auth_key) || "", :class => "form-control", :readonly => @notification_app.try(:auth_key) %>
+    </div>
+    <div class="form-group">
+      <%= submit_tag "Update", :class => "btn btn-success" unless @notification_app.try(:auth_key) %>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="list-group">
+  <%= link_to(new_app_notification_path, remote: true, data: { modal: true }, :class => 'list-group-item active justify-content-between') do %>
+  <div class="d-flex w-100 justify-content-end align-items-center">
+    <i class="fa fa-plus p-2" aria-hidden="true"></i>
+    <span class="mr-auto p-2">Send new notification</span>
+  </div>
+  <% end %>
+  <% @notifications.each do |notification| %>
+  <%= link_to(edit_app_notification_path(notification.app, notification), remote: true, data: { modal: true }, :class=>'list-group-item list-group-item-action flex-column align-items-start') do %>
+    <div class="d-flex w-100 justify-content-end">
+      <h6 class="mr-1"><%= notification.title %></h6>
+      <%= content_tag(:small, notification.url, :class => "mr-auto text-muted") %>
+      <%= content_tag(:small, notification.status, :class => class_string("mr-1" => true, "text-danger" => notification.failed?)) %>
+    </div>
+      <p class="mb-1"><%= notification.body %></p>
+  <% end %>
+  <% end %>
+</div>
+</main>

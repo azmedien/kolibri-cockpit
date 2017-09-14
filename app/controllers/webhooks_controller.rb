@@ -1,5 +1,6 @@
 class WebhooksController < ActionController::API
   include WebhooksHelper
+
   def receive
       @app = App.find_by_internal_id(params[:project]) or return head :not_found
 

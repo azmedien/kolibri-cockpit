@@ -9,6 +9,9 @@ Rails.application.routes.draw do
         get 'download', action: 'download', as: 'download'
     end
 
+    resources :notifications
+
+    post 'notifications/configure', to: 'notifications#configure'
     post 'autority/invite', to: 'apps#invite', as: 'autority_invite'
 
     member do
@@ -19,9 +22,6 @@ Rails.application.routes.draw do
       get 'prepare'
       get 'publish'
       get 'runtime'
-      get 'notifications'
-      post 'notifications/send', to: 'apps#send_notifications', as: 'send_notifications'
-
     end
   end
   root to: 'apps#index'

@@ -40,7 +40,8 @@
 
     <% if current_user %>
     <%= render 'layouts/navigation', application: @app, applications: @apps %>
-    <% end %>
+
+    <div id="modal-holder"></div>
 
     <div id="notifications">
       <% if notice %>
@@ -70,10 +71,12 @@
       </div>
       <% end %>
     </div>
+    <% end %>
+
     <%= yield %>
 
     <footer class="footer">
-      <nav class="navbar fixed-bottom navbar-light bg-faded">
+      <nav class="navbar fixed-bottom navbar-light bg-light">
         <span class="navbar-text">Version:
           <%= APP_VERSION %></span>
       </nav>

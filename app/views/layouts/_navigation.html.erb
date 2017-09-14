@@ -1,4 +1,4 @@
-<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+<nav class="navbar navbar-expand-lg navbar-toggleable-md navbar-dark bg-dark">
   <div class="container">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -18,7 +18,7 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <h6 class="dropdown-header">Applications</h6>
             <% @apps.each do |application| %>
-            <%= link_to application.internal_name, settings_app_path(application), :class => "dropdown-item" %>
+            <%= link_to application.internal_name, edit_app_path(application), :class => "dropdown-item" %>
             <% end %>
             <div class="dropdown-divider"></div>
             <%= link_to "Create new...", new_app_path, remote: true, :class => "dropdown-item" %>
@@ -30,9 +30,11 @@
           <a class="nav-link" href="<%= settings_app_path(@app) %>" aria-controls="app">App</a>
         </li>
         <% end %>
+        <% if current_user.can_build?(@app) %>
         <li class="nav-item align-self-center <%= 'active' if controller?('assets') && action?('index', 'show', 'edit') %>">
           <a class="nav-link" href="<%= app_assets_path(@app) %>" aria-controls="assets">Assets</a>
         </li>
+        <% end %>
         <% if current_user.can_build?(@app) %>
         <li class="nav-item align-self-center <%= 'active' if current_page?(build_app_path(@app)) %>">
           <a class="nav-link" href="<%= build_app_path(@app) %>" aria-controls="build">Build</a>
@@ -49,8 +51,8 @@
         </li>
         <% end %>
         <% if current_user.can_notify?(@app) %>
-        <li class="nav-item align-self-center <%= 'active' if current_page?(notifications_app_path(@app)) %>">
-          <a class="nav-link" href="<%= notifications_app_path(@app) %>" aria-controls="publish">Notifications</a>
+        <li class="nav-item align-self-center <%= 'active' if current_page?(app_notifications_path(@app)) %>">
+          <a class="nav-link" href="<%= app_notifications_path(@app) %>" aria-controls="publish">Notifications</a>
         </li>
         <% end %>
         <% end %>
