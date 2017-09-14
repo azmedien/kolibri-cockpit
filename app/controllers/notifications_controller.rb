@@ -39,6 +39,13 @@ class NotificationsController < ApplicationController
   def create
     @notification = Notification.new(notification_params)
     @notification.app = @app
+
+    if params[:send] == 'now'
+      @notification.update(scheduled_for: Time.now)
+    else
+      @notification.update(scheduled_for: Time.parse(notification_params['scheduled_for']).utc)
+    end
+
     @notification.user = current_user
     @notification.rpush_app = @notification_app
     @notification.save
@@ -49,13 +56,12 @@ class NotificationsController < ApplicationController
   # PATCH/PUT /notifications/1
   # PATCH/PUT /notifications/1.json
   def update
-
-    byebug
-
     @notification.update(notification_params)
 
     if params[:send] == 'now'
-      @notification.update(scheduled_for: Time.zone.now)
+      @notification.update(scheduled_for: Time.now)
+    else
+      @notification.update(scheduled_for: Time.parse(notification_params['scheduled_for']).utc)
     end
 
     respond_modal_with @notification, location: app_notifications_url
