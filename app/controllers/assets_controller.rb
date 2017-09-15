@@ -7,8 +7,8 @@ class AssetsController < ApplicationController
   before_action :authenticate_user!, except: [:download]
   before_action :set_asset, only: [:show, :edit, :update, :destroy, :download]
 
-  authorize_actions_for :parent_resource, all_actions: :build
-  authority_actions :download => :build 
+  authorize_actions_for :parent_resource, all_actions: :build, :except => :download
+
 
   # GET /assets
   # GET /assets.json
