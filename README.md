@@ -191,6 +191,10 @@ Add additional notes about how to deploy this on a live system
 
 * `PKEY=/app/cockpit` - pointing to the private key which must be used to access repositories. Make sure the public key is added to the repository with read and write access.
 
+**Timezone for push notifications**
+
+* `TZ` - environment variable in unix TZ format 
+
 > Note that currently Kolibri Cockpit uses only one key for accessing all repositories.
 
 ## Getting started with Cockpit
