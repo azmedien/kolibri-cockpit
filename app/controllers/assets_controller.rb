@@ -1,13 +1,13 @@
 class AssetsController < ApplicationController
 
-  respond_to :html, :json
-
+  before_action :authenticate_user!, except: [:download]
   before_action :set_app
   before_action :set_apps
-  before_action :authenticate_user!, except: [:download]
   before_action :set_asset, only: [:show, :edit, :update, :destroy, :download]
 
   authorize_actions_for :parent_resource, all_actions: :build, :except => :download
+
+  respond_to :html, :json
 
 
   # GET /assets
@@ -42,31 +42,25 @@ class AssetsController < ApplicationController
       assets << asset
     end
 
-    respond_to do |format|
-
-      assets.each do |asset|
-        if !asset.save
-          format.html { render :new }
-          format.json { render json: asset.errors, status: :unprocessable_entity }
-          return
-        end
+    assets.each do |asset|
+      if !asset.save
+        @asset.errors.add(:base, :unprocessable_entity)
+        respond_modal_with [@app, @asset], location: :new
+        return
       end
-
-      format.html { redirect_to app_assets_url, notice: 'Asset was successfully created.' }
     end
+
+    respond_modal_with [@app, @asset], location: app_assets_url
   end
 
   # PATCH/PUT /assets/1
   # PATCH/PUT /assets/1.json
   def update
-    respond_to do |format|
-      if @asset.update(file: asset_params[:file].first)
-        format.html { redirect_to [@app, @asset], notice: 'Asset was successfully updated.' }
-        format.json { render :show, status: :ok, location: [@app, @asset] }
-      else
-        format.html { render :edit }
-        format.json { render json: @asset.errors, status: :unprocessable_entity }
-      end
+    if @asset.update(file: asset_params[:file].first)
+      respond_modal_with [@app, @asset], location: app_assets_url
+    else
+      @asset.errors.add(:base, :unprocessable_entity)
+      respond_modal_with @asset
     end
   end
 
