@@ -15,7 +15,7 @@ class NotificationsController < ApplicationController
   # GET /notifications
   # GET /notifications.json
   def index
-    @notifications = Notification.where(app_id: @app.id)
+    @notifications = Notification.where(app_id: @app.id).order("scheduled_for DESC, updated_at DESC")
   end
 
   # GET /notifications/1
