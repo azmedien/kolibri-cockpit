@@ -105,18 +105,20 @@ class NotificationsController < ApplicationController
 
     def schedule_notification
 
-      require 'sidekiq/api'
+      if @notification.valid?
+        require 'sidekiq/api'
 
-      jid = @notification.job_id
 
-      if jid
-        Sidekiq::ScheduledSet.new.find_job(jid).try(:delete)
-        Sidekiq::Queue.new.find_job(jid).try(:delete)
+        jid = @notification.job_id
+
+        if jid
+          Sidekiq::ScheduledSet.new.find_job(jid).try(:delete)
+          Sidekiq::Queue.new.find_job(jid).try(:delete)
+        end
+
+        job_id = NotificationWorker.perform_at(@notification.scheduled_for, @notification.id)
+        @notification.update(job_id: job_id)
       end
-
-      job_id = NotificationWorker.perform_at(@notification.scheduled_for, @notification.id)
-      puts job_id.inspect
-      @notification.update(job_id: job_id)
     end
 
     def parent_resource

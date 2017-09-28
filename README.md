@@ -155,7 +155,7 @@ Also make sure you have start rpush, redis and sidekiq serivce using
 
 ```bash
 $ bundle exec rpush start
-$ bundle exec rpush sidekiq
+$ bundle exec sidekiq
 $ redis-server
 ```
 
@@ -193,7 +193,7 @@ Add additional notes about how to deploy this on a live system
 
 **Timezone for push notifications**
 
-* `TZ` - environment variable in unix TZ format 
+* `TZ` - environment variable in unix TZ format
 
 > Note that currently Kolibri Cockpit uses only one key for accessing all repositories.
 
