@@ -11,6 +11,33 @@ platform :android do
 
   desc "Kolibri Pipeline (build, test and publish)"
   lane :all do
+
+    kolibri(
+      stage: "initialize",
+      message: "Setup configuration and credentials before we go...",
+    )
+
+    cryptex(
+      git_branch: "test",
+      type: "export",
+      out: "prototype/keystore.jks",
+      key: "android_keystore"
+    )
+
+    cryptex(
+      git_branch: "test",
+      type: "export",
+      out: "google-play-console.json",
+      key: "android_google_play"
+    )
+
+    cryptex(
+      git_branch: "test",
+      type: "export_env",
+      key: "android_keystore",
+      set_env: true
+    )
+
     build
     test
     publish
