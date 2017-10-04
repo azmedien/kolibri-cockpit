@@ -21,8 +21,13 @@
     </div>
     <div class="card-body">
         <div class=" form-group">
-            <%= f.label "Repository url:" %><br/>
+            <%= f.label "Repository URL:" %><br/>
             <%= text_field_tag "app[android_config][repository_url]", f.object.android_config["repository_url"], :class => "form-control" %>
+        </div>
+
+        <div class=" form-group">
+            <%= f.label "Publishing Profile:" %><br/>
+            <%= select_tag "app[android_config][publishing_profile]", options_for_select(Rails.configuration.cockpit['android_publishing_profiles'], f.object.android_config["publishing_profile"]), :class => "form-control" %>
         </div>
 
         <div class="form-group <%= class_string("has-success" => !@app.android_firebase.file.nil?)%>">
@@ -40,7 +45,7 @@
     </div>
     <div class="card-body">
         <div class="form-group">
-            <%= f.label "Repository url:" %><br/>
+            <%= f.label "Repository URL:" %><br/>
             <%= text_field_tag "app[ios_config][repository_url]", f.object.ios_config["repository_url"], :class => "form-control" %>
         </div>
 

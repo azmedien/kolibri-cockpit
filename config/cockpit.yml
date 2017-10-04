@@ -1,5 +1,8 @@
 default: &default
   jenkins_url: http://cimac.yanova.ch:8080/
+  android_publishing_profiles:
+    - azmedien
+    - test
 
 development:
   <<: *default
