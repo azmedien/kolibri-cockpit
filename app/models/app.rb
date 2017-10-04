@@ -33,6 +33,15 @@ class App < ApplicationRecord
   before_create :set_slug
   after_create :set_role
 
+  def self.bundle_id? bundle_id
+    apps = App.where("android_config ? :key", key: "bundle_id")
+    app = apps.where("android_config @> hstore(:key, :value)",
+      key: "bundle_id", value: bundle_id
+    ).first
+
+    return !app.nil?
+  end
+
   def origin?
     return App.exists?(self.android_config['origin']) if self.android_config['origin']
   end

@@ -22,7 +22,7 @@
     </table>
 
     <div class="card-footer text-muted">
-        <%= link_to "Publish", trigger_configure_app_path(@app, :platform => 'android'), method: :post, :class => "btn btn-success" %>
+        <%= link_to "Publish", trigger_configure_app_path(@app, :platform => 'android'), method: :post, :class => "btn btn-success", data: {disable_with: "Publishing..."} %>
     </div>
 </div>
 

@@ -82,7 +82,13 @@ class AppsController < ApplicationController
 
     respond_to do |format|
 
-      if @app.update(app_params)
+      if app_params[:android_config][:bundle_id].present?
+        if (App.bundle_id? app_params[:android_config][:bundle_id])
+          @app.errors.add(:base, "bundle id is invalid or already used")
+        end
+      end
+
+      if !@app.errors.full_messages.present? && @app.update(app_params)
         format.html { redirect_to request.referrer, notice: 'App was successfully updated.' }
         format.json { render json: @app, status: :ok, location: :edit }
       else
