@@ -21,7 +21,7 @@
             <%= link_to application.internal_name, edit_app_path(application), :class => "dropdown-item" %>
             <% end %>
             <div class="dropdown-divider"></div>
-            <%= link_to "Create new...", new_app_path, remote: true, :class => "dropdown-item" %>
+            <%= link_to "Create new...", new_app_path, remote: true, data: { modal: true }, :class => "dropdown-item" %>
           </div>
         </li>
         <% if @app and not @app.new_record? %>

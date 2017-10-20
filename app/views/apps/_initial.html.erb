@@ -18,7 +18,7 @@
     <%= f.text_field :internal_name, :class => "form-control" %>
 </div>
 
-<% if app.new_record? and current_user.apps.any? %>
+<% if app.new_record? and @apps.any? %>
 
 <div class="form-group btn-group" data-toggle="buttons">
   <%= label_tag(:create_new, "Create new", :class => "btn btn-outline-primary active", :id => "create_new") do %>
