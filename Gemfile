@@ -65,7 +65,7 @@ group :development do
 end
 
 group :production do
-  gem 'redis'
+  gem 'redis', '~> 3.3'
   gem 'fog-aws'
   gem 'newrelic_rpm'
 end
