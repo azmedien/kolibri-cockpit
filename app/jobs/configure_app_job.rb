@@ -33,10 +33,9 @@ class ConfigureAppJob < ApplicationJob
 
     open_repo repo
 
-    service = AppConfigureService.new('android', '.', app)
-
     logger.tagged('Android') do
       manipulate_repo repo, app, user do |_git|
+        service = AppConfigureService.new('android', '.', app)
         service.configure_it
       end
     end
@@ -51,9 +50,8 @@ class ConfigureAppJob < ApplicationJob
 
     open_repo repo
 
-    service = AppConfigureService.new('ios', '.', app)
-
     manipulate_repo repo, app, user do |_git|
+      service = AppConfigureService.new('ios', '.', app)
       service.configure_it
     end
   end

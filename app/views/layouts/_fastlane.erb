@@ -7,7 +7,7 @@ platform :android do
     ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
     ENV["KOLIBRI_URL"] = "https://kolibri.herokuapp.com"
     ENV["KOLIBRI_PROJECT"] = "<%= app.internal_id %>"
-    ENV["CRYPTEX_GIT_BRANCH"] = <%= app.android_config[publishing_profile] || 'master' %>
+    ENV["CRYPTEX_GIT_BRANCH"] = <%= app.android_config['publishing_profile'] || 'master' %>
   end
 
   desc "Kolibri Pipeline (build, test and publish)"
