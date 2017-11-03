@@ -33,9 +33,18 @@ class App < ApplicationRecord
   before_create :set_slug
   after_create :set_role
 
-  def self.bundle_id? bundle_id
+  def self.android_bundle_id? bundle_id
     apps = App.where("android_config ? :key", key: "bundle_id")
     app = apps.where("android_config @> hstore(:key, :value)",
+      key: "bundle_id", value: bundle_id
+    ).first
+
+    return !app.nil?
+  end
+
+  def self.ios_bundle_id? bundle_id
+    apps = App.where("ios_config ? :key", key: "bundle_id")
+    app = apps.where("ios_config @> hstore(:key, :value)",
       key: "bundle_id", value: bundle_id
     ).first
 

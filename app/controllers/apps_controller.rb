@@ -83,8 +83,14 @@ class AppsController < ApplicationController
     respond_to do |format|
 
       if app_params[:android_config].present? and app_params[:android_config][:bundle_id].present?
-        if (App.bundle_id? app_params[:android_config][:bundle_id])
-          @app.errors.add(:base, "bundle id is invalid or already used")
+        if (@app.android_config['bundle_id'] != app_params[:android_config][:bundle_id] and App.android_bundle_id? app_params[:android_config][:bundle_id])
+          @app.errors.add(:base, "Android bundle id is invalid or already used")
+        end
+      end
+
+      if app_params[:ios_config].present? and app_params[:ios_config][:bundle_id].present?
+        if (@app.ios_config['bundle_id'] != app_params[:ios_config][:bundle_id] and App.ios_bundle_id? app_params[:ios_config][:bundle_id])
+          @app.errors.add(:base, "iOS bundle id is invalid or already used")
         end
       end
 
