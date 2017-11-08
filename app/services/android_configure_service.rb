@@ -35,7 +35,7 @@ class AndroidConfigureService
   def configure_fastlane
     @log.tagged("Fastlane") do
       if Dir.glob("#{@app_folder}/fastlane/Fastfile").any?
-        logger.info 'Fastlane already configured. Skipping...'
+        @log.info 'Fastlane already configured. Skipping...'
         return
       end
 

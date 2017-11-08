@@ -35,7 +35,7 @@ class IosConfigureService
   def configure_fastlane
     @log.tagged("Fastlane") do
       if Dir.glob("#{@app_folder}/fastlane/Fastfile").any?
-        logger.info 'Fastlane already configured. Skipped'
+        @log.info 'Fastlane already configured. Skipped'
         return
       end
 
