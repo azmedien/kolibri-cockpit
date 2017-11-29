@@ -31,14 +31,14 @@ class ConfigureAppJob < ApplicationJob
     raise "Repository must be set" if repo.nil? || repo.empty?
     raise "Application or Bundle Id must be set" if bundle.nil? || bundle.empty?
 
+    tag_name = "#{app.internal_name.parameterize}-#{app.android_config['version_name']}(#{app.android_config['version_code']})"
+
     open_repo repo
 
     logger.tagged('Android') do
-      manipulate_repo repo, app, user do |_git|
+      manipulate_repo repo, app, user, tag_name do |_git|
         service = AppConfigureService.new('android', '.', app)
         service.configure_it
-        _git.add_tag("#{app.internal_name.parameterize}-#{app.android_config[version_name]}(#{app.android_config[version_code]})")
-        _git.push
       end
     end
   end
@@ -50,13 +50,13 @@ class ConfigureAppJob < ApplicationJob
     raise "Repository must be set" if repo.nil? || repo.empty?
     raise "Application or Bundle Id must be set" if bundle.nil? || bundle.empty?
 
+    tag_name = "#{app.internal_name.parameterize}-#{app.ios_config['version_name']}(#{app.ios_config['version_code']})"
+
     open_repo repo
 
-    manipulate_repo repo, app, user do |_git|
+    manipulate_repo repo, app, user, tag_name do |_git|
       service = AppConfigureService.new('ios', '.', app)
       service.configure_it
-      _git.add_tag("#{app.internal_name.parameterize}-#{app.ios_config[version_name]}(#{app.ios_config[version_code]})")
-      _git.push
     end
   end
 
