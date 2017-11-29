@@ -8,12 +8,6 @@ platform :android do
     ENV["KOLIBRI_URL"] = "https://kolibri.herokuapp.com"
     ENV["KOLIBRI_PROJECT"] = "<%= app.internal_id %>"
     ENV["CRYPTEX_GIT_BRANCH"] = "<%= app.android_config['publishing_profile'] || 'master' %>"
-
-    ENV["MATCH_GIT_BRANCH"] = "<%= app.ios_config['publishing_profile'] || 'master' %>"
-    ENV["MATCH_TYPE"] = "appstore"
-    ENV["MATCH_APP_IDENTIFIER"] = "<%= app.ios_config['bundle_id'] %>"
-    ENV["MATCH_USERNAME"] = "<%= Rails.configuration.cockpit['publishing_profiles'][app.ios_config['publishing_profile']] %>"
-
   end
 
   desc "Kolibri Pipeline (build, test and publish)"
