@@ -23,7 +23,7 @@ module GitHelper
     git
   end
 
-  def manipulate_repo(url, app, user)
+  def manipulate_repo(url, app, user, tag)
     branch_name = app.internal_name.parameterize
     origin_app = App.friendly.find(app.android_config['origin']) if app.android_config['origin']
 
@@ -55,6 +55,11 @@ module GitHelper
         repo.add(all: true)
         repo.commit('Project configured by Kolibri Cockpit')
         repo.push('origin', branch_name)
+
+        if tag
+          repo.add_tag(tag)
+          repo.push('origin', "refs/tags/#{tag}")
+        end
       end
     rescue Exception => e
       logger.error e.message

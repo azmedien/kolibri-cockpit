@@ -8,12 +8,6 @@ platform :android do
     ENV["KOLIBRI_URL"] = "https://kolibri.herokuapp.com"
     ENV["KOLIBRI_PROJECT"] = "<%= app.internal_id %>"
     ENV["CRYPTEX_GIT_BRANCH"] = "<%= app.android_config['publishing_profile'] || 'master' %>"
-
-    ENV["MATCH_GIT_BRANCH"] = "<%= app.ios_config['publishing_profile'] || 'master' %>"
-    ENV["MATCH_TYPE"] = "appstore"
-    ENV["MATCH_APP_IDENTIFIER"] = "<%= app.ios_config['bundle_id'] %>"
-    ENV["MATCH_USERNAME"] = "<%= Rails.configuration.cockpit['publishing_profiles'][app.ios_config['publishing_profile']] %>"
-
   end
 
   desc "Kolibri Pipeline (build, test and publish)"
@@ -143,21 +137,23 @@ platform :ios do
     ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
     ENV["KOLIBRI_URL"] = "https://kolibri.herokuapp.com"
     ENV["KOLIBRI_PROJECT"] = "<%= app.internal_id %>"
+
+    ENV["MATCH_GIT_BRANCH"] = "<%= app.ios_config['publishing_profile'] || 'master' %>"
+    ENV["MATCH_GIT_URL"] = "git@bitbucket.org:yanova/kolibri-certs.git"
+    ENV["MATCH_TYPE"] = "appstore"
+    ENV["MATCH_APP_IDENTIFIER"] = "<%= app.ios_config['bundle_id'] %>"
+    ENV["MATCH_USERNAME"] = "<%= Rails.configuration.cockpit['publishing_profiles'][app.ios_config['publishing_profile']] %>"
   end
 
   desc "Kolibri Pipeline (build, test and publish)"
   lane :all do
-
-    unless ENV.key?('FL_APPLE_USER')
-      UI.user_error!("FL_APPLE_USER not set.  Exiting")
-    end
 
     kolibri(
       stage: "initialize",
       message: "Setup provisioning and certificates before we go...",
     )
 
-    keychain_entry = CredentialsManager::AccountManager.new(user: ENV['FL_APPLE_USER'] || '')
+    keychain_entry = CredentialsManager::AccountManager.new(user: ENV['MATCH_USERNAME'] || '')
 
     produce(
       app_name: "<%= app.internal_name %>",
@@ -165,14 +161,10 @@ platform :ios do
       username:keychain_entry.user
     )
 
-    cert(
-      username:keychain_entry.user
-    )
-
-    sigh(
-      username:keychain_entry.user,
+    match(
+      type: "appstore",
+      username: keychain_entry.user,
       app_identifier: "<%= app.ios_config['bundle_id'] %>",
-      force: true
     )
 
     build

@@ -1,8 +1,8 @@
 default: &default
   jenkins_url: http://cimac.yanova.ch:8080/
   publishing_profiles:
-    azmedien: 'email'
-    test: 'email'
+    azmedien: 'kolibri@azmedien.ch'
+    test: 'kolibri-yanova@gmail.com'
 
 development:
   <<: *default
