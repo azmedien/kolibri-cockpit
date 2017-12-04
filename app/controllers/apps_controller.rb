@@ -261,6 +261,6 @@ class AppsController < ApplicationController
         :ios_icon,
         :splash,
         :android_config => [:repository_url, :publishing_profile ,:bundle_id, :version_code, :version_name],
-        :ios_config => [:repository_url, :bundle_id, :version_code, :version_name])
+        :ios_config => [:repository_url, :publishing_profile, :bundle_id, :version_code, :version_name])
     end
 end
