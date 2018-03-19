@@ -9,6 +9,7 @@ class NotificationsController < ApplicationController
   before_action :set_notification, only: [:show, :edit, :update, :destroy]
 
   authorize_actions_for :parent_resource, all_actions: :notify
+  authorize_actions_for :parent_resource, :actions => {:configure_notifications => 'notify'}
 
   after_action :schedule_notification, only: [:create, :update]
 
@@ -77,7 +78,7 @@ class NotificationsController < ApplicationController
     end
   end
 
-  def configure
+  def configure_notifications
     if @notification_app.nil?
       api_key = settings_params['firebase_server_key']
 
