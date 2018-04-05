@@ -37,10 +37,10 @@ Rails.application.configure do
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
   config.action_cable.url = 'wss://kolibri.herokuapp.com/cable'
-  config.action_cable.allowed_request_origins = [ 'http://kolibri.herokuapp.com', /http:\/\/kolibri.herokuapp.*/ ]
+  config.action_cable.allowed_request_origins = [ 'https://kolibri.herokuapp.com', /https:\/\/kolibri.herokuapp.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -64,7 +64,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  config.action_mailer.default_url_options = { host: 'http://kolibri.herokuapp.com' }
+  config.action_mailer.default_url_options = { protocol: 'https', host: 'kolibri.herokuapp.com' }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

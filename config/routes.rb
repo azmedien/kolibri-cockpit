@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
     resources :notifications
 
-    post 'notifications/configure', to: 'notifications#configure'
+    post 'notifications/configure', to: 'notifications#configure_notifications'
     post 'autority/invite', to: 'apps#invite', as: 'autority_invite'
 
     member do
