@@ -37,7 +37,7 @@ gem 'mini_magick'
 
 gem 'friendly_id', '~> 5.2'
 
-gem 'bootstrap', '~> 4.0.0.beta'
+gem 'bootstrap', '~> 4.0.0' 
 gem "font-awesome-rails"
 
 source 'https://rails-assets.org' do
