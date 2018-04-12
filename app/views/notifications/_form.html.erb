@@ -27,7 +27,7 @@
       <%= f.url_field :url, :class => "form-control" %>
   </div>
 
-  <div class="form-group btn-group" data-toggle="buttons">
+  <div class="form-group btn-group btn-group-toggle" data-toggle="buttons">
     <%= label_tag(:send_now, "Send now", :class => "btn btn-outline-primary active", :id => "send_now") do %>
       <%= radio_button_tag(:send, "now", !notification.persisted? || !notification.is_scheduled? ) %> Send now
     <% end %>
