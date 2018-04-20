@@ -11,6 +11,21 @@ class VersionsController < ApplicationController
     @versions = @app.versions.page params[:page]
   end
 
+  def create
+    version = @app.paper_trail.version_at(version_params['created_at'])
+
+    if version
+      @app = version
+    else
+      version = PaperTrail::Version.find(version_params['id'])
+      version = version.next if version.index == 0
+
+      @app = version.reify
+    end
+
+    redirect_to @app if @app.save
+  end
+
   private
 
   def set_app
@@ -23,5 +38,9 @@ class VersionsController < ApplicationController
 
   def parent_resource
     @app
+  end
+
+  def version_params
+    params.require(:version).permit(:created_at, :id)
   end
 end

@@ -4,7 +4,7 @@ class App < ApplicationRecord
   include CopyCarrierwaveFile
 
   resourcify
-  has_paper_trail ignore: %i[created_at updated_at id user_id slug internal_slug]
+  has_paper_trail only: %i[runtime android_config ios_config internal_name internal_id]
 
   self.authorizer_name = 'AppsAuthorizer'
 

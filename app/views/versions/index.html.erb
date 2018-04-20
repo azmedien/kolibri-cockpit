@@ -8,15 +8,23 @@
    </ol>
   </nav>
 
+<% if @versions.empty? %>
+  <h5> No changes </h5>
+<% end %>
+
 <div id="accordion">
  <% @versions.reverse.each do |version| %>
   <div>
-    <div class="list-group-item d-flex justify-content-between align-items-center" id="version<%= version.id %>" data-toggle="collapse" data-target="#<%= version.id %>" aria-expanded="false" aria-controls="<%= version.id %>">
+    <div class="list-group-item d-flex align-items-center" id="version<%= version.id %>" data-toggle="collapse" data-target="#<%= version.id %>" aria-expanded="false" aria-controls="<%= version.id %>">
       <%= image_tag gravatar_url(User.find(version.whodunnit).email, 64), alt: "", :class => "img-responsive rounded-circle", :style => "max-height:36px; width:auto; vertical-align:middle;" %>
-      <%= User.find(version.whodunnit).full_name %>
+      <span class="pl-2"><%= User.find(version.whodunnit).full_name %>
       <%= version.event %>
       <%= time_ago_in_words(version.created_at) %> ago
-      <span class="badge badge-secondary"><%= diff_with_previous(version).last %> changes</span>
+      </span>
+      <span class="ml-auto">
+        <span class="badge badge-secondary"><%= diff_with_previous(version).last %> changes</span>
+        <%= content_tag(:span, 'current', class: 'badge badge-primary') if @app.versions.last == version %>
+      </span>
     </div>
 
     <div class="collapse" id="<%= version.id %>" aria-labelledby="version<%= version.id %>" data-parent="#accordion">
@@ -31,15 +39,22 @@
           <% end %>
         <% end %>
       </div>
+      <div class="card-body">
+          <%= form_tag(app_versions_path, method: :post) do |f| %>
+            <%= hidden_field(:version, :created_at, value: version.created_at) %>
+            <%= hidden_field(:version, :id, value: version.id) %>
+            <%= submit_tag "Revert this changes", :class => "btn btn-outline-danger" if @app.versions.last == version && @app.versions.last.index != 0 %>
+            <%= submit_tag "Revert to this version", :class => "btn btn-outline-primary" if @app.versions.last != version %>
+          <% end %>
+        </div>
+      </div>
+      </div>
     </div>
-  </div>
-  </div>
     <% end %>
+</div>
 </div>
 
 <div style="margin-top:36px;">
   <%= paginate @versions %>
 </div>
-
-
 </main>

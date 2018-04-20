@@ -2,7 +2,6 @@ class AppsController < ApplicationController
   before_action :authenticate_user!, except: [:runtime]
   before_action :set_app, except: %i[index create new runtime]
   before_action :set_apps, except: %i[show destroy jenkins runtime]
-  before_action :set_paper_trail_whodunnit
 
   authority_actions settings: 'update',
                     build: 'build',

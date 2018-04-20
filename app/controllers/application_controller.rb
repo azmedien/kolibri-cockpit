@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::RoutingError, with: :not_found
 
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_paper_trail_whodunnit
   before_action :set_apps
 
   def respond_modal_with(*args, &blk)
@@ -18,7 +19,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name])
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[first_name last_name])
   end
 
   def not_found
@@ -38,8 +39,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_apps
-    if user_signed_in?
-      @apps = current_user.apps
-    end
+    @apps = current_user.apps if user_signed_in?
   end
 end
