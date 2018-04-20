@@ -48,11 +48,8 @@ class AppsController < ApplicationController
       @app.ios_config.delete('bundle_id')
 
       @app.duplicate_files(origin)
-
-      notice = 'Application was successfully duplicated.'
     else
       @app = App.new(app_params)
-      notice = 'Application was successfully created.'
     end
 
     @app.user = current_user
@@ -145,32 +142,6 @@ class AppsController < ApplicationController
 
   def publish
     authorize_action_for @app
-  end
-
-  def send_notifications
-    n = Rpush::Gcm::Notification.new
-    n.app = @notification
-    n.data = {
-      component: notification_params['url'].to_s,
-      url: notification_params['url'].to_s,
-      title: notification_params['title'],
-      body: notification_params['message'],
-      to: '/topics/main'
-    }
-    n.notification = {
-      component: notification_params['url'].to_s,
-      url: notification_params['url'].to_s,
-      title: notification_params['title'],
-      body: notification_params['message'],
-      to: '/topics/main'
-    }
-    n.priority = 'high'
-    n.content_available = true
-    n.save!
-
-    respond_to do |format|
-      format.html { redirect_to notifications_app_path(@app), notice: 'Notification send' }
-    end
   end
 
   def runtime

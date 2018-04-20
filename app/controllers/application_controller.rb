@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  # protect_from_forgery with: :exception
   protect_from_forgery with: :exception, unless: -> { request.format.json? }
   add_flash_types :success, :warning, :danger, :info
 
@@ -8,7 +7,6 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_paper_trail_whodunnit
-  before_action :set_apps
 
   def respond_modal_with(*args, &blk)
     options = args.extract_options!
@@ -36,9 +34,5 @@ class ApplicationController < ActionController::Base
       format.xml { head :not_found }
       format.any { head :not_found }
     end
-  end
-
-  def set_apps
-    @apps = current_user.apps if user_signed_in?
   end
 end

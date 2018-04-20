@@ -34,12 +34,6 @@
         <%= f.file_field :android_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.android_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
         <%= f.label 'Android Firebase JSON file', :class => "custom-file-label" %>
         <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "valid-feedback") if !@app.android_firebase.file.nil? %>
-
-        <!-- <div class="custom-file" id="customFile" lang="en">
-        <input type="file" class="custom-file-input" id="exampleInputFile" aria-describedby="fileHelp">
-        <label class="custom-file-label" for="exampleInputFile">
-           Select file...
-        </label> -->
 </div>
     </div>
 </section>
