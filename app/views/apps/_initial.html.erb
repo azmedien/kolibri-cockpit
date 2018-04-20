@@ -20,7 +20,7 @@
 
 <% if app.new_record? and @apps.any? %>
 
-<div class="form-group btn-group" data-toggle="buttons">
+<div class="form-group btn-group btn-group-toggle" data-toggle="buttons">
   <%= label_tag(:create_new, "Create new", :class => "btn btn-outline-primary active", :id => "create_new") do %>
     <%= radio_button_tag(:send, "now", true) %> Create new
   <% end %>

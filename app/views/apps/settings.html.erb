@@ -57,6 +57,7 @@
 </div>
 <div class="actions">
     <%= f.submit :class => "btn btn-primary" %>
+    <%= link_to 'Changes history', app_versions_path(@app), :class => "btn btn-warning" %>
     <%= link_to 'Preview configuration', runtime_app_path(@app), :class => "btn btn-outline-primary", :target => '_blank' %>
     <%= link_to 'Invite', app_autority_invite_path(@app), remote: true, method: :post, :class => "btn btn-outline-primary" %>
 </div>

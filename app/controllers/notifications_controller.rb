@@ -1,28 +1,26 @@
 class NotificationsController < ApplicationController
-
   respond_to :html, :json
 
   before_action :set_app
   before_action :set_apps
   before_action :authenticate_user!
   before_action :set_nofication_app
-  before_action :set_notification, only: [:show, :edit, :update, :destroy]
+  before_action :set_notification, only: %i[show edit update destroy]
 
   authorize_actions_for :parent_resource, all_actions: :notify
-  authorize_actions_for :parent_resource, :actions => {:configure_notifications => 'notify'}
+  authorize_actions_for :parent_resource, actions: { configure_notifications: 'notify' }
 
-  after_action :schedule_notification, only: [:create, :update]
+  after_action :schedule_notification, only: %i[create update]
 
   # GET /notifications
   # GET /notifications.json
   def index
-    @notifications = Notification.where(app_id: @app.id).order("scheduled_for DESC, updated_at DESC")
+    @notifications = Notification.where(app_id: @app.id).order('scheduled_for DESC, updated_at DESC').page params[:page]
   end
 
   # GET /notifications/1
   # GET /notifications/1.json
-  def show
-  end
+  def show; end
 
   # GET /notifications/new
   def new
@@ -83,7 +81,7 @@ class NotificationsController < ApplicationController
       api_key = settings_params['firebase_server_key']
 
       @notification_app = Rpush::Gcm::App.new
-      @notification_app.name = "#{@app.internal_id}"
+      @notification_app.name = @app.internal_id.to_s
       @notification_app.auth_key = api_key
       @notification_app.connections = 1
       @notification_app.save!
@@ -96,55 +94,55 @@ class NotificationsController < ApplicationController
   end
 
   private
-    def set_notification
-      @notification = Notification.find(params[:id])
-    end
 
-    def set_nofication_app
-      @notification_app = Rpush::Gcm::App.find_by_name("#{@app.internal_id}")
-    end
+  def set_notification
+    @notification = Notification.find(params[:id])
+  end
 
-    def schedule_notification
+  def set_nofication_app
+    @notification_app = Rpush::Gcm::App.find_by_name(@app.internal_id.to_s)
+  end
 
-      if @notification.valid?
-        require 'sidekiq/api'
+  def schedule_notification
+    if @notification.valid?
+      require 'sidekiq/api'
 
+      jid = @notification.job_id
 
-        jid = @notification.job_id
-
-        if jid
-          Sidekiq::ScheduledSet.new.find_job(jid).try(:delete)
-          Sidekiq::Queue.new.find_job(jid).try(:delete)
-        end
-
-        job_id = NotificationWorker.perform_at(@notification.scheduled_for, @notification.id)
-        @notification.update(job_id: job_id)
+      if jid
+        Sidekiq::ScheduledSet.new.find_job(jid).try(:delete)
+        Sidekiq::Queue.new.find_job(jid).try(:delete)
       end
-    end
 
-    def parent_resource
-      @app
+      job_id = NotificationWorker.perform_at(@notification.scheduled_for, @notification.id)
+      @notification.update(job_id: job_id)
     end
+  end
 
-    def set_app
-      @app = App.with_roles([:admin, :notifier], current_user).find(params[:app_id])
-    end
+  def parent_resource
+    @app
+  end
 
-    def set_apps
-      @apps = App.with_roles([:admin, :notifier], current_user).order(:internal_name)
-    end
+  def set_app
+    @app = App.with_roles(%i[admin notifier], current_user).find(params[:app_id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def notification_params
-      params.require(:notification).permit(
-        :title,
-        :body,
-        :url,
-        :send,
-        :scheduled_for)
-    end
+  def set_apps
+    @apps = App.with_roles(%i[admin notifier], current_user).order(:internal_name)
+  end
 
-    def settings_params
-      params.require(:notification).permit(:firebase_server_key)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def notification_params
+    params.require(:notification).permit(
+      :title,
+      :body,
+      :url,
+      :send,
+      :scheduled_for
+    )
+  end
+
+  def settings_params
+    params.require(:notification).permit(:firebase_server_key)
+  end
 end

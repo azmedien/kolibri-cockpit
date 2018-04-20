@@ -1,0 +1,45 @@
+<main>
+
+  <nav aria-label="breadcrumb">
+   <ol class="container breadcrumb">
+     <li class="breadcrumb-item"><a href="<%= root_path %>">Apps</a></li>
+     <li class="breadcrumb-item"><a href="<%= settings_app_path(@app) %>"><%= @app.internal_name %></a></li>
+     <li class="breadcrumb-item active" aria-current="page">Changes</li>
+   </ol>
+  </nav>
+
+<div id="accordion">
+ <% @versions.reverse.each do |version| %>
+  <div>
+    <div class="list-group-item d-flex justify-content-between align-items-center" id="version<%= version.id %>" data-toggle="collapse" data-target="#<%= version.id %>" aria-expanded="false" aria-controls="<%= version.id %>">
+      <%= image_tag gravatar_url(User.find(version.whodunnit).email, 64), alt: "", :class => "img-responsive rounded-circle", :style => "max-height:36px; width:auto; vertical-align:middle;" %>
+      <%= User.find(version.whodunnit).full_name %>
+      <%= version.event %>
+      <%= time_ago_in_words(version.created_at) %> ago
+      <span class="badge badge-secondary"><%= diff_with_previous(version).last %> changes</span>
+    </div>
+
+    <div class="collapse" id="<%= version.id %>" aria-labelledby="version<%= version.id %>" data-parent="#accordion">
+      <div class="card">
+      <div class="card-body">
+        <% diff_with_previous(version).first.each do |key, item| %>
+          <% item.each do |change| %>
+            <%= raw change_to_html(key, change) %>
+          <% end %>
+          <% if item.empty? %>
+            <p class='alert alert-primary'><strong><%= key.upcase %>: </strong> Updated</code>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  </div>
+    <% end %>
+</div>
+
+<div style="margin-top:36px;">
+  <%= paginate @versions %>
+</div>
+
+
+</main>

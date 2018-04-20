@@ -1,15 +1,15 @@
 Rails.application.routes.draw do
-
   post 'webhooks/receive'
 
   devise_for :users
 
   resources :apps do
     resources :assets do
-        get 'download', action: 'download', as: 'download'
+      get 'download', action: 'download', as: 'download'
     end
 
     resources :notifications
+    resources :versions
 
     post 'notifications/configure', to: 'notifications#configure_notifications'
     post 'autority/invite', to: 'apps#invite', as: 'autority_invite'

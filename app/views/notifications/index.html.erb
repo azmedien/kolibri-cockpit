@@ -30,12 +30,18 @@
   <% @notifications.each do |notification| %>
   <%= link_to(edit_app_notification_path(notification.app, notification), remote: true, data: { modal: true }, :class=>'list-group-item list-group-item-action flex-column align-items-start') do %>
     <div class="d-flex w-100 justify-content-end">
-      <h6 class="mr-1"><%= notification.title %></h6>
-      <%= content_tag(:small, notification.url, :class => "mr-auto text-muted") %>
-      <%= content_tag(:small, notification.status, :class => class_string("mr-1" => true, "text-danger" => notification.failed?)) %>
+      <h6 class="mr-auto"><%= notification.title %></h6>
+      <%= content_tag(:small, notification.status, :class => class_string("text-danger" => notification.failed?)) %>
     </div>
+      <%= content_tag(:small, notification.url, :class => "text-muted") %>
       <p class="mb-1"><%= notification.body %></p>
   <% end %>
   <% end %>
 </div>
+
+<div style="margin-top:36px;">
+  <%= paginate @notifications %>
+</div>
+
+
 </main>

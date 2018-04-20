@@ -27,6 +27,9 @@ gem 'devise'
 gem 'devise_invitable'
 gem 'authority'
 gem 'rolify'
+gem 'paper_trail'
+gem 'hashdiff'
+gem 'kaminari'
 
 gem 'git', '~> 1.3'
 

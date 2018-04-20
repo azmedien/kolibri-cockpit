@@ -1,21 +1,20 @@
 class AppsController < ApplicationController
-
   before_action :authenticate_user!, except: [:runtime]
-  before_action :set_app, except: [:index, :create, :new, :runtime]
-  before_action :set_apps, except: [:show, :destroy, :jenkins, :runtime]
+  before_action :set_app, except: %i[index create new runtime]
+  before_action :set_apps, except: %i[show destroy jenkins runtime]
+  before_action :set_paper_trail_whodunnit
 
-  authority_actions :settings => 'update',
-                    :build => 'build',
-                    :prepare => 'prepare',
-                    :publish => 'publish',
-                    :configure_app => 'publish'
+  authority_actions settings: 'update',
+                    build: 'build',
+                    prepare: 'prepare',
+                    publish: 'publish',
+                    configure_app: 'publish'
 
   respond_to :html, :json
 
   # GET /apps
   # GET /apps.json
-  def index
-  end
+  def index; end
 
   # GET /apps/1
   # GET /apps/1.json
@@ -77,20 +76,18 @@ class AppsController < ApplicationController
   # PATCH/PUT /apps/1
   # PATCH/PUT /apps/1.json
   def update
-
     authorize_action_for @app
 
     respond_to do |format|
-
-      if app_params[:android_config].present? and app_params[:android_config][:bundle_id].present?
-        if (@app.android_config['bundle_id'] != app_params[:android_config][:bundle_id] and App.android_bundle_id? app_params[:android_config][:bundle_id])
-          @app.errors.add(:base, "Android bundle id is invalid or already used")
+      if app_params[:android_config].present? && app_params[:android_config][:bundle_id].present?
+        if (@app.android_config['bundle_id'] != app_params[:android_config][:bundle_id]) && App.android_bundle_id?(app_params[:android_config][:bundle_id])
+          @app.errors.add(:base, 'Android bundle id is invalid or already used')
         end
       end
 
-      if app_params[:ios_config].present? and app_params[:ios_config][:bundle_id].present?
-        if (@app.ios_config['bundle_id'] != app_params[:ios_config][:bundle_id] and App.ios_bundle_id? app_params[:ios_config][:bundle_id])
-          @app.errors.add(:base, "iOS bundle id is invalid or already used")
+      if app_params[:ios_config].present? && app_params[:ios_config][:bundle_id].present?
+        if (@app.ios_config['bundle_id'] != app_params[:ios_config][:bundle_id]) && App.ios_bundle_id?(app_params[:ios_config][:bundle_id])
+          @app.errors.add(:base, 'iOS bundle id is invalid or already used')
         end
       end
 
@@ -106,14 +103,13 @@ class AppsController < ApplicationController
 
   # GET /apps/1/edit
   def edit
-    redirect_to settings_app_path @app and return if current_user.has_role?(:admin, @app)
-    redirect_to app_notifications_path @app and return if current_user.can_notify?(@app)
+    redirect_to(settings_app_path(@app)) && return if current_user.has_role?(:admin, @app)
+    redirect_to(app_notifications_path(@app)) && return if current_user.can_notify?(@app)
   end
 
   # DELETE /apps/1
   # DELETE /apps/1.json
   def destroy
-
     authorize_action_for @app
 
     if @app.deletable_by?(current_user)
@@ -132,7 +128,6 @@ class AppsController < ApplicationController
   end
 
   def settings
-
     authorize_action_for @app
 
     respond_to do |format|
@@ -142,32 +137,30 @@ class AppsController < ApplicationController
   end
 
   def build
-      authorize_action_for @app
+    authorize_action_for @app
   end
 
   def prepare
-      authorize_action_for @app
+    authorize_action_for @app
   end
 
   def publish
-      authorize_action_for @app
+    authorize_action_for @app
   end
 
   def send_notifications
-
-
     n = Rpush::Gcm::Notification.new
     n.app = @notification
     n.data = {
-      component: "#{notification_params['url']}",
-      url: "#{notification_params['url']}",
+      component: notification_params['url'].to_s,
+      url: notification_params['url'].to_s,
       title: notification_params['title'],
       body: notification_params['message'],
       to: '/topics/main'
     }
     n.notification = {
-      component: "#{notification_params['url']}",
-      url: "#{notification_params['url']}",
+      component: notification_params['url'].to_s,
+      url: notification_params['url'].to_s,
       title: notification_params['title'],
       body: notification_params['message'],
       to: '/topics/main'
@@ -203,14 +196,14 @@ class AppsController < ApplicationController
       user = User.find_by_email(email)
 
       unless user
-        invited = User.invite!({:email => email, :skip_invitation => true}, current_user)
+        invited = User.invite!({ email: email, skip_invitation: true }, current_user)
         invited.add_role :admin, @app
 
         respond_to do |format|
-          format.html {
+          format.html do
             redirect_to request.referrer,
-            notice: "An invitation email will be sent to #{email}"
-          }
+                        notice: "An invitation email will be sent to #{email}"
+          end
         end
 
         return
@@ -221,46 +214,48 @@ class AppsController < ApplicationController
       if already_invated
         respond_to do |format|
           format.js
-          format.html {
+          format.html do
             redirect_to request.referrer,
-            alert: "User with email #{email} already invited"
-          }
+                        alert: "User with email #{email} already invited"
+          end
         end
       else
         user.add_role :admin, @app
         respond_to do |format|
           format.js
-          format.html {
+          format.html do
             redirect_to request.referrer,
-            notice: "User with email #{email} successfully invited"
-          }
+                        notice: "User with email #{email} successfully invited"
+          end
         end
       end
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_app
-      @app = App.with_roles([:admin, :notifier], current_user).find(params[:id] || params[:app_id])
-    end
 
-    def set_apps
-      @apps = App.with_roles([:admin, :notifier], current_user).order(:internal_name)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_app
+    @app = App.with_roles(%i[admin notifier], current_user).find(params[:id] || params[:app_id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def app_params
-      params.require(:app).permit(
-        :internal_name,
-        :internal_id,
-        :runtime,
-        :android_icon,
-        :android_firebase,
-        :ios_firebase,
-        :ios_icon,
-        :splash,
-        :android_config => [:repository_url, :publishing_profile ,:bundle_id, :version_code, :version_name],
-        :ios_config => [:repository_url, :publishing_profile, :bundle_id, :version_code, :version_name])
-    end
+  def set_apps
+    @apps = App.with_roles(%i[admin notifier], current_user).order(:internal_name)
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def app_params
+    params.require(:app).permit(
+      :internal_name,
+      :internal_id,
+      :runtime,
+      :android_icon,
+      :android_firebase,
+      :ios_firebase,
+      :ios_icon,
+      :splash,
+      android_config: %i[repository_url publishing_profile bundle_id version_code version_name],
+      ios_config: %i[repository_url publishing_profile bundle_id version_code version_name]
+    )
+  end
 end

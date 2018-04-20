@@ -30,12 +30,17 @@
             <%= select_tag "app[android_config][publishing_profile]", options_for_select(Rails.configuration.cockpit['publishing_profiles'].keys, f.object.android_config["publishing_profile"]), :class => "form-control" %>
         </div>
 
-        <div class="form-group <%= class_string("has-success" => !@app.android_firebase.file.nil?)%>">
-            <%= f.label "Firebase JSON", :class => "form-control-label" %>
-            <%= f.file_field :android_firebase, accept: 'application/json', :class => class_string("form-control-file" => true, "form-control-success" => !@app.android_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
-            <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "form-control-feedback") if !@app.android_firebase.file.nil? %>
-            <small id="fileHelp" class="form-text text-muted"></small>
-        </div>
+        <div class="custom-file">
+        <%= f.file_field :android_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.android_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
+        <%= f.label 'Android Firebase JSON file', :class => "custom-file-label" %>
+        <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "valid-feedback") if !@app.android_firebase.file.nil? %>
+
+        <!-- <div class="custom-file" id="customFile" lang="en">
+        <input type="file" class="custom-file-input" id="exampleInputFile" aria-describedby="fileHelp">
+        <label class="custom-file-label" for="exampleInputFile">
+           Select file...
+        </label> -->
+</div>
     </div>
 </section>
 
@@ -54,12 +59,10 @@
             <%= select_tag "app[ios_config][publishing_profile]", options_for_select(Rails.configuration.cockpit['publishing_profiles'].keys, f.object.ios_config["publishing_profile"]), :class => "form-control" %>
         </div>
 
-        <div class="form-group <%= class_string("has-success" => !@app.ios_firebase.file.nil?)%>">
-            <%= f.label "Firebase plist", :class => "form-control-label" %>
-            <%= f.file_field :ios_firebase, :class => class_string("form-control-file" => true, "form-control-success" => !@app.ios_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
-            <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "form-control-feedback") if !@app.ios_firebase.file.nil? %>
-            <small id="fileHelp" class="form-text text-muted"></small>
-        </div>
+        <div class="custom-file">
+        <%= f.file_field :ios_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.ios_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
+        <%= f.label 'iOS Firebase plist file', :class => "custom-file-label" %>
+        <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "valid-feedback") if !@app.ios_firebase.file.nil? %>
     </div>
 </section>
 

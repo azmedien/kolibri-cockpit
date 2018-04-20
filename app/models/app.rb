@@ -4,6 +4,7 @@ class App < ApplicationRecord
   include CopyCarrierwaveFile
 
   resourcify
+  has_paper_trail ignore: %i[created_at updated_at id user_id slug internal_slug]
 
   self.authorizer_name = 'AppsAuthorizer'
 
