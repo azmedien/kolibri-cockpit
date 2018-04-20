@@ -1,8 +1,4 @@
-class NotificationsController < ApplicationController
-  respond_to :html, :json
-
-  before_action :set_app
-  before_action :set_apps
+class NotificationsController < AppAwareController
   before_action :authenticate_user!
   before_action :set_nofication_app
   before_action :set_notification, only: %i[show edit update destroy]
@@ -117,18 +113,6 @@ class NotificationsController < ApplicationController
       job_id = NotificationWorker.perform_at(@notification.scheduled_for, @notification.id)
       @notification.update(job_id: job_id)
     end
-  end
-
-  def parent_resource
-    @app
-  end
-
-  def set_app
-    @app = App.with_roles(%i[admin notifier], current_user).find(params[:app_id])
-  end
-
-  def set_apps
-    @apps = App.with_roles(%i[admin notifier], current_user).order(:internal_name)
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

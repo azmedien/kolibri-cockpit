@@ -1,14 +1,9 @@
-class AssetsController < ApplicationController
-
+class AssetsController < AppAwareController
   before_action :authenticate_user!, except: [:download]
-  before_action :set_app
-  before_action :set_apps
-  before_action :set_asset, only: [:show, :edit, :update, :destroy, :download]
 
-  authorize_actions_for :parent_resource, all_actions: :build, :except => :download
+  before_action :set_asset, only: %i[show edit update destroy download]
 
-  respond_to :html, :json
-
+  authorize_actions_for :parent_resource, all_actions: :build, except: :download
 
   # GET /assets
   # GET /assets.json
@@ -18,8 +13,7 @@ class AssetsController < ApplicationController
 
   # GET /assets/1
   # GET /assets/1.json
-  def show
-  end
+  def show; end
 
   # GET /assets/new
   def new
@@ -35,7 +29,7 @@ class AssetsController < ApplicationController
   # POST /assets
   # POST /assets.json
   def create
-    assets = Array.new
+    assets = []
 
     asset_params[:file].each do |file|
       asset = Asset.new(file: file, app_id: @app.id)
@@ -43,11 +37,10 @@ class AssetsController < ApplicationController
     end
 
     assets.each do |asset|
-      if !asset.save
-        @asset.errors.add(:base, :unprocessable_entity)
-        respond_modal_with [@app, @asset], location: :new
-        return
-      end
+      next if asset.save
+      @asset.errors.add(:base, :unprocessable_entity)
+      respond_modal_with [@app, @asset], location: :new
+      return
     end
 
     respond_modal_with [@app, @asset], location: app_assets_url
@@ -85,25 +78,13 @@ class AssetsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_asset
-      @asset = Asset.friendly.find_by!(slug: params[:id] || params[:asset_id], app_id: @app.id)
-    end
 
-    def parent_resource
-      @app
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_asset
+    @asset = Asset.friendly.find_by!(slug: params[:id] || params[:asset_id], app_id: @app.id)
+  end
 
-    def set_app
-      @app = App.with_roles([:admin, :notifier], current_user).find(params[:app_id])
-    end
-
-    def set_apps
-      @apps = App.with_roles([:admin, :notifier], current_user).order(:internal_name)
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def asset_params
-      params.require(:asset).permit(:file => [])
-    end
+  def asset_params
+    params.require(:asset).permit(file: [])
+  end
 end

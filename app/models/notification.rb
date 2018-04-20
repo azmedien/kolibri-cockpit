@@ -1,5 +1,4 @@
 class Notification < ApplicationRecord
-
   include ActionView::Helpers::DateHelper
 
   validates :title, presence: true
@@ -12,30 +11,30 @@ class Notification < ApplicationRecord
   belongs_to :app
   belongs_to :user
 
-  belongs_to :rpush_app, :class_name => "Rpush::Client::ActiveRecord::App"
-  belongs_to :rpush_notification, :class_name => "Rpush::Client::ActiveRecord::Notification"
+  belongs_to :rpush_app, class_name: 'Rpush::Client::ActiveRecord::App'
+  belongs_to :rpush_notification, class_name: 'Rpush::Client::ActiveRecord::Notification', optional: true
 
   def is_scheduled?
-    new_record? || self.updated_at <= self.scheduled_for
+    new_record? || updated_at <= scheduled_for
   end
 
   def status
-    rpush = self.rpush_notification
+    rpush = rpush_notification
 
     if rpush
-      return "processed #{time_ago_in_words(self.updated_at)} ago" if rpush.processing
+      return "processed #{time_ago_in_words(updated_at)} ago" if rpush.processing
       return "delivered #{time_ago_in_words(rpush.delivered_at)} ago" if rpush.delivered
       return "failed #{time_ago_in_words(rpush.failed_at)} ago" if rpush.failed
     end
 
-    "scheduled for #{time_ago_in_words(self.scheduled_for)} from now"
+    "scheduled for #{time_ago_in_words(scheduled_for)} from now"
   end
 
   def delivered?
-    self.rpush_notification and self.rpush_notification.delivered
+    rpush_notification && rpush_notification.delivered
   end
 
   def failed?
-    self.rpush_notification and self.rpush_notification.failed
+    rpush_notification && rpush_notification.failed
   end
 end
