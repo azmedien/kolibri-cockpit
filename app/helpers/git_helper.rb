@@ -24,7 +24,7 @@ module GitHelper
   end
 
   def manipulate_repo(url, app, user, tag)
-    branch_name = app.internal_name.parameterize
+    branch_name = app.internal_slug
     origin_app = App.friendly.find(app.android_config['origin']) if app.android_config['origin']
 
     repo = open_repo(url)
@@ -35,7 +35,7 @@ module GitHelper
 
     # Trying to find origin app branch we want to branch from. We want to skip this if we alredy cloned the app
     if origin_app && (repo_branches[branch_name].nil? || repo_branches["origin/#{branch_name}"].nil?)
-      origin_branch_name = origin_app.internal_name.parameterize
+      origin_branch_name = origin_app.internal_slug
 
       if repo_branches[origin_branch_name] || repo_branches["origin/#{origin_branch_name}"]
         repo.checkout(origin_branch_name) # Checkout the origin app branch so we will branch from it

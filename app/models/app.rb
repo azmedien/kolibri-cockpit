@@ -14,7 +14,7 @@ class App < ApplicationRecord
 
   accepts_nested_attributes_for :assets
 
-  validates :internal_name, uniqueness: true,  presence: true
+  validates :internal_name, uniqueness: true, presence: true
   validates :internal_id, uniqueness: true
   validates :user, presence: true
 
@@ -33,54 +33,52 @@ class App < ApplicationRecord
   before_create :set_slug
   after_create :set_role
 
-  def self.android_bundle_id? bundle_id
-    apps = App.where("android_config ? :key", key: "bundle_id")
-    app = apps.where("android_config @> hstore(:key, :value)",
-      key: "bundle_id", value: bundle_id
-    ).first
+  def self.android_bundle_id?(bundle_id)
+    apps = App.where('android_config ? :key', key: 'bundle_id')
+    app = apps.where('android_config @> hstore(:key, :value)',
+                     key: 'bundle_id', value: bundle_id).first
 
-    return !app.nil?
+    !app.nil?
   end
 
-  def self.ios_bundle_id? bundle_id
-    apps = App.where("ios_config ? :key", key: "bundle_id")
-    app = apps.where("ios_config @> hstore(:key, :value)",
-      key: "bundle_id", value: bundle_id
-    ).first
+  def self.ios_bundle_id?(bundle_id)
+    apps = App.where('ios_config ? :key', key: 'bundle_id')
+    app = apps.where('ios_config @> hstore(:key, :value)',
+                     key: 'bundle_id', value: bundle_id).first
 
-    return !app.nil?
+    !app.nil?
   end
 
   def origin?
-    return App.exists?(self.android_config['origin']) if self.android_config['origin']
+    return App.exists?(android_config['origin']) if android_config['origin']
   end
 
   def origin
-    return App.find(self.android_config['origin'])
+    App.find(android_config['origin'])
   end
 
   def icon?
-    return self.android_icon? || self.ios_icon?
+    android_icon? || ios_icon?
   end
 
   def icon
-    icon = self.android_icon if self.android_icon?
+    icon = android_icon if android_icon?
 
     unless icon
-      icon = self.ios_icon if self.ios_icon?
+      icon = ios_icon if ios_icon?
     end
 
     icon
   end
 
   def android_config=(new_config)
-    gs = self.android_config || {}
+    gs = android_config || {}
     gs = gs.merge(new_config || {})
     write_attribute(:android_config, gs)
   end
 
   def ios_config=(new_config)
-    gs = self.ios_config || {}
+    gs = ios_config || {}
     gs = gs.merge(new_config || {})
     write_attribute(:ios_config, gs)
   end
@@ -92,11 +90,13 @@ class App < ApplicationRecord
   end
 
   private
+
   def set_slug
     self.slug = internal_id
+    self.internal_slug = internal_name.parameterize
   end
 
   def set_role
-    self.user.add_role(:admin, self)
+    user.add_role(:admin, self)
   end
 end

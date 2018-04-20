@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170912094335) do
+ActiveRecord::Schema.define(version: 20180420103854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,9 +45,11 @@ ActiveRecord::Schema.define(version: 20170912094335) do
     t.string "slug"
     t.string "android_firebase"
     t.string "ios_firebase"
+    t.string "internal_slug", null: false
     t.index ["android_config"], name: "index_apps_on_android_config", using: :gin
     t.index ["internal_id"], name: "index_apps_on_internal_id"
     t.index ["internal_name"], name: "index_apps_on_internal_name"
+    t.index ["internal_slug"], name: "index_apps_on_internal_slug", unique: true
     t.index ["ios_config"], name: "index_apps_on_ios_config", using: :gin
     t.index ["user_id"], name: "index_apps_on_user_id"
   end
