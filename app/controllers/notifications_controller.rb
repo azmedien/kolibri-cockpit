@@ -100,7 +100,7 @@ class NotificationsController < AppAwareController
   end
 
   def schedule_notification
-    if @notification.valid?
+    if @notification && @notification.valid?
       require 'sidekiq/api'
 
       jid = @notification.job_id

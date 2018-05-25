@@ -14,6 +14,16 @@ class Notification < ApplicationRecord
   belongs_to :rpush_app, class_name: 'Rpush::Client::ActiveRecord::App'
   belongs_to :rpush_notification, class_name: 'Rpush::Client::ActiveRecord::Notification', optional: true
 
+  validate :url_contains_a_valid_deeplink
+
+  def url_contains_a_valid_deeplink
+    return if url.starts_with? 'http'
+    items = JSON.parse(app.runtime)['navigation']['items']
+    unless items.map { |x| x['component'] }.uniq.include? url
+      errors.add(:url, 'contains a deep link which is not supported by this app.')
+    end
+  end
+
   def is_scheduled?
     new_record? || updated_at <= scheduled_for
   end
