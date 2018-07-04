@@ -99,6 +99,10 @@ class AndroidConfigureService
       api = 'apiSecret=8f94e66fae0366a48a613623166a2586ae77e7fab1b68d021471e0036ba46ad8'
       File.write(File.join(@app_folder, "fabric.properties"), api.to_s)
 
+      mainSrc = Dir.glob("#{@app_folder}/**/src/main").first
+      FileUtils.mkdir_p(File.dirname("#{mainSrc}/assets"))
+      File.write(File.join("#{mainSrc}/assets", "runtime.json"), JSON.parse(@app.runtime))
+
       @log.info "Setup and copy of all required configurations are done."
     end
   end
@@ -176,11 +180,18 @@ class AndroidConfigureService
       splash.retrieve_from_cache!(splash.cache_name)
       @log.debug "Retrieved from cache!"
 
-      dest = Dir.glob("#{@app_folder}/**/res").first
-      FileUtils.mkdir_p(File.dirname("#{dest}/drawable-nodpi/#{@app.splash_identifier}"))
-      FileUtils.cp splash.path, "#{dest}/drawable-nodpi/#{@app.splash_identifier}"
+      splash.versions.each do |version|
 
-      @log.debug "Copy #{splash.path} -> #{dest}/drawable-nodpi/#{@app.splash_identifier}"
+        @log.debug "Processing #{version.first} of #{@app.splash_identifier}"
+
+        dest = Dir.glob("#{@app_folder}/**/res").first
+        FileUtils.mkdir_p(File.dirname("#{dest}/drawable-#{version.first}/splash.png"))
+        FileUtils.cp version.last.file.path, "#{dest}/drawable-#{version.first}/splash.png"
+
+        @log.debug "Copy #{version.last.file.path} -> #{dest}/drawable-#{version.first}/splash.png"
+        @log.debug "Successfully processed #{version.first} of #{@app.splash_identifier}"
+      end
+
       @log.info "Successfully processed #{@app.splash_identifier}"
     else
       @log.warn "Application splash is not set. Skipping.."

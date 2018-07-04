@@ -21,7 +21,7 @@ class App < ApplicationRecord
 
   mount_uploader :android_icon, IconsUploader
   mount_uploader :ios_icon, IconsUploader
-  mount_uploader :splash, IconsUploader
+  mount_uploader :splash, SplashUploader
 
   mount_uploader :android_firebase, FirebaseUploader
   mount_uploader :ios_firebase, FirebaseUploader

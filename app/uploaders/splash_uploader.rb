@@ -1,48 +1,23 @@
-class IconsUploader < CarrierWave::Uploader::Base
+class SplashUploader < CarrierWave::Uploader::Base
 
   include CarrierWave::MiniMagick
 
   after :remove, :delete_empty_upstream_dirs
 
-  process :validate_dimensions
-  process :convert_to_png
-
   version :xxxhdpi do
-    convert :png
-    process :resize_to_fit => [196, 196]
+    process :resize_to_fill => [1280, 1920]
   end
 
   version :xxhdpi do
-    convert :png
-    process :resize_to_fit => [144, 144]
+    process :resize_to_fill=> [960, 1600]
   end
 
   version :xhdpi do
-    convert :png
-    process :resize_to_fit => [96, 96]
+    process :resize_to_fill => [720, 1280]
   end
 
   version :hdpi do
-    convert :png
-    process :resize_to_fit => [72, 72]
-  end
-
-  def convert_to_png()
-    manipulate! do |img|
-      img.format("png") do |c|
-        c.resize      "#{img[:width]}x#{img[:height]}>"
-        c.resize      "#{img[:width]}x#{img[:height]}<"
-        # Background workaround because of the commandline args arrangement
-        c.args.unshift "none"
-        c.args.unshift "-background"
-        c.density      "512"
-        c.args.unshift ".8"
-        c.args.unshift "-sharpen"
-      end
-      file.content_type="image/png"
-
-      img
-    end
+    process :resize_to_fill => [480, 800]
   end
 
   def store_dir
@@ -73,7 +48,7 @@ class IconsUploader < CarrierWave::Uploader::Base
   end
 
   def extension_whitelist
-    %w(png svg)
+    %w(png)
   end
 
   def size_range
