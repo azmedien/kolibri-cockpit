@@ -14,6 +14,6 @@ $(document).on("turbolinks:load", function() {
         return JSON.parse(target.val());
       } catch (_error) {}
     })());
-    return target.remove();
+    return target.hide();
   });
 });
