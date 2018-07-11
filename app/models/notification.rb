@@ -15,6 +15,13 @@ class Notification < ApplicationRecord
   belongs_to :rpush_notification, class_name: 'Rpush::Client::ActiveRecord::Notification', optional: true
 
   validate :url_contains_a_valid_deeplink
+  after_validation :scrub_control_chars
+
+  def scrub_control_chars
+    self.title.gsub!(/[\u200B-\u200D\uFEFF]/, '')
+    self.body.gsub!(/[\u200B-\u200D\uFEFF]/, '')
+    self.url.gsub!(/[\u200B-\u200D\uFEFF]/, '')
+  end
 
   def url_contains_a_valid_deeplink
     return if url.starts_with? 'http'
