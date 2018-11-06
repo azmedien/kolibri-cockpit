@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby "2.5.0"
+ruby "2.5.3"
 
 gem 'rails', '~> 5.2.0'
 gem 'pg'
@@ -14,7 +14,7 @@ gem 'sidekiq'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Assets pipeline and frontend
-gem 'sass-rails', '~> 5.0'
+gem 'sassc-rails', '~> 2'
 gem 'coffee-rails', '~> 4.2'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
