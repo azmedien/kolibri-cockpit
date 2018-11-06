@@ -145,10 +145,17 @@ Make sure you have exported the `PKEY` env which will grant you `push` rights to
 $ export PKEY=/Users/lekov/Workspace/Kolibri/kolibri-cockpit/cockpit
 ```
 
+Load db scheme and make migrations:
+
+```ruby
+bundle exec rake db:scheme:load
+bundle exec rake db:migrate
+```
+
 Now you are ready to run the server by executing this command from the project's folder:
 
 ```bash
-$ bin/rails server
+$ bundle exec rails server
 ```
 
 Also make sure you have start rpush, redis and sidekiq serivce using

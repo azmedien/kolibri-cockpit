@@ -15,7 +15,7 @@
 <div id="accordion">
  <% @versions.reverse.each do |version| %>
   <div>
-    <div class="list-group-item d-flex align-items-center" id="version<%= version.id %>" data-toggle="collapse" data-target="#<%= version.id %>" aria-expanded="false" aria-controls="<%= version.id %>">
+    <div class="list-group-item d-flex align-items-center" id="version<%= version.id %>" data-toggle="collapse" data-target="#v<%= version.id %>" aria-expanded="false" aria-controls="<%= version.id %>">
       <%= image_tag gravatar_url(User.find(version.whodunnit).email, 64), alt: "", :class => "img-responsive rounded-circle", :style => "max-height:36px; width:auto; vertical-align:middle;" %>
       <span class="pl-2"><%= User.find(version.whodunnit).full_name %>
       <%= version.event %>
@@ -27,7 +27,7 @@
       </span>
     </div>
 
-    <div class="collapse" id="<%= version.id %>" aria-labelledby="version<%= version.id %>" data-parent="#accordion">
+    <div class="collapse" id="v<%= version.id %>" aria-labelledby="version<%= version.id %>" data-parent="#accordion">
       <div class="card">
       <div class="card-body">
         <% diff_with_previous(version).first.each do |key, item| %>
@@ -35,7 +35,7 @@
             <%= raw change_to_html(key, change) %>
           <% end %>
           <% if item.empty? %>
-            <p class='alert alert-primary'><strong><%= key.upcase %>: </strong> Updated</code>
+            <p class='alert alert-primary'><strong><%= key.upcase %>: </strong> Updated</p>
           <% end %>
         <% end %>
       </div>
@@ -51,7 +51,6 @@
       </div>
     </div>
     <% end %>
-</div>
 </div>
 
 <div style="margin-top:36px;">

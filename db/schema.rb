@@ -10,25 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180420112635) do
+ActiveRecord::Schema.define(version: 2018_04_20_112635) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
   enable_extension "hstore"
-
-  create_table "active_admin_comments", force: :cascade do |t|
-    t.string "namespace"
-    t.text "body"
-    t.string "resource_type"
-    t.bigint "resource_id"
-    t.string "author_type"
-    t.bigint "author_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
-    t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
-    t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
-  end
+  enable_extension "plpgsql"
 
   create_table "apps", id: :serial, force: :cascade do |t|
     t.string "internal_name"
@@ -103,7 +89,7 @@ ActiveRecord::Schema.define(version: 20180420112635) do
     t.text "body"
     t.string "url"
     t.json "extras"
-    t.datetime "scheduled_for", default: -> { "now()" }
+    t.datetime "scheduled_for", default: -> { "CURRENT_TIMESTAMP" }
     t.string "job_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -118,13 +104,14 @@ ActiveRecord::Schema.define(version: 20180420112635) do
     t.string "resource_type"
     t.integer "resource_id"
     t.decimal "abilities", default: "0.0", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["name"], name: "index_roles_on_name"
+    t.index ["resource_type", "resource_id"], name: "index_roles_on_resource_type_and_resource_id"
   end
 
-  create_table "rpush_apps", id: :serial, force: :cascade do |t|
+  create_table "rpush_apps", force: :cascade do |t|
     t.string "name", null: false
     t.string "environment"
     t.text "certificate"
@@ -140,7 +127,7 @@ ActiveRecord::Schema.define(version: 20180420112635) do
     t.datetime "access_token_expiration"
   end
 
-  create_table "rpush_feedback", id: :serial, force: :cascade do |t|
+  create_table "rpush_feedback", force: :cascade do |t|
     t.string "device_token", limit: 64, null: false
     t.datetime "failed_at", null: false
     t.datetime "created_at", null: false
@@ -149,7 +136,7 @@ ActiveRecord::Schema.define(version: 20180420112635) do
     t.index ["device_token"], name: "index_rpush_feedback_on_device_token"
   end
 
-  create_table "rpush_notifications", id: :serial, force: :cascade do |t|
+  create_table "rpush_notifications", force: :cascade do |t|
     t.integer "badge"
     t.string "device_token", limit: 64
     t.string "sound", default: "default"
@@ -211,13 +198,14 @@ ActiveRecord::Schema.define(version: 20180420112635) do
     t.datetime "invitation_accepted_at"
     t.integer "invitation_limit"
     t.string "invited_by_type"
-    t.integer "invited_by_id"
+    t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
@@ -225,7 +213,9 @@ ActiveRecord::Schema.define(version: 20180420112635) do
   create_table "users_roles", id: false, force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
+    t.index ["role_id"], name: "index_users_roles_on_role_id"
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+    t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
   create_table "versions", force: :cascade do |t|

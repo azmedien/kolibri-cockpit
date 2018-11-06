@@ -38,8 +38,8 @@ class AssetsController < AppAwareController
 
     assets.each do |asset|
       next if asset.save
-      @asset.errors.add(:base, :unprocessable_entity)
-      respond_modal_with [@app, @asset], location: :new
+      asset.errors.add(:base, :unprocessable_entity)
+      respond_modal_with [@app, @asset], location: app_assets_url
       return
     end
 

@@ -16,7 +16,7 @@
         <% end %>
         <div class="btn-group" role="group" aria-label="Asset actions">
           <%= link_to 'Edit', edit_app_asset_path(@app, asset), remote: true, data: { modal: true }, :class => "btn btn-sm btn-outline-primary" %>
-          <%= link_to 'Destroy', [@app, asset], method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-sm btn-outline-danger" %>
+          <%= link_to 'Delete', [@app, asset], method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-sm btn-outline-danger" %>
         </div>
       </div>
     </div>

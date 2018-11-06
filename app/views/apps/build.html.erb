@@ -31,10 +31,10 @@
         </div>
 
         <div class="custom-file">
-        <%= f.file_field :android_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.android_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
-        <%= f.label 'Android Firebase JSON file', :class => "custom-file-label" %>
-        <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "valid-feedback") if !@app.android_firebase.file.nil? %>
-</div>
+          <%= f.file_field :android_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.android_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
+          <%= f.label 'Android Firebase JSON file', :class => "custom-file-label" %>
+          <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "valid-feedback") if !@app.android_firebase.file.nil? %>
+        </div>
     </div>
 </section>
 
