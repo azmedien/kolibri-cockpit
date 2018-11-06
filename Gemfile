@@ -34,7 +34,7 @@ gem 'paper_trail'
 gem 'hashdiff'
 gem 'kaminari'
 
-gem 'git', '~> 1.3'
+gem 'git', '~> 1'
 
 gem 'carrierwave', '~> 1.2'
 gem 'copy_carrierwave_file'
@@ -43,7 +43,7 @@ gem 'mini_magick'
 
 gem 'friendly_id', '~> 5.2'
 
-gem 'bootstrap', '~> 4.1.0'
+gem 'bootstrap', '~> 4.1'
 gem "font-awesome-rails"
 
 source 'https://rails-assets.org' do
