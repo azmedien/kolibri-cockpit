@@ -46,7 +46,6 @@ class App < ApplicationRecord
     apps = App.where('ios_config ? :key', key: 'bundle_id')
     app = apps.where('ios_config @> hstore(:key, :value)',
                      key: 'bundle_id', value: bundle_id).first
-
     !app.nil?
   end
 
@@ -93,8 +92,10 @@ class App < ApplicationRecord
   private
 
   def set_slug
-    self.slug = internal_id
-    self.internal_slug = internal_name.parameterize
+    if new_record?
+      self.slug = internal_id
+      self.internal_slug = internal_name.parameterize
+    end
   end
 
   def set_role

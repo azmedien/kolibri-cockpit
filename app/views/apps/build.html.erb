@@ -22,7 +22,8 @@
     <div class="card-body">
         <div class=" form-group">
             <%= f.label "Repository URL:" %><br/>
-            <%= text_field_tag "app[android_config][repository_url]", f.object.android_config["repository_url"], :class => "form-control" %>
+            <%= text_field_tag "app[android_config][repository_url]", f.object.android_config["repository_url"], :class => class_string("form-control" => true, "is-valid" => !@app.android_config["repository_url"].blank?) %>
+            <%= content_tag(:div, content_tag(:kbd, "git clone -b #{@app.internal_slug} --single-branch #{@app.android_config["repository_url"]}"), class: "valid-feedback") if !@app.android_config["repository_url"].blank? %>
         </div>
 
         <div class=" form-group">
@@ -30,10 +31,18 @@
             <%= select_tag "app[android_config][publishing_profile]", options_for_select(Rails.configuration.cockpit['publishing_profiles'].keys, f.object.android_config["publishing_profile"]), :class => "form-control" %>
         </div>
 
-        <div class="custom-file">
+        <div class="form-row">
+          <div class="custom-file form-group col-md-10">
           <%= f.file_field :android_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.android_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
           <%= f.label 'Android Firebase JSON file', :class => "custom-file-label" %>
           <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "valid-feedback") if !@app.android_firebase.file.nil? %>
+          </div>
+
+          <% unless @app.android_firebase.file.nil? %>
+          <div class="form-group col-md-2">
+            <a class="btn btn-primary btn-block" href="<%= @app.android_firebase.url %>" target="_blank" role="button">Download</a>
+          </div>
+          <% end %>
         </div>
     </div>
 </section>
@@ -45,7 +54,8 @@
     <div class="card-body">
         <div class="form-group">
             <%= f.label "Repository URL:" %><br/>
-            <%= text_field_tag "app[ios_config][repository_url]", f.object.ios_config["repository_url"], :class => "form-control" %>
+            <%= text_field_tag "app[ios_config][repository_url]", f.object.ios_config["repository_url"], :class => class_string("form-control" => true, "is-valid" => !@app.ios_config["repository_url"].blank?) %>
+            <%= content_tag(:div, content_tag(:kbd, "git clone -b #{@app.internal_slug} --single-branch #{@app.ios_config["repository_url"]}"), class: "valid-feedback") if !@app.ios_config["repository_url"].blank? %>
         </div>
 
         <div class=" form-group">
@@ -53,10 +63,20 @@
             <%= select_tag "app[ios_config][publishing_profile]", options_for_select(Rails.configuration.cockpit['publishing_profiles'].keys, f.object.ios_config["publishing_profile"]), :class => "form-control" %>
         </div>
 
-        <div class="custom-file">
-        <%= f.file_field :ios_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.ios_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
-        <%= f.label 'iOS Firebase plist file', :class => "custom-file-label" %>
-        <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "valid-feedback") if !@app.ios_firebase.file.nil? %>
+        <div class="form-row">
+
+          <div class="custom-file form-group col-md-10">
+            <%= f.file_field :ios_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.ios_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
+            <%= f.label 'iOS Firebase plist file', :class => "custom-file-label" %>
+            <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "valid-feedback") if !@app.ios_firebase.file.nil? %>
+          </div>
+
+          <% unless @app.ios_firebase.file.nil? %>
+          <div class="form-group col-md-2">
+            <a class="btn btn-primary btn-block" href="<%= @app.ios_firebase.url %>" target="_blank" role="button">Download</a>
+          </div>
+          <% end %>
+        </div>
     </div>
 </section>
 
