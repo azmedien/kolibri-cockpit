@@ -22,8 +22,8 @@
     <div class="card-body">
         <div class=" form-group">
             <%= f.label 'Application ID:' %><br/>
-            <%= text_field_tag "app[android_config][bundle_id]", f.object.android_config["bundle_id"], :class => "form-control", 'aria-describedby' => "bundleIdHelp" %>
-            <small id="bundleIdHelp" class="form-text text-muted">Unique application identifier. In most cases contains the company domain and app name. Example: com.example.appname.variant</small>
+            <%= text_field_tag "app[android_config][bundle_id]", f.object.android_config["bundle_id"], :readonly => true, :class => "form-control", 'aria-describedby' => "bundleIdHelp" %>
+            <small id="bundleIdHelp" class="form-text text-muted">Unique in Google Play package name which identify the application. <strong> Autopopulated once when Firebase configuration persist. </strong> </small>
         </div>
 
         <div class=" form-group">
@@ -47,8 +47,8 @@
     <div class="card-body">
       <div class=" form-group">
           <%= f.label "Bundle ID:" %><br/>
-          <%= text_field_tag "app[ios_config][bundle_id]", f.object.ios_config["bundle_id"], :class => "form-control", 'aria-describedby' => "bundleIdHelp" %>
-          <small id="bundleIdHelp" class="form-text text-muted">Unique application identifier. In most cases contains the company domain and app name. Example: com.example.appname.variant</small>
+          <%= text_field_tag "app[ios_config][bundle_id]", f.object.ios_config["bundle_id"], :readonly => true, :class => "form-control", 'aria-describedby' => "bundleIdHelp" %>
+          <small id="bundleIdHelp" class="form-text text-muted">Unique AppStore package name which identify the application. <strong> Autopopulated once when Firebase configuration persist. </strong> </small>
       </div>
 
       <div class=" form-group">

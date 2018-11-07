@@ -9,13 +9,25 @@
 <div class="form-group collapse" id="collapseExample">
   <div class="card card-body">
 
+
+    <div class="alert alert-secondary" role="alert">
+      To send push notifications you need to set Firebase server key. To get it follow instructions on <a href="https://developer.clevertap.com/docs/find-your-fcm-sender-id-fcm-server-api-key#" target="_blank" class="alert-link">this link</a>.
+    </div>
+
+
+
     <%= form_tag(app_notifications_configure_path, method: :post) do |f| %>
     <div class=" form-group">
-      <%= label_tag 'notification[firebase_server_key]', "Firebase Server key:" %><br/>
-      <%= text_field_tag "notification[firebase_server_key]", @notification_app.try(:auth_key) || "", :class => "form-control", :readonly => @notification_app.try(:auth_key) %>
-    </div>
-    <div class="form-group">
-      <%= submit_tag "Update", :class => "btn btn-success" unless @notification_app.try(:auth_key) %>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Firebase Server key:</span>
+        </div>
+          <%= text_field_tag "notification[firebase_server_key]", @notification_app.try(:auth_key) || "", :class => "form-control", :readonly => @notification_app.try(:auth_key) %>
+          <div class="input-group-append">
+            <%= submit_tag "Update", :class => "btn btn-success" unless @notification_app.try(:auth_key) %>
+          </div>
+        <div>
+      </div>
     </div>
     <% end %>
   </div>

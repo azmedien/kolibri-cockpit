@@ -33,6 +33,7 @@ class App < ApplicationRecord
 
   before_create :set_slug
   after_create :set_role
+  before_save :set_bundle_id
 
   def self.android_bundle_id?(bundle_id)
     apps = App.where('android_config ? :key', key: 'bundle_id')
@@ -90,6 +91,17 @@ class App < ApplicationRecord
   end
 
   private
+  def set_bundle_id
+      unless self.android_firebase.file.nil?
+        json = JSON.parse(self.android_firebase.file.read).with_indifferent_access
+        self.android_config['bundle_id'] = json['client'].first.dig(:client_info, :android_client_info, :package_name)
+      end
+
+      unless self.ios_firebase.file.nil?
+        plist = Plist.parse_xml(self.ios_firebase.file)
+        self.ios_config['bundle_id'] = plist['BUNDLE_ID']
+      end
+  end
 
   def set_slug
     if new_record?

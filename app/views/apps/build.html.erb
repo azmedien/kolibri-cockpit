@@ -20,10 +20,15 @@
         Android
     </div>
     <div class="card-body">
-        <div class=" form-group">
+        <div class="form-group">
             <%= f.label "Repository URL:" %><br/>
-            <%= text_field_tag "app[android_config][repository_url]", f.object.android_config["repository_url"], :class => class_string("form-control" => true, "is-valid" => !@app.android_config["repository_url"].blank?) %>
+            <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">SSH:</span>
+            </div>
+            <%= text_field_tag "app[android_config][repository_url]", f.object.android_config["repository_url"], :'aria-describedby' => "basic-addon1", :class => class_string("form-control" => true, "is-valid" => !@app.android_config["repository_url"].blank?) %>
             <%= content_tag(:div, content_tag(:kbd, "git clone -b #{@app.internal_slug} --single-branch #{@app.android_config["repository_url"]}"), class: "valid-feedback") if !@app.android_config["repository_url"].blank? %>
+            </div>
         </div>
 
         <div class=" form-group">
@@ -40,7 +45,7 @@
 
           <% unless @app.android_firebase.file.nil? %>
           <div class="form-group col-md-2">
-            <a class="btn btn-primary btn-block" href="<%= @app.android_firebase.url %>" target="_blank" role="button">Download</a>
+            <a class="btn btn-success btn-block" href="<%= @app.android_firebase.url %>" target="_blank" role="button">Download</a>
           </div>
           <% end %>
         </div>
@@ -54,8 +59,13 @@
     <div class="card-body">
         <div class="form-group">
             <%= f.label "Repository URL:" %><br/>
+            <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">SSH:</span>
+            </div>
             <%= text_field_tag "app[ios_config][repository_url]", f.object.ios_config["repository_url"], :class => class_string("form-control" => true, "is-valid" => !@app.ios_config["repository_url"].blank?) %>
             <%= content_tag(:div, content_tag(:kbd, "git clone -b #{@app.internal_slug} --single-branch #{@app.ios_config["repository_url"]}"), class: "valid-feedback") if !@app.ios_config["repository_url"].blank? %>
+            </div>
         </div>
 
         <div class=" form-group">
@@ -66,14 +76,14 @@
         <div class="form-row">
 
           <div class="custom-file form-group col-md-10">
-            <%= f.file_field :ios_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.ios_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
+            <%= f.file_field :ios_firebase, :class => class_string("custom-file-input" => true, "is-valid" => !@app.ios_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
             <%= f.label 'iOS Firebase plist file', :class => "custom-file-label" %>
             <%= content_tag(:div, content_tag(:p, "You have already uploaded an firebase configuration."), class: "valid-feedback") if !@app.ios_firebase.file.nil? %>
           </div>
 
           <% unless @app.ios_firebase.file.nil? %>
           <div class="form-group col-md-2">
-            <a class="btn btn-primary btn-block" href="<%= @app.ios_firebase.url %>" target="_blank" role="button">Download</a>
+            <a class="btn btn-success btn-block" href="<%= @app.ios_firebase.url %>" target="_blank" role="button">Download</a>
           </div>
           <% end %>
         </div>
