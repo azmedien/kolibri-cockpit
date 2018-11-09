@@ -1,8 +1,6 @@
 <main>
 <div class="card">
-    <div class="card-header">
-        Android
-    </div>
+    <div class="card-header">Android</div>
     <table class="card-block table table-hover" id="android">
         <thead>
             <tr>
@@ -22,15 +20,28 @@
     </table>
 
     <div class="card-footer text-muted">
-        <%= link_to "Publish", trigger_configure_app_path(@app, :platform => 'android'), method: :post, :class => "btn btn-success", data: {disable_with: "Publishing..."} %>
+
+    <div class="row">
+      <div class="col-8">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+          <label class="form-check-label" for="inlineCheckbox1">Fabric Beta</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+          <label class="form-check-label" for="inlineCheckbox2">Google Play</label>
+        </div>
+      </div>
+      <div class="col-4 text-right">
+          <%= link_to "Publish", trigger_configure_app_path(@app, :platform => 'android'), method: :post, :class => "btn btn-success", data: {disable_with: "Publishing..."} %>
+      </div>
     </div>
+  </div>
 </div>
 
 
 <div class="card">
-    <div class="card-header">
-        iOS
-    </div>
+    <div class="card-header">iOS</div>
     <table class="card-block table table-hover" id="ios">
         <thead>
             <tr>
@@ -50,7 +61,18 @@
     </table>
 
     <div class="card-footer text-muted">
-        <%= link_to "Publish", trigger_configure_app_path(@app, :platform => 'ios'), method: :post, :class => "btn btn-success" %>
+
+      <div class="row">
+        <div class="col-8">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked>
+            <label class="form-check-label" for="inlineCheckbox1">AppStore</label>
+          </div>
+        </div>
+        <div class="col-4 text-right">
+            <%= link_to "Publish", trigger_configure_app_path(@app, :platform => 'ios'), method: :post, :class => "btn btn-success" %>
+        </div>
+      </div>
     </div>
 </div>
 </main>

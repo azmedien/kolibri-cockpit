@@ -36,7 +36,12 @@
             <%= select_tag "app[android_config][publishing_profile]", options_for_select(Rails.configuration.cockpit['publishing_profiles'].keys, f.object.android_config["publishing_profile"]), :class => "form-control" %>
         </div>
 
+        <div class="alert alert-secondary" role="alert">
+          On <a href="https://support.google.com/firebase/answer/7015592" target="_blank" class="alert-link">this link</a> you can find instructions how to get Firebase configuration for the app.
+        </div>
+
         <div class="form-row">
+
           <div class="custom-file form-group col-md-10">
           <%= f.file_field :android_firebase, accept: 'application/json', :class => class_string("custom-file-input" => true, "is-valid" => !@app.android_firebase.file.nil?), :'aria-describedby' => "fileHelp" %>
           <%= f.label 'Android Firebase JSON file', :class => "custom-file-label" %>
@@ -71,6 +76,10 @@
         <div class=" form-group">
             <%= f.label "Publishing Profile:" %><br/>
             <%= select_tag "app[ios_config][publishing_profile]", options_for_select(Rails.configuration.cockpit['publishing_profiles'].keys, f.object.ios_config["publishing_profile"]), :class => "form-control" %>
+        </div>
+
+        <div class="alert alert-secondary" role="alert">
+          On <a href="https://support.google.com/firebase/answer/7015592" target="_blank" class="alert-link">this link</a> you can find instructions how to get Firebase configuration for the app.
         </div>
 
         <div class="form-row">
