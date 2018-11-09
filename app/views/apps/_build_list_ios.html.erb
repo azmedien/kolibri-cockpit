@@ -1,0 +1,37 @@
+<section class="card">
+    <div class="card-header">iOS</div>
+    <table class="card-block table table-hover" id="ios">
+        <thead>
+            <tr>
+                <th>App</th>
+                <th>Status</th>
+                <th>Details</th>
+                <th>Step</th>
+                <th>Message</th>
+                <th>Updated </th>
+            </tr>
+        </thead>
+        <tbody id="builds">
+            <% @app.builds.where(platform: 'ios').last(5).reverse.each do |build| %>
+              <%= raw build_to_html_table_row(@app, build) %>
+            <% end %>
+        </tbody>
+    </table>
+
+    <div class="card-footer text-muted">
+      <%= form_tag(trigger_configure_app_path, method: :post) do |f| %>
+      <%= hidden_field_tag 'platform', 'ios' %>
+      <div class="row">
+        <div class="col-8">
+          <div class="form-check form-check-inline">
+            <%= check_box_tag 'channels[]', 'fabric', true, :class => 'form-check-input' %>
+            <%= label_tag 'channels[]', 'App Store', :class => 'form-check-label' %>
+          </div>
+        </div>
+        <div class="col-4 text-right">
+          <%= submit_tag 'Publish', :class => "btn btn-success", data: {disable_with: "Publishing..."} %>
+        </div>
+      </div>
+      <% end %>
+    </div>
+</section>
