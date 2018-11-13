@@ -3,6 +3,10 @@ module WebhooksHelper
   include ActionView::Helpers::AssetTagHelper
 
   def build_to_html_table_row(app, build)
+
+    is_finished = build.stage == 'publish' && build.code == 0
+    url_literal = is_finished ? "Download files" : "Link to build"
+
     if build.code < 0
       status = '<i class="fa fa-times-circle text-danger text-center" aria-hidden="true"></i>'
     else
@@ -23,7 +27,7 @@ module WebhooksHelper
           #{image_tag("placeholder.png", size: "32", :class => "img-fluid rounded-circle preload", data: {source: app.android_icon.url}) if app.android_icon?}
         </th>
         <th>#{status}</th>
-        <th><a href="#{build.url}" target="_blank">Link</a></th>
+        <th><a href="#{build.url}" target="_blank">#{url_literal}</a></th>
         <td>#{build.stage.capitalize}</td>
         <td data-toggle="tooltip" data-placement="bottom" data-html="true" title="#{build.message}">#{build.message.lines.first.capitalize}</td>
         <td data-toggle="tooltip" data-placement="bottom" title="#{build.updated_at}">#{time_ago_in_words(build.updated_at)}</td>
