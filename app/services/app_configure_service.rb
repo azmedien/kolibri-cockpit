@@ -9,8 +9,8 @@ class AppConfigureService
     @platform_instance.configure_firebase
   end
 
-  def configure_fastlane
-    @platform_instance.configure_fastlane
+  def configure_fastlane channels
+    @platform_instance.configure_fastlane channels
   end
 
   def configure_assets
@@ -21,9 +21,9 @@ class AppConfigureService
     @platform_instance.copy_configurations
   end
 
-  def configure_it
+  def configure_it channels
     configure_firebase
-    configure_fastlane
+    configure_fastlane channels
     configure_assets
     copy_configurations
     clean_cached_files

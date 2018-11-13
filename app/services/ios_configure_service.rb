@@ -32,7 +32,7 @@ class IosConfigureService
     end
   end
 
-  def configure_fastlane
+  def configure_fastlane channels
     @log.tagged("Fastlane") do
       if Dir.glob("#{@app_folder}/fastlane/Fastfile").any?
         @log.info 'Fastlane already configured. Skipped'
@@ -47,7 +47,7 @@ class IosConfigureService
 
       fastlane = ApplicationController.renderer.render({
         partial: 'layouts/fastlane',
-        locals: { app: @app }
+        locals: { app: @app, channels: channels }
       })
 
       File.write(File.join(dir, "Fastfile"), fastlane.to_s)
@@ -74,8 +74,8 @@ class IosConfigureService
 
     modify_plist(plist_path) do |plist|
       plist['CFBundleDisplayName'] = @app.internal_name
-      plist['CFBundleShortVersionString'] = @app.ios_config['version_name']
-      plist['CFBundleVersion'] = @app.ios_config['version_code']
+      plist['CFBundleShortVersionString'] = @app.ios_config['version_name'] || "1.0.0"
+      plist['CFBundleVersion'] = @app.ios_config['version_code'] || "1"
 
       if plist['KolibriParameters'].nil?
         params = {}

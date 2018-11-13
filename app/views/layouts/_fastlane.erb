@@ -77,6 +77,8 @@ platform :android do
   desc "Publish the app"
   lane :publish do
 
+    <% if channels.include? 'fabric' %>
+
     kolibri(
       stage: "publish",
       message: "Publishing app to Fabric...",
@@ -93,7 +95,11 @@ platform :android do
       code: 1
     )
 
+    <% end %>
+
     sleep(10)
+
+    <% if channels.include? 'play' %>
 
     kolibri(
       stage: "publish",
@@ -108,6 +114,8 @@ platform :android do
       code: 1
     )
   end
+
+  <% end %>
 
   after_all do |lane|
     slack(message: "Kolibri pipelane was successfully executed")
@@ -212,6 +220,8 @@ platform :ios do
   desc "Publish the app"
   lane :publish do
 
+    <% if channels.include? 'appstore' %>
+
     kolibri(
       stage: "publish",
       message: "Publish app TestFlight",
@@ -224,6 +234,8 @@ platform :ios do
       message: "Application beta is published to TestFlight",
       code: 1
     )
+
+    <% end %>
   end
 
   after_all do |lane|

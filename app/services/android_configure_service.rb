@@ -32,7 +32,7 @@ class AndroidConfigureService
     end
   end
 
-  def configure_fastlane
+  def configure_fastlane channels
     @log.tagged("Fastlane") do
       if Dir.glob("#{@app_folder}/fastlane/Fastfile").any?
         @log.info 'Fastlane already configured. Skipping...'
@@ -61,7 +61,7 @@ class AndroidConfigureService
 
       fastlane = ApplicationController.renderer.render({
         partial: 'layouts/fastlane',
-        locals: { app: @app }
+        locals: { app: @app, channels: channels }
       })
 
       File.write(File.join(dir, "Fastfile"), fastlane.to_s)
@@ -100,7 +100,7 @@ class AndroidConfigureService
       File.write(File.join(@app_folder, "fabric.properties"), api.to_s)
 
       mainSrc = Dir.glob("#{@app_folder}/**/src/main").first
-      FileUtils.mkdir_p(File.dirname("#{mainSrc}/assets"))
+      FileUtils.mkdir_p(File.dirname("#{mainSrc}/assets/runtime.json"))
       File.write(File.join("#{mainSrc}/assets", "runtime.json"), JSON.parse(@app.runtime))
 
       @log.info "Setup and copy of all required configurations are done."
@@ -241,8 +241,8 @@ class AndroidConfigureService
 
   def update_android_gradle gradle
     applicationId = @app.android_config['bundle_id']
-    code = @app.android_config['version_code']
-    name = @app.android_config['version_name']
+    code = @app.android_config['version_code'] || "1"
+    name = @app.android_config['version_name'] || "1.0.0"
 
     Tempfile.open(".#{File.basename(gradle)}", File.dirname(gradle)) do |tempfile|
       File.open(gradle).each do |line|

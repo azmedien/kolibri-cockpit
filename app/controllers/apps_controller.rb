@@ -156,7 +156,7 @@ class AppsController < ApplicationController
     authorize_action_for @app
 
     redirect_to request.referrer
-    ConfigureAppJob.set(wait: 2.seconds).perform_later @app, params['platform'] || 'both', current_user
+    ConfigureAppJob.set(wait: 2.seconds).perform_later @app, configure_params.to_h, current_user
   end
 
   def invite
@@ -211,6 +211,16 @@ class AppsController < ApplicationController
 
   def set_apps
     @apps = App.with_roles(%i[admin notifier], current_user).order(:internal_name)
+  end
+
+  def configure_params
+    params.permit(
+      :utf8,
+      :authenticity_token,
+      :platform,
+      :commit,
+      :id,
+      channels: [],)
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
