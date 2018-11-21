@@ -4,15 +4,16 @@ class WebhooksController < ActionController::API
   def receive
       @app = App.find_by_internal_id(params[:project]) or return head :not_found
 
-      is_finished = params[:stage] == 'publish' && params[:code] == 0
-
       build = @app.builds.find_or_create_by(build_id: params[:build])
       build.platform = params[:platform] || 'unknown'
       build.stage = params[:stage] || 'unknown'
-      build.url = is_finished ? params[:artifacts] : params[:url]
       build.code = params[:code] || 0
       build.message = params[:message] || 'unknown'
       build.user = @app.user
+
+      is_finished = build.stage == 'publish' && build.code == 1
+      build.url = is_finished ? params[:artifacts] : params[:url]
+
       build.save!
 
       ActionCable.server.broadcast 'webhooks',

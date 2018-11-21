@@ -4,7 +4,7 @@ module WebhooksHelper
 
   def build_to_html_table_row(app, build)
 
-    is_finished = build.stage == 'publish' && build.code == 0
+    is_finished = build.stage == 'publish' && build.code == 1
     url_literal = is_finished ? "Download files" : "Link to build"
 
     if build.code < 0
