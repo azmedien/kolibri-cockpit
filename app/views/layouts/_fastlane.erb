@@ -1,4 +1,4 @@
-fastlane_version "2.60.0"
+fastlane_version "2.108.0"
 default_platform :android
 
 # Android
@@ -21,19 +21,22 @@ platform :android do
     cryptex(
       type: "export",
       out: "app/keystore.jks",
-      key: "android_keystore"
+      key: "android_keystore",
+      verbose: true
     )
 
     cryptex(
       type: "export",
       out: "google-play-console.json",
-      key: "android_google_play"
+      key: "android_google_play",
+      verbose: true
     )
 
     cryptex(
       type: "export_env",
       key: "android_keystore",
-      set_env: true
+      set_env: true,
+      verbose: true
     )
 
     build
