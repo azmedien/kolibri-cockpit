@@ -70,7 +70,7 @@ class IosConfigureService
     identifier_key = 'PRODUCT_BUNDLE_IDENTIFIER'
 
     project_path = Dir.glob("#{@app_folder}/**.xcodeproj").first
-    plist_path = Dir.glob("#{@app_folder}/Kolibri/Info.plist").first
+    plist_path = Dir.glob("#{@app_folder}/Kolibri/Resources/App/pLists/Info.plist").first
 
     modify_plist(plist_path) do |plist|
       plist['CFBundleDisplayName'] = @app.internal_name
@@ -110,6 +110,11 @@ class IosConfigureService
         plist['CFBundleIdentifier'] = @app.ios_config['bundle_id']
       end
     end
+
+    resources = Dir.glob("#{@app_folder}/Kolibri/Resources").first
+
+    FileUtils.mkdir_p(File.dirname("#{resources}/Defaults/runtime.json"))
+    File.write(File.join("#{resources}/Defaults", "runtime.json"), JSON.parse(@app.runtime))
   end
 
   private
