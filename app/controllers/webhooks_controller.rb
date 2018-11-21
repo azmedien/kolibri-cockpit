@@ -12,6 +12,7 @@ class WebhooksController < ActionController::API
       build.url = is_finished ? params[:artifacts] : params[:url]
       build.code = params[:code] || 0
       build.message = params[:message] || 'unknown'
+      build.user = @app.user
       build.save!
 
       ActionCable.server.broadcast 'webhooks',
