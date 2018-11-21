@@ -116,9 +116,9 @@ platform :android do
       message: "Application beta is published to Google Play",
       code: 1
     )
-  end
 
-  <% end %>
+    <% end %>
+  end
 
   after_all do |lane|
     slack(message: "Kolibri pipelane was successfully executed")
