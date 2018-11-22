@@ -4,9 +4,11 @@ class AndroidConfigureService
 
   include FileHelper
   include UrlHelper
+  include WebhooksHelper
 
-  def initialize(folder, app)
-    @app = app
+  def initialize(folder, build)
+    @build = build
+    @app = build.app
     @app_folder = Dir.glob("#{folder}/**/app").first
     @log = Rails.logger
   end
@@ -14,6 +16,7 @@ class AndroidConfigureService
   def configure_firebase
     @log.tagged("Firebase") do
 
+      send_build_update_cable(@build, 'firebase', 0, "Configure Firebase to app...")
       firebase = @app.android_firebase
 
       unless firebase.file.nil?
@@ -29,6 +32,8 @@ class AndroidConfigureService
       else
         @log.warn "Firebase JSON is not set. Skipping..."
       end
+
+      send_build_update_cable(@build, 'firebase', 1, "Firebase configured")
     end
   end
 
@@ -38,6 +43,8 @@ class AndroidConfigureService
         @log.info 'Fastlane already configured. Skipping...'
         return
       end
+
+      send_build_update_cable(@build, 'fastlane', 0, "Configure Fastlane to app for channels #{channels}")
 
       dir = File.join(File.dirname(@app_folder), "fastlane")
 
@@ -65,14 +72,17 @@ class AndroidConfigureService
       })
 
       File.write(File.join(dir, "Fastfile"), fastlane.to_s)
+      send_build_update_cable(@build, 'firebase', 1, "Fastlane configured")
     end
   end
 
   def configure_assets
     @log.tagged("Assets") do
+      send_build_update_cable(@build, 'assets', 0, "Copying assets to app..")
       copy_assets
       copy_icon
       copy_splash
+      send_build_update_cable(@build, 'assets', 1, "Assets copied.")
     end
   end
 
@@ -82,6 +92,8 @@ class AndroidConfigureService
     manifest = Dir.glob("#{@app_folder}/**/AndroidManifest.xml").first
 
     @log.tagged("Configurations") do
+      send_build_update_cable(@build, 'configurations', 0, "Copy platform specific configurations to app...")
+
       @log.debug "Configure application name"
       update_android_xml(string_xml, 'app_name', @app.internal_name) if string_xml
 
@@ -104,10 +116,11 @@ class AndroidConfigureService
       File.write(File.join("#{mainSrc}/assets", "runtime.json"), JSON.parse(@app.runtime))
 
       @log.info "Setup and copy of all required configurations are done."
+      send_build_update_cable(@build, 'configurations', 1, "Setup and copy of all required configurations are done.")
     end
   end
 
-  private
+  private 
   def copy_assets
     assets = @app.assets
 

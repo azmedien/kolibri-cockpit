@@ -2,6 +2,29 @@ module WebhooksHelper
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::AssetTagHelper
 
+
+  def send_build_update_cable build, stage, code, message
+    build.stage = stage
+    build.code = code
+    build.message = message
+    build.save!
+
+    send_build_cable(build)
+  end
+
+  def send_cable(message, type)
+    html = render_message(message, type)
+    ActionCable.server.broadcast 'app_configure',
+                                 html: html
+  end
+
+  def send_build_cable(build)
+    ActionCable.server.broadcast 'webhooks',
+      id: build.id,
+      html: build_to_html_table_row(build.app, build),
+      platform: build.platform
+  end
+
   def build_to_html_table_row(app, build)
 
     is_finished = build.stage == 'publish' && build.code == 1
@@ -22,7 +45,7 @@ module WebhooksHelper
     }
 
     html = %{
-      <tr id="#{build.build_id}" data-href="#{build.url}" target="_blank">
+      <tr id="#{build.id}" data-href="#{build.url}" target="_blank">
         <th scope="row" data-toggle="tooltip" data-placement="bottom" data-html="true" title="#{meta}">
           #{image_tag("placeholder.png", size: "32", :class => "img-fluid rounded-circle preload", data: {source: app.android_icon.url}) if app.android_icon?}
         </th>

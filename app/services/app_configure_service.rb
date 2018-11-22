@@ -1,8 +1,8 @@
 class AppConfigureService
-  attr_reader :platform_instance, :folder, :app
+  attr_reader :platform_instance, :folder, :build
 
-  def initialize(platform, folder, app)
-    @platform_instance = "#{platform.capitalize}ConfigureService".constantize.new(folder, app)
+  def initialize(platform, folder, build)
+    @platform_instance = "#{platform.capitalize}ConfigureService".constantize.new(folder, build)
   end
 
   def configure_firebase

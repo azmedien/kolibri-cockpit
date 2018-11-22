@@ -5,8 +5,9 @@ class IosConfigureService
   include FileHelper
   include UrlHelper
 
-  def initialize(folder, app)
-    @app = app
+  def initialize(folder, build)
+    @build = build
+    @app = build.app
     @app_folder = folder
     @log = Rails.logger
   end
@@ -14,6 +15,7 @@ class IosConfigureService
   def configure_firebase
     @log.tagged("Firebase") do
 
+      send_build_update_cable(@build, 'firebase', 0, "Configure Firebase to app...")
       firebase = @app.ios_firebase
 
       unless firebase.file.nil?
@@ -29,6 +31,8 @@ class IosConfigureService
       else
         @log.warn "Firebase plist is not set. Skipping..."
       end
+
+      send_build_update_cable(@build, 'firebase', 1, "Firebase configured")
     end
   end
 
@@ -39,6 +43,7 @@ class IosConfigureService
         return
       end
 
+      send_build_update_cable(@build, 'fastlane', 0, "Configure Fastlane to app for channels #{channels}")
       dir = File.join(File.dirname(@app_folder), "fastlane")
 
       unless File.directory?(dir)
@@ -51,18 +56,22 @@ class IosConfigureService
       })
 
       File.write(File.join(dir, "Fastfile"), fastlane.to_s)
+      send_build_update_cable(@build, 'firebase', 1, "Fastlane configured")
     end
   end
 
   def configure_assets
     @log.tagged("Assets") do
+      send_build_update_cable(@build, 'assets', 0, "Copying assets to app..")
       copy_assets
       copy_icon
       copy_splash
+      send_build_update_cable(@build, 'assets', 1, "Assets copied.")
     end
   end
 
   def copy_configurations
+    send_build_update_cable(@build, 'configurations', 0, "Copy platform specific configurations to app...")
     require 'xcodeproj'
     require 'pathname'
 
@@ -115,6 +124,7 @@ class IosConfigureService
 
     FileUtils.mkdir_p(File.dirname("#{resources}/Defaults/runtime.json"))
     File.write(File.join("#{resources}/Defaults", "runtime.json"), JSON.parse(@app.runtime))
+    send_build_update_cable(@build, 'configurations', 1, "Setup and copy of all required configurations are done.")
   end
 
   private

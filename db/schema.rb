@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_20_112635) do
+ActiveRecord::Schema.define(version: 2018_11_22_105802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -64,7 +64,6 @@ ActiveRecord::Schema.define(version: 2018_04_20_112635) do
     t.string "message"
     t.index ["app_id"], name: "index_builds_on_app_id"
     t.index ["build_id"], name: "index_builds_on_build_id"
-    t.index ["platform", "build_id"], name: "index_builds_on_platform_and_build_id", unique: true
     t.index ["user_id"], name: "index_builds_on_user_id"
   end
 
