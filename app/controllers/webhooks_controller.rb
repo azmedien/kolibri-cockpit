@@ -15,11 +15,7 @@ class WebhooksController < ActionController::API
 
       build.save!
 
-      ActionCable.server.broadcast 'webhooks',
-        id: build.build_id,
-        html: build_to_html_table_row(@app, build),
-        platform: build.platform
-
+      send_build_cable(build)
       head @app? :ok : :not_found
   end
 end
