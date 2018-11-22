@@ -163,11 +163,13 @@ class AppsController < ApplicationController
     unless request.xhr?
 
       email = params[:app][:invite]
+      role = params[:role]
+
       user = User.find_by_email(email)
 
       unless user
         invited = User.invite!({ email: email, skip_invitation: true }, current_user)
-        invited.add_role :admin, @app
+        invited.add_role role, @app
 
         respond_to do |format|
           format.html do
@@ -179,14 +181,14 @@ class AppsController < ApplicationController
         return
       end
 
-      already_invated = user.has_role?(:admin, @app) || @app.user == user
+      already_invated = user.has_role?(role, @app) || @app.user == user
 
       if already_invated
         respond_to do |format|
           format.js
           format.html do
             redirect_to request.referrer,
-                        alert: "User with email #{email} already invited"
+                        alert: "User with email #{email} already invited for this role"
           end
         end
       else
@@ -195,7 +197,7 @@ class AppsController < ApplicationController
           format.js
           format.html do
             redirect_to request.referrer,
-                        notice: "User with email #{email} successfully invited"
+                        notice: "User with email #{email} successfully invited for this role"
           end
         end
       end

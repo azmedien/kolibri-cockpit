@@ -13,6 +13,14 @@
         <%= label_tag 'app[invite]', "Email address", :class => "form-control-label" %><br/>
         <%= email_field_tag 'app[invite]', '', :class => "form-control" %>
       </div>
+      <div class="form-group btn-group btn-group-toggle" data-toggle="buttons">
+        <%= label_tag(:create_new, "Admin", :class => "btn btn-outline-primary active", :id => "role_admin") do %>
+          <%= radio_button_tag(:role, "admin", true) %> Admin
+        <% end %>
+        <%= label_tag(:create_existing, "Push notification manager", :class => "btn btn btn-outline-primary", :id => "role_notifier") do %>
+          <%= radio_button_tag(:role, "notifier") %> Push notification manager
+        <% end %>
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
